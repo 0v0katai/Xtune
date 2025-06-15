@@ -10,7 +10,6 @@ include(GenerateG3A)
 include(GenerateHH2Bin)
 include(Fxconv)
 find_package(Gint 2.11 REQUIRED)
-find_package(LibProf 2.1 REQUIRED)
 find_package(Azur 0.1)
 find_package(Git REQUIRED)
 
@@ -59,7 +58,7 @@ target_include_directories(Xtune4 PRIVATE
   "${CMAKE_CURRENT_BINARY_DIR}/include")
 target_compile_options(Xtune4 PRIVATE -Wall -Wextra -Os -g -flto)
 target_link_options(Xtune4 PRIVATE -flto=auto -Wl,-Map=map -Wl,--print-memory-usage)
-target_link_libraries(Xtune4 Gint::Gint LibProf::LibProf #[[Azur::Azur]])
+target_link_libraries(Xtune4 Gint::Gint #[[Azur::Azur]])
 
 if("${FXSDK_PLATFORM_LONG}" STREQUAL fx9860G)
   generate_g1a(TARGET Xtune4 VERSION ${XTUNE4_VERSION} OUTPUT "Ftune4.g1a"

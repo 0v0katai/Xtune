@@ -1,6 +1,6 @@
 #include <gint/display.h>
 #include <gint/timer.h>
-#include <libprof.h>
+#include <gint/prof.h>
 
 #include "dhrystone.h"
 #include "whetstone.h"

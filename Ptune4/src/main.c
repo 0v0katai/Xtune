@@ -5,7 +5,7 @@
 #include <gint/keyboard.h>
 #include <gint/usb.h>
 #include <gint/usb-ff-bulk.h>
-#include <libprof.h>
+#include <gint/prof.h>
 #include <stdlib.h>
 
 #include "config.h"

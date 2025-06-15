@@ -5,7 +5,7 @@
 #include <gint/keyboard.h>
 #include <gint/gint.h>
 #include <gint/clock.h>
-#include <libprof.h>
+#include <gint/prof.h>
 #include <gint/mpu/cpg.h>
 #include <gint/mpu/bsc.h>
 #include <gint/gdb.h>
