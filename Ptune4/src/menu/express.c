@@ -103,24 +103,6 @@ static void print_preset(int current)
 }
 
 #if defined CG50 || defined CG100
-static void shift_f5_preset()
-{
-    /* dupdate: 5633 μs/177 FPS, INT: 211264 Dhrystone/s */
-    static struct cpg_overclock_setting const settings_fxcg50_100_shift_f5 =
-        { .FLLFRQ   = 0x00004384,
-          .FRQCR    = 0x1F001103,   // PLL: x32, IFC: 1/2, SFC: 1/4, BFC: 1/4, PFC: 1/16
-          .CS0BCR   = 0x46DA0400,   // IWW: 6
-          .CS2BCR   = 0x36DA3400,
-          .CS3BCR   = 0x24924400,   // IWW: 2, IWRWD: 2, IWRWS: 2, IWRRD: 2, IWRRS: 2
-          .CS5aBCR  = 0x17DF0400,
-          .CS0WCR   = 0x000004C0,   // WR: 12
-          .CS2WCR   = 0x000003C0,
-          .CS3WCR   = 0x00004953,   // TRP: 3, TRCD: 3, A3CL: 3, TRC: 9
-          .CS5aWCR  = 0x000203C1
-        };
-    cpg_set_overclock_setting(&settings_fxcg50_100_shift_f5);
-}
-
 static void alpha_f5_preset()
 {
     /* dupdate: 3896 μs/256 FPS, INT: 257122 Dhrystone/s */
@@ -145,8 +127,6 @@ static void cg100_getkey(key_event_t key)
 {
     if (key.key == KEY_ON)
         clock_set_speed(CLOCK_SPEED_DEFAULT);
-    if (key.key == KEY_NEXTTAB && key.shift)
-        shift_f5_preset();
     else if (key.key == KEY_NEXTTAB && key.alpha)
         alpha_f5_preset();
     else if (key.key == KEY_PREVTAB || key.key == KEY_NEXTTAB)
@@ -443,9 +423,7 @@ void express_menu()
             case KEY_F4:
             case KEY_F5:
             # ifdef CG50
-            if (key.shift)
-                shift_f5_preset();
-            else if (key.alpha)
+            if (key.alpha)
                 alpha_f5_preset();
             else
             # endif
