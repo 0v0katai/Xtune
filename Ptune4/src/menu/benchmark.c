@@ -2,11 +2,16 @@
 #include <gint/timer.h>
 #include <gint/prof.h>
 
-#include "dhrystone.h"
-#include "whetstone.h"
 #include "util.h"
 #include "config.h"
 #include "menu.h"
+
+#ifdef ENABLE_DHRY
+# include "cBench/dhry.h"
+#endif
+#ifdef ENABLE_WHET
+# include "cBench/whet.h"
+#endif
 
 #ifdef ENABLE_AZUR
 # include <azur/gint/render.h>
@@ -56,6 +61,6 @@ void run_benchmark(u32 benchmark_data[])
     #endif
 
     #ifdef ENABLE_WHET
-    benchmark_data[7] = prof_exec(whetstone());
+    benchmark_data[7] = prof_exec(whetstone(WHET_LOOP));
     #endif
 }

@@ -28,7 +28,9 @@
 /* Feature toggles */
 
 #define ENABLE_DHRY
+#define DHRY_LOOP 10000
 // #define ENABLE_WHET
+#define WHET_LOOP 10
 #define ENABLE_USB
 // #define ENABLE_AZUR
 #define ENABLE_HELP

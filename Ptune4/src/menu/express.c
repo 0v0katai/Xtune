@@ -13,7 +13,6 @@
 #include "util.h"
 #include "validate.h"
 #include "mem_test.h"
-#include "dhrystone.h"
 #include "settings.h"
 #include "bsc.h"
 #include "config.h"
@@ -390,7 +389,7 @@ void express_menu()
             #endif
 
             #ifdef ENABLE_WHET
-            row_print(WHETSTONE_ROW, WHETSTONE_X, "DBL: %d KWIPS", 100 * ITERATIONS * 1000000 / benchmark_data[7]);
+            row_print(WHETSTONE_ROW, WHETSTONE_X, "DBL: %d KWIPS", 100 * WHET_LOOP * 1000000 / benchmark_data[7]);
             #endif
 
             for (int i = SCORE_ROW(0); i != WHETSTONE_ROW + 1; i++)
