@@ -6,6 +6,7 @@
 #include <gint/usb.h>
 #include <gint/usb-ff-bulk.h>
 #include <gint/prof.h>
+#include <fxlibc/printf.h>
 #include <stdlib.h>
 
 #include "config.h"
@@ -57,6 +58,8 @@ int main()
     gdb_start_on_exception();
     __asm__("trapa #42");
     #endif
+
+    __printf_enable_fixed();
 
     if (gint[HWCALC] != HARDWARE_TARGET)
         abort();

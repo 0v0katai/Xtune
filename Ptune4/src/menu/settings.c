@@ -118,8 +118,8 @@ void settings_menu()
         for (int i = 0; i < 5; i++)
         {
             row_print(i + 3, 1, "%s Clock Max", option[i]);
-            row_print(i + 3, 25, "%d", settings[i + 2] / 1000);
-            row_print(i + 3, 33, "KHz");
+            row_print(i + 3, 25, "%.3D", settings[i + 2] / 1000);
+            row_print(i + 3, 33, "MHz");
         }
         row_print(8, 1, "Unlocked mode");
         row_print(9, 1, "Auto Reduce Wait");

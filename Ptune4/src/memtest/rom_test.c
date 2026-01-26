@@ -47,7 +47,7 @@ static void rom_read_test(mem_test_settings test_settings)
             break;
         FLF_max = FLF;
         print_RAM_read_select(ROM_read_area);
-        row_print(1, 1, "%d KHz", clock_freq()->Bphi_f / 1000);
+        row_print(1, 1, "%.3D MHz", clock_freq()->Bphi_f / 1000);
         dupdate();
         row_clear(1);
     }
@@ -93,7 +93,7 @@ static void rom_read_test(mem_test_settings test_settings)
             Bphi_f = clock_freq()->Bphi_f;
             row_clear(2 + i);
             row_print(2 + i, 1, "roR_%d", WR_equivalent(i));
-            row_print(2 + i, 11, "%d KHz", Bphi_f / 1000);
+            row_print(2 + i, 11, "%.3D MHz", Bphi_f / 1000);
             dupdate();
         }
         roR[i] = Bphi_f;

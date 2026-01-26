@@ -26,7 +26,7 @@ static void print_SDRAM_speed(u32 Bphi_f, u8 TRC)
 {
     row_clear(TRC_DISPLAY_ROW + TRC);
     row_print(TRC_DISPLAY_ROW + TRC, TRC_DISPLAY_X, "TRC_%d", TRC_equivalent(TRC));
-    row_print(TRC_DISPLAY_ROW + TRC, TRC_DISPLAY_X + 10, "%d KHz", Bphi_f / 1000);
+    row_print(TRC_DISPLAY_ROW + TRC, TRC_DISPLAY_X + 10, "%.3D MHz", Bphi_f / 1000);
 }
 
 static void ram_write_test(bool TRC_3_check)
@@ -64,7 +64,7 @@ static void ram_write_test(bool TRC_3_check)
                     }
                     Bphi_f = clock_freq()->Bphi_f;
                     row_print(TRC_DISPLAY_ROW - 1, TRC_DISPLAY_X, "Trial %d", trial);
-                    row_print_color(TRC_DISPLAY_ROW - 1, TRC_DISPLAY_X + 10, C_RED, C_WHITE, "%d KHz", Bphi_f / 1000);
+                    row_print_color(TRC_DISPLAY_ROW - 1, TRC_DISPLAY_X + 10, C_RED, C_WHITE, "%.3D MHz", Bphi_f / 1000);
                     dupdate();
                     row_clear(TRC_DISPLAY_ROW - 1);
                 }

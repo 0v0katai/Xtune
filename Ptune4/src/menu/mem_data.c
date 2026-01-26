@@ -93,7 +93,7 @@ void mem_data_menu()
         for (int i = 0; i < 10; i++)
         {
             row_print(i + 2, 1, "roR_%d", WR_equivalent(i));
-            row_print_color(i + 2, 11, margin ? C_BLUE : C_BLACK, C_WHITE, "%d KHz", margin
+            row_print_color(i + 2, 11, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
                 ? roR[i] / 100 * (100 - ROM_MARGIN) / 1000
                 : roR[i] / 1000);
         }
@@ -102,7 +102,7 @@ void mem_data_menu()
         {
             row_print(i + RAM_DISPLAY_ROW, OFFSET_X, "TRC_%d", TRC_equivalent(i));
             row_print_color(i + RAM_DISPLAY_ROW, OFFSET_X + 10,
-                margin ? C_BLUE : C_BLACK, C_WHITE, "%d KHz", margin
+                margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
                 ? raW_TRC[i] / 100 * (100 - RAM_MARGIN) / 1000
                 : raW_TRC[i] / 1000);
         }
@@ -111,7 +111,7 @@ void mem_data_menu()
             for (int i = WAIT_0; i <= WAIT_8; i++)
             {
                 row_print(i + 2, 25, "raR_%d", WR_equivalent(i));
-                row_print_color(i + 2, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%d KHz", margin
+                row_print_color(i + 2, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
                     ? raR[i] / 100 * (100 - RAM_MARGIN) / 1000
                     : raR[i] / 1000);
             }
@@ -119,7 +119,7 @@ void mem_data_menu()
             for (int i = WAIT_0; i <= WAIT_6; i++)
             {
                 row_print(i + 2, 25, "raW_%d", i);
-                row_print_color(i + 2, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%d KHz", margin
+                row_print_color(i + 2, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
                     ? raW[i] / 100 * (100 - RAM_MARGIN) / 1000
                     : raW[i] / 1000);
             }

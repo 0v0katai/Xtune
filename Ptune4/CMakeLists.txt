@@ -55,8 +55,8 @@ add_executable(Xtune4 ${SOURCES} ${ASSETS} ${ASSETS_${FXSDK_PLATFORM}})
 target_include_directories(Xtune4 PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}/include"
   "${CMAKE_CURRENT_BINARY_DIR}/include")
-target_compile_options(Xtune4 PRIVATE -Wall -Wextra -Os -g -flto)
-target_link_options(Xtune4 PRIVATE -flto=auto -Wl,-Map=map -Wl,--print-memory-usage)
+target_compile_options(Xtune4 PRIVATE -Wall -Wextra -Os -g -flto=auto)
+target_link_options(Xtune4 PRIVATE -Wl,-Map=map -Wl,-print-memory-usage -Wl,-gc-sections)
 target_link_libraries(Xtune4 Gint::Gint cBench::cBench #[[Azur::Azur]])
 
 if("${FXSDK_PLATFORM_LONG}" STREQUAL fx9860G)

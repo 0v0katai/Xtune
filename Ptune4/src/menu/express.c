@@ -320,8 +320,8 @@ void express_menu()
         for (int i = 0; i < 6; i++)
         {
             row_print_color(i + 1, SPEED_DISPLAY_X, freq[i] > red_zone[i]
-                ? C_RED : C_BLACK, C_WHITE, "%d", freq[i] / 1000);
-            row_print(i + 1, SPEED_DISPLAY_X + 7, "KHz");
+                ? C_RED : C_BLACK, C_WHITE, "%.3D", freq[i] / 1000);
+            row_print(i + 1, SPEED_DISPLAY_X + 7, "MHz");
         }
 
         #if !defined CP400
@@ -378,10 +378,10 @@ void express_menu()
                 row_print(SCORE_ROW(i), SCORE_X(i), "%s %d", score_name[i], benchmark_data[i]);
             }
             row_print_color(UPDATE_ROW, 2, benchmark_data[8] + 1 < 1000000 / benchmark_data[4] ? C_RGB(0,31,31) : C_RGB(31,0,31), C_WHITE,
-                "dupd: %d us/%d (%d) FPS", benchmark_data[4], 1000000 / benchmark_data[4], benchmark_data[8]);
+                "dupdate: %.2D FPS", 100000000 / benchmark_data[4]);
             
             #ifdef ENABLE_AZUR
-            row_print(UPDATE_ROW, 26, "azrp: %d us/%d FPS", benchmark_data[5], 1000000 / benchmark_data[5]);
+            row_print(UPDATE_ROW, 26, "azrp: %.2D FPS", benchmark_data[5], 100000000 / benchmark_data[5]);
             #endif
 
             #ifdef DHRY_LOOP

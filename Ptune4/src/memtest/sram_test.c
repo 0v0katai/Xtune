@@ -38,7 +38,7 @@ static void ram_read_test()
             break;
         FLF_max = FLF;
         print_RAM_read_select(RAM_read_area);
-        row_print(1, 1, "%d KHz", clock_freq()->Bphi_f / 1000);
+        row_print(1, 1, "%.3D MHz", clock_freq()->Bphi_f / 1000);
         dupdate();
         row_clear(1);
     }
@@ -72,7 +72,7 @@ static void ram_read_test()
             const u32 Bphi_f = clock_freq()->Bphi_f;
             row_clear(2 + i);
             row_print(2 + i, 25, "raR_%d", WR_equivalent(i));
-            row_print(2 + i, 35, "%d KHz", Bphi_f / 1000);
+            row_print(2 + i, 35, "%.3D MHz", Bphi_f / 1000);
             raR[i] = Bphi_f;
             dupdate();
         }
@@ -107,7 +107,7 @@ static void ram_write_test()
             const u32 Bphi_f = clock_freq()->Bphi_f;
             row_clear(2 + i);
             row_print(2 + i, 25, "raW_%d", i);
-            row_print(2 + i, 35, "%d KHz", Bphi_f / 1000);
+            row_print(2 + i, 35, "%.3D MHz", Bphi_f / 1000);
             raW[i] = Bphi_f;
             dupdate();
         }
