@@ -384,11 +384,11 @@ void express_menu()
             row_print(UPDATE_ROW, 26, "azrp: %d us/%d FPS", benchmark_data[5], 1000000 / benchmark_data[5]);
             #endif
 
-            #ifdef ENABLE_DHRY
+            #ifdef DHRY_LOOP
             row_print(DHRYSTONE_ROW, 2, "INT: %llu Dhrystone/s", DHRY_LOOP * 1000000ull / benchmark_data[6]);
             #endif
 
-            #ifdef ENABLE_WHET
+            #ifdef WHET_LOOP
             row_print(WHETSTONE_ROW, WHETSTONE_X, "DBL: %d KWIPS", 100 * WHET_LOOP * 1000000 / benchmark_data[7]);
             #endif
 

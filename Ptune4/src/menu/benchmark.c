@@ -6,12 +6,8 @@
 #include "config.h"
 #include "menu.h"
 
-#ifdef ENABLE_DHRY
-# include "cBench/dhry.h"
-#endif
-#ifdef ENABLE_WHET
-# include "cBench/whet.h"
-#endif
+#include "cBench/dhry.h"
+#include "cBench/whet.h"
 
 #ifdef ENABLE_AZUR
 # include <azur/gint/render.h>
@@ -56,11 +52,11 @@ void run_benchmark(u32 benchmark_data[])
     benchmark_data[8] = 32768 / (ETMU_start - SH7305_ETMU[ETMU_timer - 3].TCNT);
     timer_stop(ETMU_timer);
 
-    #ifdef ENABLE_DHRY
+    #ifdef DHRY_LOOP
     benchmark_data[6] = prof_exec(dhrystone(DHRY_LOOP));
     #endif
 
-    #ifdef ENABLE_WHET
+    #ifdef WHET_LOOP
     benchmark_data[7] = prof_exec(whetstone(WHET_LOOP));
     #endif
 }
