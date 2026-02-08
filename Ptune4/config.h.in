@@ -11,18 +11,26 @@
 // #define CP400       /* fx-CP400(+E), fx-CG500 */
 
 #if defined CP400
-# define VERSION "CPtune4 v@VERSTR@ (@@COMMIT_ID_SHORT@)"
-#elif defined MONO_SH3 || defined MONO_SH4A
-# define VERSION "Ftune4 v@VERSTR@ (@@COMMIT_ID_SHORT@)"
-#else
-# define VERSION "Ptune4 v@VERSTR@ (@@COMMIT_ID_SHORT@)"
-# if defined CG20
-#  define PLATFORM "fx-CG10/20"
-# elif defined CG50
-#  define PLATFORM "fx-CG50/Graph 90+E"
-# elif defined CG100
-#  define PLATFORM "fx-CG100/Graph Math+"
-# endif
+# define VERSION "CPtune4 v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define HARDWARE_TARGET HWCALC_FXCP400
+#elif defined MONO_SH3
+# define VERSION "Ftune4 SH3 v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define HARDWARE_TARGET HWCALC_FX9860G_SH3
+#elif defined MONO_SH4A
+# define VERSION "Ftune4 SH4A v@VERSTR@ SH4A @@COMMIT_ID_SHORT@"
+# define HARDWARE_TARGET HWCALC_FX9860G_SH4
+#elif defined CG20
+# define VERSION "Ptune4 Prizm v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define HARDWARE_TARGET HWCALC_PRIZM
+# define PLATFORM "fx-CG10/20"
+#elif defined CG50
+# define VERSION "Ptune4 CG50 v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define HARDWARE_TARGET HWCALC_FXCG50
+# define PLATFORM "fx-CG50/Graph 90+E"
+#elif defined CG100
+# define VERSION "Ptune4 MPM v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define HARDWARE_TARGET HWCALC_FXCG100
+# define PLATFORM "fx-CG100/Graph Math+"
 #endif
 
 /* Feature toggles */
@@ -35,7 +43,6 @@
 
 /* Keybinds */
 #if defined CP400
-# define HARDWARE_TARGET HWCALC_FXCP400
 # define KEY_EXPRESS_SELXM KEY_LEFTPAR
 # define KEY_EXPRESS_SS KEY_RIGHTPAR
 # define KEY_EXPRESS_SETTINGS KEY_EQUALS
@@ -52,7 +59,6 @@
 # define KEY_ENABLE_USB KEY_7
 # define KEY_OPEN_HELP KEY_4
 #elif defined CG100
-# define HARDWARE_TARGET HWCALC_FXCG100
 # define KEY_EXPRESS_SELXM KEY_XOT
 # define KEY_EXPRESS_SS KEY_LOG     /* Should be KEY_FRAC for fx-CG100 */
 # define KEY_EXPRESS_SETTINGS KEY_SETTINGS
@@ -69,13 +75,6 @@
 # define KEY_ENABLE_USB KEY_EXP
 # define KEY_OPEN_HELP KEY_CATALOG
 #else
-# if defined CG50
-#  define HARDWARE_TARGET HWCALC_FXCG50
-# elif defined CG20
-#  define HARDWARE_TARGET HWCALC_PRIZM
-# elif defined MONO_SH4A
-#  define HARDWARE_TARGET HWCALC_FX9860G_SH4
-# endif
 # define KEY_EXPRESS_SELXM KEY_SQUARE
 # define KEY_EXPRESS_SS KEY_POWER
 # define KEY_EXPRESS_SETTINGS KEY_MENU
