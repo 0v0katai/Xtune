@@ -14,6 +14,11 @@
 #include "menu.h"
 #include "util.h"
 
+HHK_NAME("CPtune4")
+HHK_AUTHOR("CalcLoverHK")
+HHK_VERSION(VERSION)
+HHK_DESCRIPTION("Overclocking utilities for your calculator")
+
 bool help_status = false;
 
 static bool global_getkey(key_event_t key)
