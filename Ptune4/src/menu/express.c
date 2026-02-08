@@ -574,18 +574,18 @@ void express_menu()
             cpg_compute_freq();
             const u32 Bphi_f = clock_freq()->Bphi_f;
             const u8 new_CS0WCR_WR = best_rom_wait(Bphi_f);
-            if (new_CS0WCR_WR > BSC.CS0WCR.WR)
+            if (!UNLOCKED_MODE && new_CS0WCR_WR > BSC.CS0WCR.WR)
                 BSC.CS0WCR.WR = new_CS0WCR_WR;
             #if defined CG50 || defined CG100 || defined CP400
             const u8 new_CS3WCR_TRC = best_TRC(Bphi_f);
-            if (new_CS3WCR_TRC > BSC.CS3WCR.TRC || AUTO_REDUCE_WAIT)
+            if (!UNLOCKED_MODE && (new_CS3WCR_TRC > BSC.CS3WCR.TRC || AUTO_REDUCE_WAIT))
                 BSC.CS3WCR.TRC = new_CS3WCR_TRC;
             #else
             const u8 new_CS2WCR_WR = best_ram_read(Bphi_f);
             const u8 new_CS2WCR_WW = best_ram_write(Bphi_f);
-            if (new_CS2WCR_WR > BSC.CS2WCR.WR || AUTO_REDUCE_WAIT)
+            if (!UNLOCKED_MODE && (new_CS2WCR_WR > BSC.CS2WCR.WR || AUTO_REDUCE_WAIT))
                 BSC.CS2WCR.WR = new_CS2WCR_WR;
-            if (new_CS2WCR_WW > BSC.CS2WCR.WW || AUTO_REDUCE_WAIT)
+            if (!UNLOCKED_MODE && (new_CS2WCR_WW > BSC.CS2WCR.WW || AUTO_REDUCE_WAIT))
                 BSC.CS2WCR.WW = new_CS2WCR_WW;
             #endif
         }

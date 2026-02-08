@@ -5,6 +5,7 @@
 #include "validate.h"
 #include "util.h"
 #include "config.h"
+#include "settings.h"
 
 #ifdef ENABLE_HELP
 static void help_info()
@@ -169,7 +170,7 @@ void bsc_modify(BSC_option select, i8 modify)
                 return;
             }
             #if defined CG50 || defined CG100 || defined CP400
-            if (select.REG == SELECT_TRC)
+            if (!UNLOCKED_MODE && select.REG == SELECT_TRC)
                 min = best_TRC(Bphi_f);
             #endif
             if (check >= min && check <= 3)
@@ -180,10 +181,10 @@ void bsc_modify(BSC_option select, i8 modify)
         static const u8 mask[4] = {16, 11, 0, 7};
         static const u8 field[4] = {0b111, 0b11, 0b11, 0b1111};
         i8 check = ((wcr_addr->lword >> mask[select.REG]) & field[select.REG]) + modify;
-        if (select.byte == CS0WCR_WR_ptr.byte)
+        if (!UNLOCKED_MODE && select.byte == CS0WCR_WR_ptr.byte)
             min = best_rom_wait(Bphi_f);
         #if !defined CG50 && !defined CG100 && !defined CP400
-        else if (select.byte == CS2WCR_WW_ptr.byte)
+        else if (!UNLOCKED_MODE && select.byte == CS2WCR_WW_ptr.byte)
         {
             u8 best_wait = best_ram_write(Bphi_f);
             if (((wcr_addr->lword >> mask[select.REG]) & field[select.REG]) == 0)
@@ -191,7 +192,7 @@ void bsc_modify(BSC_option select, i8 modify)
             else if (check < best_wait || check > WAIT_6 + 1)
                 check = 0;
         }
-        else if (select.byte == CS2WCR_WR_ptr.byte)
+        else if (!UNLOCKED_MODE && select.byte == CS2WCR_WR_ptr.byte)
             min = best_ram_read(Bphi_f);
         #endif
         if (check >= min && check <= max[select.REG])

@@ -126,7 +126,7 @@ void settings_menu()
             row_print(i + 3, 25, "%.3D", settings[i + 2] / 1000);
             row_print(i + 3, 33, "MHz");
         }
-        row_print(8, 1, "Unlocked mode");
+        row_print(8, 1, "Unrestricted mode");
         row_print(9, 1, "Auto Reduce Wait");
         row_print(10, 1, "Auto Up PFC");
         for (int i = 0; i < 3; i++)
