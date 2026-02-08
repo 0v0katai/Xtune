@@ -16,7 +16,7 @@ bool exceed_limit()
 {
     cpg_compute_freq();
     const clock_frequency_t *freq = clock_freq();
-    return !UNLOCKED_MODE && (freq->FLL * freq->PLL * 32768 > PLL_CLK_MAX ||
+    return !UNLOCKED_MODE && (freq->PLL_f > PLL_CLK_MAX ||
            freq->Iphi_f > CPU_CLK_MAX || freq->Sphi_f > SHW_CLK_MAX ||
            freq->Bphi_f > BUS_CLK_MAX || (freq->Pphi_f > IO_CLK_MAX && freq->Pphi_div == 64));
 }

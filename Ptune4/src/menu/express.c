@@ -308,7 +308,7 @@ void express_menu()
         #endif
 
         #ifdef ENABLE_USB
-            row_print(KEY_DISPLAY_ROW, 2, "Capture");
+        row_print(KEY_DISPLAY_ROW, 2, "Capture");
         # ifdef CG100
         row_print(KEY_DISPLAY_ROW, 12, "[SHIFT][x10^]");
         # else
@@ -493,68 +493,57 @@ void express_menu()
 
             case KEY_LEFT:
                 update = true;
+                static const u8 min[6] = {225, 1, 64, 64, 64, 64};
+                if ((&f.FLL)[select] == min[select])
+                    break;
                 if (select == SELECT_FLL)
-                {
-                    if (f.FLL == 225)
-                        break;
                     CPG.FLLFRQ.FLF -= 1 + CPG.FLLFRQ.SELXM;
-                    divs[SELECT_PFC - 2] >>= auto_up_PFC();
-                }
                 else if (select == SELECT_PLL)
-                {
-                    if (f.PLL == 1)
-                        break;
                     CPG.FRQCR.STC--;
-                    divs[SELECT_PFC - 2] >>= auto_up_PFC();
-                }
                 else
                 {
                     const u8 check = select - 2;
-                    if (divs[check] == 64)
-                        break;
                     for (int i = check + 1; i <= 3; i++)
                         if (divs[check] == divs[i])
                             divs[i] <<= 1;
                     divs[check] <<= 1;
                     for (int i = check - 1; i >= 0; i--)
                         if (divs[check] / divs[i] > divs_ratio[check - 1][i])
-                            divs[i] <<= 1; 
+                            divs[i] <<= 1;
                 }
+                if (select <= SELECT_PLL)
+                    divs[SELECT_PFC - 2] >>= auto_up_PFC();
                 break;
             case KEY_RIGHT:
                 update = true;
+                const u8 max[6] = {2047 >> CPG.FLLFRQ.SELXM,
+                                   64 >> spread_spectrum,
+                                   2, 2, 2, 2};
+                if ((&f.FLL)[select] == max[select])
+                    break;
                 if (select == SELECT_FLL)
                 {
-                    if (f.FLL == (2047 >> CPG.FLLFRQ.SELXM))
-                        break;
                     CPG.FLLFRQ.FLF += 1 + CPG.FLLFRQ.SELXM;
                     if (exceed_limit())
                     {
                         CPG.FLLFRQ.FLF -= 1 + CPG.FLLFRQ.SELXM;
                         break;
                     }
-                    divs[SELECT_PFC - 2] <<= auto_down_PFC();
                 }
                 else if (select == SELECT_PLL)
                 {
-                    if (f.PLL == (64 >> spread_spectrum))
-                        break;
                     CPG.FRQCR.STC++;
                     if (exceed_limit())
                     {
                         CPG.FRQCR.STC--;
                         break;
                     }
-                    divs[SELECT_PFC - 2] <<= auto_down_PFC();
                 }
                 else
                 {
                     const u8 check = select - 2;
-                    if (divs[check] == 2)
-                        break;
-                    const i32 fs[4] = {f.Iphi_f, f.Sphi_f, f.Bphi_f, f.Pphi_f};
                     const i32 limit[4] = {CPU_CLK_MAX, SHW_CLK_MAX, BUS_CLK_MAX, IO_CLK_MAX};
-                    if (!UNLOCKED_MODE && (fs[check] << 1) > limit[check])
+                    if (!UNLOCKED_MODE && ((&f.Iphi_f)[check] << 1) > limit[check])
                         break;
                     for (int i = check - 1; i >= 0; i--)
                         if (divs[check] == divs[i])
@@ -564,6 +553,8 @@ void express_menu()
                         if (divs[i] / divs[check] > divs_ratio[i - 1][check])
                             divs[i] >>= 1;
                 }
+                if (select <= SELECT_PLL)
+                    divs[SELECT_PFC - 2] <<= auto_down_PFC();
                 break;
         }
         if (update)
