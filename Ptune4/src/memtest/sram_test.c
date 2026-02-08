@@ -119,6 +119,7 @@ void sram_test()
     dclear(C_WHITE);
     row_title("SRAM Test");
 
+    CPG.SSCGCR.SSEN = false;
     struct cpg_overclock_setting s0;
     cpg_get_overclock_setting(&s0);
     ram_read_test();

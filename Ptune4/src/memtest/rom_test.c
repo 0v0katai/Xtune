@@ -109,6 +109,7 @@ void rom_test(mem_test_settings test_settings)
     dclear(C_WHITE);
     row_title("ROM Test");
 
+    CPG.SSCGCR.SSEN = false;
     struct cpg_overclock_setting s0;
     cpg_get_overclock_setting(&s0);
     rom_read_test(test_settings);

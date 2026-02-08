@@ -86,6 +86,7 @@ void sdram_test(bool TRC_3_check)
     dclear(C_WHITE);
     row_title("SDRAM Test");
 
+    CPG.SSCGCR.SSEN = false;
     struct cpg_overclock_setting s0;
     cpg_get_overclock_setting(&s0);
     ram_write_test(TRC_3_check);
