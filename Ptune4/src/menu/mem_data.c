@@ -13,34 +13,39 @@
 static void help_info()
 {
     #if defined CP400
-    info_box(15, 7, "HELP");
-    row_print(16, 2, "[=]: Reset to default");
-    row_print(17, 2, "[x]: Toggle margin view");
-    row_print(18, 2, "[y]: ROM read test");
-    row_print(19, 2, "[z]: SDRAM write test");
-    row_print(21, 2, "[Clear]: Close help / < Express menu");
+    info_box(15, 6, C_BLACK, "HELP",
+    	"[=]: Reset to default",
+    	"[x]: Toggle margin view",
+    	"[y]: ROM read test",
+    	"[z]: SDRAM write test",
+        "",
+    	"[Clear]: Close help / < Express menu");
     #elif defined CG100
-    info_box(4, 7, "HELP");
-    row_print(5, 2, "[ON]: Reset to default");
-    row_print(6, 2, "[|<-]: Toggle margin view");
-    row_print(7, 2, "[->|]: ROM read test");
-    row_print(8, 2, "[PGUP]: SDRAM write test");
-    row_print(10, 2, "[BACK]: Close help / < Express menu");
+    info_box(4, 6, C_BLACK, "HELP",
+    	"[ON]: Reset to default",
+    	"[|<-]: Toggle margin view",
+    	"[->|]: ROM read test",
+    	"[PGUP]: SDRAM write test",
+        "",
+    	"[BACK]: Close help / < Express menu");
     #elif defined CG50
-    info_box(4, 7, "HELP");
-    row_print(5, 2, "[F1]: Reset to default");
-    row_print(6, 2, "[F3]: Toggle margin view");
-    row_print(7, 2, "[F5]: ROM read test");
-    row_print(8, 2, "[F6]: SDRAM write test");
-    row_print(10, 2, "[EXIT]: Close help / < Express menu");
+    info_box(4, 6, C_BLACK, "HELP",
+    	"[F1]: Reset to default",
+    	"[F3]: Toggle margin view",
+    	"[F5]: ROM read test",
+    	"[F6]: SDRAM write test",
+        "",
+    	"[EXIT]: Close help / < Express menu");
     #else
-    info_box(3, 9, "HELP");
-    row_print(4, 2, "[F1]: Reset to default");
-    row_print(5, 2, "[F2]: Toggle SRAM read/write view");
-    row_print(6, 2, "[F3]: Toggle margin view");
-    row_print(7, 2, "[F5]: ROM read test");
-    row_print(8, 2, "[F6]: SRAM read/write test");
-    row_print(11, 2, "[EXIT]: Close help / < Express menu");
+    info_box(3, 8, C_BLACK, "HELP",
+    	"[F1]: Reset to default",
+    	"[F2]: Toggle SRAM read/write view",
+    	"[F3]: Toggle margin view",
+    	"[F5]: ROM read test",
+    	"[F6]: SRAM read/write test",
+        "",
+        "",
+    	"[EXIT]: Close help / < Express menu");
     #endif
     while (xtune_getkey().key != KEY_EXIT);
 }
@@ -204,29 +209,23 @@ void mem_data_menu()
             
             case KEY_MEMDATA_RAMTEST:
                 #if defined CP400
-                warning_box(15, 8);
-                row_print_color(16, 2, C_RED, C_WHITE,
-                    "SDRAM test may cause system errors!");
-                row_print_color(17, 2, C_RED, C_WHITE,
-                    "It is highly recommended to press the");
-                row_print_color(18, 2, C_RED, C_WHITE,
-                    "RESTART button after this test is");
-                row_print_color(19, 2, C_RED, C_WHITE,
-                    "finished.");
-                row_print(21, 2,
-                    "Are you sure you want to continue?");
+                info_box(15, 7, C_RED, "WARNING",
+                    "RAM test may cause system errors!",
+                    "It is highly recommended to press the",
+                    "RESTART button after this test is"
+                    "finished.",
+                    "",
+                    "Are you sure you want to continue?",
+                    "");
                 if (yes_no(22))
                     sdram_test(test_settings.TRC_3_check);
                 #elif defined CG50 || defined CG100
-                warning_box(5, 6);
-                row_print_color(6, 2, C_RED, C_WHITE,
-                    "SDRAM test may cause system errors!");
-                row_print_color(7, 2, C_RED, C_WHITE,
-                    "It is highly recommended to press the RESTART");
-                row_print_color(8, 2, C_RED, C_WHITE,
-                    "button after this test is finished.");
-                row_print(9, 2,
-                    "Are you sure you want to continue?");
+                info_box(5, 5, C_RED, "WARNING",
+                    "SDRAM test may cause system errors!",
+                    "It is highly recommended to press the RESTART",
+                    "button after this test is finished.",
+                    "Are you sure you want to continue?",
+                    "");
                 if (yes_no(10))
                     sdram_test(test_settings.TRC_3_check);
                 #else

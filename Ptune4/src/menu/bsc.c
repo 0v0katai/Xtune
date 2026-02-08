@@ -10,29 +10,33 @@
 static void help_info()
 {
     #if defined CP400
-    info_box(15, 7, "HELP");
-    row_print(16, 2, "[-][+]: -/+ option value");
-    row_print(17, 2, "[x]: Toggle BCR/WCR mode");
-    row_print(18, 2, "[UP][DOWN]: Select option");
-    row_print(19, 2, "[LEFT][RIGHT]: Select CSn area");
-    row_print(21, 2, "[Clear]: Close help / < Express menu");
+    info_box(15, 6, C_BLACK, "HELP",
+        "[-][+]: -/+ option value",
+        "[x]: Toggle BCR/WCR mode",
+        "[UP][DOWN]: Select option",
+        "[LEFT][RIGHT]: Select CSn area",
+        "",
+        "[Clear]: Close help / < Express menu");
     #elif defined CG100
-    info_box(3, 9, "HELP");
-    row_print(4, 2, "[+]: Increase option value");
-    row_print(5, 2, "[-]: Decrease option value");
-    row_print(6, 2, "[|<-][->|]: Toggle BCR/WCR mode");
-    row_print(7, 2, "[UP][DOWN]: Select option");
-    row_print(8, 2, "[LEFT][RIGHT]: Select CSn area");
-    row_print(9, 2, "[PGUP][PGDW]: Quick jump to previous/next row");
-    row_print(11, 2, "[BACK]: Close help / < Express menu");
+    info_box(3, 8, C_BLACK, "HELP",
+    	"[+]: Increase option value",
+    	"[-]: Decrease option value",
+    	"[|<-][->|]: Toggle BCR/WCR mode",
+    	"[UP][DOWN]: Select option",
+    	"[LEFT][RIGHT]: Select CSn area",
+    	"[PGUP][PGDW]: Quick jump to previous/next row",
+        "",
+        "[BACK]: Close help / < Express menu");
     #else
-    info_box(3, 9, "HELP");
-    row_print(4, 2, "[F1][+]: Increase option value");
-    row_print(5, 2, "[F2][-]: Decrease option value");
-    row_print(6, 2, "[F6]: Toggle BCR/WCR mode");
-    row_print(7, 2, "[UP][DOWN]: Select option");
-    row_print(8, 2, "[LEFT][RIGHT]: Select CSn area");
-    row_print(11, 2, "[EXIT]: Close help / < Express menu");
+    info_box(3, 8, C_BLACK, "HELP",
+    	"[F1][+]: Increase option value",
+    	"[F2][-]: Decrease option value",
+    	"[F6]: Toggle BCR/WCR mode",
+    	"[UP][DOWN]: Select option",
+    	"[LEFT][RIGHT]: Select CSn area",
+        "",
+        "",
+        "[EXIT]: Close help / < Express menu");
     #endif
     while (xtune_getkey().key != KEY_EXIT);
 }

@@ -258,27 +258,23 @@ void tab_clear(int start, int end)
 static void msg_box_frame(int row, int size, int color)
 {
 	drect_border(3, ROW_Y + ROW_H * (row - 1) - 1,
-		DWIDTH - 4, ROW_Y + ROW_H * (row + size - 1) - 1,
+		DWIDTH - 4, ROW_Y + ROW_H * (row + size) - 1,
 		C_WHITE, 2, color);
 	drect(3, ROW_Y + ROW_H * (row - 1) - 1,
 		DWIDTH - 4, ROW_Y + ROW_H * row - 1,
 		color);
 }
 
-void info_box(int row, int size, const char *title)
+void info_box(int row, int size, int bg, const char *title, ...)
 {
-	msg_box_frame(row, size, C_BLACK);
-	row_print_color(row, 2, C_WHITE, C_BLACK, title);
-}
+	msg_box_frame(row, size, bg);
+	row_print_color(row, 2, C_WHITE, bg, title);
 
-void warning_box(int row, int size)
-{
-	msg_box_frame(row, size, C_RED);
-	#if defined CP400
-	row_print_color(row, 15, C_WHITE, C_RED, "WARNING");
-	#else
-	row_print_color(row, 21, C_WHITE, C_RED, "WARNING");
-	#endif
+	va_list args;
+	va_start(args, title);
+	for (int i = 1; i <= size; i++)
+		row_print(row + i, 2, va_arg(args, char *));
+	va_end(args);
 }
 
 bool yes_no(int row)

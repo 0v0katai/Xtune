@@ -3,6 +3,7 @@
 #include <gint/clock.h>
 #include <gint/gdb.h>
 #include <gint/keyboard.h>
+#include <gint/display.h>
 #include <gint/usb.h>
 #include <gint/usb-ff-bulk.h>
 #include <gint/prof.h>
@@ -40,11 +41,13 @@ static bool global_getkey(key_event_t key)
     # if defined CG50 || defined CG100
     if (key.shift && key.key == KEY_ACON)
     {
-        info_box(4, 7, "Caution");
-        row_print(6, 2, "Poweroff function is disabled in this build");
-        row_print(7, 2, "as it targets " PLATFORM ".");
-        row_print(8, 2, "Please return to the main menu before");
-        row_print(9, 2, "turning off your calculator.");
+        info_box(4, 6, C_BLACK, "Caution",
+            "",
+            "Poweroff function is disabled in this build",
+            "as it targets " PLATFORM ".",
+            "Please return to the main menu before",
+            "turning off your calculator.",
+            "");
         xtune_getkey();
     }
     # endif

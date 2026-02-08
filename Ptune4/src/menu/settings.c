@@ -11,30 +11,31 @@
 static void help_info()
 {
     #if defined CP400
-    info_box(15, 7, "HELP");
-    row_print(16, 2, "[=]: Reset to default");
-    row_print(17, 2, "[-][+]: -/+ option value (1000 KHz)");
-    row_print(18, 2, "[LEFT][RIGHT]: -/+ option value (100 KHz)");
-    row_print(19, 2, "[UP][DOWN]: Select option");
-    row_print(20, 2, "[/]: About this add-in");
-    row_print(21, 2, "[Clear]: Close help / < Express menu");
+    info_box(15, 6, C_BLACK, "HELP"
+    	"[=]: Reset to default",
+    	"[-][+]: -/+ option value (1 MHz)",
+    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)",
+    	"[UP][DOWN]: Select option",
+    	"[/]: About this add-in",
+    	"[Clear]: Close help / < Express menu");
     #elif defined CG100
-    info_box(4, 7, "HELP");
-    row_print(5, 2, "[ON]: Reset to default");
-    row_print(6, 2, "[+][-]: +/- option value (1000 KHz)");
-    row_print(7, 2, "[LEFT][RIGHT]: -/+ option value (100 KHz)");
-    row_print(8, 2, "[UP][DOWN]: Select option");
-    row_print(9, 2, "[PGUP]: About this add-in");
-    row_print(10, 2, "[BACK]: Close help / < Express menu");
+    info_box(4, 6, C_BLACK, "HELP",
+    	"[ON]: Reset to default",
+    	"[+][-]: +/- option value (1 MHz)",
+    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)",
+    	"[UP][DOWN]: Select option",
+    	"[PGUP]: About this add-in",
+    	"[BACK]: Close help / < Express menu");
     #else
-    info_box(3, 9, "HELP");
-    row_print(4, 2, "[F1]: Reset to default");
-    row_print(5, 2, "[F2][+]: Increase option value (1000 KHz)");
-    row_print(6, 2, "[F3][-]: Decrease option value (1000 KHz)");
-    row_print(7, 2, "[LEFT][RIGHT]: -/+ option value (100 KHz)");
-    row_print(8, 2, "[UP][DOWN]: Select option");
-    row_print(10, 2, "[F6]: About this add-in");
-    row_print(11, 2, "[EXIT]: Close help / < Express menu");
+    info_box(3, 8, C_BLACK, "HELP",
+    	"[F1]: Reset to default",
+    	"[F2][+]: Increase option value (1 MHz)",
+    	"[F3][-]: Decrease option value (0.1 MHz)",
+    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)",
+    	"[UP][DOWN]: Select option",
+    	"[F6]: About this add-in",
+        "",
+    	"[EXIT]: Close help / < Express menu");
     #endif
     while (xtune_getkey().key != KEY_EXIT);
 }
@@ -71,18 +72,22 @@ enum select_option
 static void about()
 {
     #if defined CP400
-    info_box(15, 8, "About");
-    row_print(16, 2, VERSION);
-    row_print(18, 2, "Copyright (C) 2025");
-    row_print(19, 2, "Sentaro21, CalcLoverHK.");
-    row_print(21, 2, "This software is licensed under");
-    row_print(22, 2, "MIT/Expat.");
+    info_box(15, 7, C_BLACK, "About",
+    	VERSION,
+        "",
+    	"Copyright (C) 2025",
+    	"Sentaro21, CalcLoverHK.",
+        "",
+    	"This software is licensed under",
+    	"MIT/Expat.");
     #else
-    info_box(4, 7, "About");
-    row_print(5, 2, VERSION);
-    row_print(6, 2, "Copyright (C) 2025 Sentaro21, CalcLoverHK.");
-    row_print(8, 2, "This software is licensed under MIT/Expat.");
-    row_print(10, 2, "This build targets " PLATFORM ".");
+    info_box(4, 6, C_BLACK, "About",
+    	VERSION,
+    	"Copyright (C) 2025 Sentaro21, CalcLoverHK.",
+        "",
+    	"This software is licensed under MIT/Expat.",
+        "",
+    	"This build targets " PLATFORM ".");
     #endif
     
     xtune_getkey();

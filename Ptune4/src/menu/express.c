@@ -32,49 +32,51 @@ enum select_option
 static void help_info()
 {
     #if defined CP400
-    row_print(26, 2, "[KBD]: Reset to default");
-    row_print(27, 2, "[DEL]: Toggle benchmark");
-    row_print(28, 2, "[UP][DOWN]: Select option");
-    row_print(29, 2, "[LEFT][RIGHT]: -/+ option value");
-    row_print(30, 2, "[/][x]: -/+ roR");
-    row_print(31, 2, "[-][+]: -/+ CL");
-    row_print(32, 2, "[SHIFT][-][+]: -/+ TRC");
-    row_print(33, 2, "[=]: Settings");
-    row_print(34, 2, "[x]: BSC settings");
-    row_print(35, 2, "[y]: Memory data & tests");
-    row_print(36, 2, "[Clear]: Close help / Quit CPtune4");
+    info_box(12, 11, C_BLACK, "HELP",
+    	"[KBD]: Reset to default",
+    	"[DEL]: Toggle benchmark",
+    	"[UP][DOWN]: Select option",
+    	"[LEFT][RIGHT]: -/+ option value",
+    	"[/][x]: -/+ roR",
+    	"[-][+]: -/+ CL",
+    	"[SHIFT][-][+]: -/+ TRC",
+    	"[=]: Settings",
+    	"[x]: BSC settings",
+    	"[y]: Memory data & tests",
+    	"[Clear]: Close help / Quit CPtune4");
     #elif defined CG100
-    info_box(1, 13, "HELP");
-    row_print(2, 2, "[ON]: Reset to default");
-    row_print(3, 2, "[|<-][->|]: Select preset, [OK]: Confirm");
-    row_print(4, 2, "[PGUP]: Toggle benchmark");
-    row_print(5, 2, "[UP][DOWN]: Select option");
-    row_print(6, 2, "[LEFT][RIGHT]: -/+ option value");
-    row_print(7, 2, "[x][/]: +/- roR");
-    row_print(8, 2, "[+][-]: +/- CL");
-    row_print(9, 2, "[SHIFT][+][-]: +/- TRC");
-    row_print(10, 2, "[SETTINGS]: Settings");
-    row_print(11, 2, "[VARIABLE]: BSC settings");
-    row_print(12, 2, "[TOOLS]: Memory data & tests");
-    row_print(13, 2, "[BACK]: Close help / Quit Ptune4");
+    info_box(1, 13, C_BLACK, "HELP",
+    	"[ON]: Reset to default",
+    	"[|<-][->|]: Select preset, [OK]: Confirm",
+    	"[PGUP]: Toggle benchmark",
+    	"[UP][DOWN]: Select option",
+    	"[LEFT][RIGHT]: -/+ option value",
+    	"[x][/]: +/- roR",
+    	"[+][-]: +/- CL",
+    	"[SHIFT][+][-]: +/- TRC",
+    	"[SETTINGS]: Settings",
+    	"[VARIABLE]: BSC settings",
+    	"[TOOLS]: Memory data & tests",
+    	"[BACK]: Close help / Quit Ptune4");
     #else
-    info_box(1, 13, "HELP");
-    row_print(2, 2, "[F1]-[F5]: Apply preset");
-    row_print(3, 2, "[F6]: Toggle benchmark");
-    row_print(4, 2, "[UP][DOWN]: Select option");
-    row_print(5, 2, "[LEFT][RIGHT]: -/+ option value");
-    row_print(6, 2, "[x][/]: +/- roR");
+    info_box(1, 12, C_BLACK, "HELP",
+    	"[F1]-[F5]: Apply preset",
+    	"[F6]: Toggle benchmark",
+    	"[UP][DOWN]: Select option",
+    	"[LEFT][RIGHT]: -/+ option value",
+    	"[x][/]: +/- roR",
     # ifdef CG50
-    row_print(7, 2, "[+][-]: +/- CL");
-    row_print(8, 2, "[SHIFT][+][-]: +/- TRC");
+    	"[+][-]: +/- CL",
+    	"[SHIFT][+][-]: +/- TRC",
     # else
-    row_print(7, 2, "[+]/[-]: +/- raR");
-    row_print(8, 2, "[SHIFT][+]/[-]: +/- raW");
+    	"[+]/[-]: +/- raR",
+    	"[SHIFT][+]/[-]: +/- raW",
     # endif
-    row_print(9, 2, "[OPTN]: Memory data & tests");
-    row_print(10, 2, "[VARS]: BSC settings");
-    row_print(11, 2, "[SHIFT][MENU]: Settings");
-    row_print(13, 2, "[EXIT]: Close help / Quit Ptune4");
+    	"[OPTN]: Memory data & tests",
+    	"[VARS]: BSC settings",
+    	"[SHIFT][MENU]: Settings",
+        "",
+    	"[EXIT]: Close help / Quit Ptune4");
     #endif
     while (xtune_getkey().key != KEY_EXIT);
 }
@@ -224,11 +226,13 @@ void express_menu()
     static const char *option[] = {"FLL:", "PLL:", "IFC:", "SFC:", "BFC:", "PFC:", 0};
 
     dclear(C_WHITE);
-    info_box(MEMTEST_DISPLAY_ROW, 7, "Start memory tests?");
-    row_print(MEMTEST_DISPLAY_ROW + 2, 2, "Select option:");
-    row_print(MEMTEST_DISPLAY_ROW + 3, 2, "[1] RAM only");
-    row_print(MEMTEST_DISPLAY_ROW + 4, 2, "[2] ROM & RAM");
-    row_print(MEMTEST_DISPLAY_ROW + 5, 2, "[3] None");
+    info_box(MEMTEST_DISPLAY_ROW, 6, C_BLACK, "Start memory tests?",
+        "",
+        "Select option:",
+        "[1] RAM only",
+        "[2] ROM & RAM",
+        "[3] None",
+        "");
     while (key.key < KEY_1 || key.key > KEY_3)
         key = xtune_getkey();
     switch (key.key)
