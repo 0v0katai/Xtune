@@ -55,13 +55,10 @@ struct cpg_overclock_setting s_default;
 
 static void get_default_preset()
 {
-    static struct cpg_overclock_setting s_current, s_current_temp;
+    static struct cpg_overclock_setting s_current;
     cpg_get_overclock_setting(&s_current);
     clock_set_speed(CLOCK_SPEED_DEFAULT);
     cpg_get_overclock_setting(&s_default);
-    s_current_temp = s_current;
-    s_current_temp.FLLFRQ |= 0x4000;
-    cpg_set_overclock_setting(&s_current_temp);
     cpg_set_overclock_setting(&s_current);
 }
 

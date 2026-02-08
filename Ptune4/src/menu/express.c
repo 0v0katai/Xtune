@@ -453,12 +453,6 @@ void express_menu()
                     select++;
                 break;
 
-            case KEY_EXPRESS_SELXM:
-                if (f.FLL >= 1024)
-                    break;
-                CPG.FLLFRQ.lword = CPG.FLLFRQ.SELXM ? f.FLL : 0x4000 + (f.FLL << 1);
-                break;
-
             case KEY_EXPRESS_SS:
                 if (f.PLL > 32)
                     break;
@@ -496,8 +490,14 @@ void express_menu()
                 static const u8 min[6] = {225, 1, 64, 64, 64, 64};
                 if ((&f.FLL)[select] == min[select])
                     break;
-                if (select == SELECT_FLL)
+                if (select == SELECT_FLL) {
+                    if (f.FLL == 1024)
+                    {
+                        CPG.FLLFRQ.SELXM = 1;
+                        CPG.FLLFRQ.FLF <<= 1;
+                    }
                     CPG.FLLFRQ.FLF -= 1 + CPG.FLLFRQ.SELXM;
+                }
                 else if (select == SELECT_PLL)
                     CPG.FRQCR.STC--;
                 else
@@ -516,13 +516,17 @@ void express_menu()
                 break;
             case KEY_RIGHT:
                 update = true;
-                const u8 max[6] = {2047 >> CPG.FLLFRQ.SELXM,
-                                   64 >> spread_spectrum,
+                const u8 max[6] = {2047, 64 >> spread_spectrum,
                                    2, 2, 2, 2};
                 if ((&f.FLL)[select] == max[select])
                     break;
                 if (select == SELECT_FLL)
                 {
+                    if (f.FLL == 1023)
+                    {
+                        CPG.FLLFRQ.SELXM = 0;
+                        CPG.FLLFRQ.FLF >>= 1;
+                    }
                     CPG.FLLFRQ.FLF += 1 + CPG.FLLFRQ.SELXM;
                     if (exceed_limit())
                     {
