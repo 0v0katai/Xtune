@@ -23,6 +23,7 @@ set(SOURCES
   src/main.c
   src/validate.c
   src/util.c
+  src/syscall.s
   src/menu/express.c
   src/menu/settings.c
   src/menu/bsc.c

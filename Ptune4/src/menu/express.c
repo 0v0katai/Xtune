@@ -214,6 +214,18 @@ static void print_express_cpg_bsc(struct cpg_overclock_setting s)
 # define SPEED_DISPLAY_X 17
 #endif
 
+static int __GetBatteryVoltage()
+{
+    #if defined CG20 || defined CG50
+    int SYSCALL(int r4, int r5, int r6, int r7, int number);
+    return SYSCALL(1, 0, 0, 0, 0x1186);
+    #elif defined CG100
+    int CALL(int r4, int r5, int r6, int r7, int address);
+    return CALL(1, 0, 0, 0, 0x8022fb9e);
+    #endif
+}
+
+
 void express_menu()
 {
     key_event_t key;
@@ -268,7 +280,11 @@ void express_menu()
         fkey_menu(6, "Bench");
         #endif
 
+        #if defined CG20 || defined CG50 || defined CG100
+        row_title(VERSION " %.2Dv", gint_world_switch(GINT_CALL(__GetBatteryVoltage)));
+        #else
         row_title(VERSION);
+        #endif
         print_express_cpg_bsc(s);
 
         const clock_frequency_t f = *clock_freq();
