@@ -308,11 +308,7 @@ void express_menu()
         #endif
 
         #ifdef ENABLE_USB
-        if (usb_is_open())
             row_print(KEY_DISPLAY_ROW, 2, "Capture");
-        else
-            row_print(KEY_DISPLAY_ROW, 2, "Open USB");
-
         # ifdef CG100
         row_print(KEY_DISPLAY_ROW, 12, "[SHIFT][x10^]");
         # else

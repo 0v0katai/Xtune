@@ -21,14 +21,13 @@ static bool global_getkey(key_event_t key)
     #ifdef ENABLE_USB
     if (key.shift && key.key == KEY_ENABLE_USB)
     {
-        if (usb_is_open())
-            usb_fxlink_screenshot(true);
-        else
+        if (!usb_is_open())
         {
             usb_interface_t const *interfaces[] = {&usb_ff_bulk, NULL};
             usb_open(interfaces, GINT_CALL_NULL);
             usb_open_wait();
         }
+        usb_fxlink_screenshot(true);
         return true;
     }
     #endif
