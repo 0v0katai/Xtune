@@ -73,21 +73,21 @@ static void about()
 {
     #if defined CP400
     info_box(15, 7, C_BLACK, "About",
-    	VERSION,
-        "",
-    	"Copyright (C) 2025",
+    	"",
+        VERSION,
+    	"Copyright (C) 2025-2026",
     	"Sentaro21, CalcLoverHK.",
-        "",
-    	"This software is licensed under",
-    	"MIT/Expat.");
+        "This software is licensed under",
+    	"MIT/Expat.",
+    	"");
     #else
     info_box(4, 6, C_BLACK, "About",
     	VERSION,
-    	"Copyright (C) 2025 Sentaro21, CalcLoverHK.",
-        "",
+    	"",
+        "Copyright (C) 2025-2026 Sentaro21, CalcLoverHK.",
     	"This software is licensed under MIT/Expat.",
-        "",
-    	"This build targets " PLATFORM ".");
+        "This build targets " PLATFORM ".",
+    	"");
     #endif
     
     xtune_getkey();
