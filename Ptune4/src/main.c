@@ -38,7 +38,7 @@ static bool global_getkey(key_event_t key)
     # endif
     if (key.key == KEY_OPEN_HELP && !help_status)
         call_help_function();
-    # if defined CG50 || defined CG100
+    # if defined CG50
     if (key.shift && key.key == KEY_ACON)
     {
         info_box(4, 6, C_BLACK, "Caution",
