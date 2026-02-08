@@ -15,9 +15,9 @@
 #include "util.h"
 
 HHK_NAME("CPtune4")
-HHK_AUTHOR("CalcLoverHK")
+HHK_AUTHOR("CalcLoverHK, Sentaro21")
 HHK_VERSION(VERSION)
-HHK_DESCRIPTION("Overclocking utilities for your calculator")
+HHK_DESCRIPTION("Overclocking utility for fx-CP calculator")
 
 bool help_status = false;
 
