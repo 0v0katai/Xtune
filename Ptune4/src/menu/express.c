@@ -288,12 +288,8 @@ void express_menu()
         print_express_cpg_bsc(s);
 
         const clock_frequency_t f = *clock_freq();
-        row_print(1, REG_DISPLAY_X, "x%d", f.FLL);
-        row_print(2, REG_DISPLAY_X, "x%d", f.PLL);
-        row_print(3, REG_DISPLAY_X, "1/%d", f.Iphi_div);
-        row_print(4, REG_DISPLAY_X, "1/%d", f.Sphi_div);
-        row_print(5, REG_DISPLAY_X, "1/%d", f.Bphi_div);
-        row_print(6, REG_DISPLAY_X, "1/%d", f.Pphi_div);
+        for (int i = 0; i < 6; i++)
+            row_print(1 + i, REG_DISPLAY_X, i < 2 ? "x%d" : "1/%d", (&f.FLL)[i]);
 
         print_options(1, 1, option, select);
         row_print_color(1, WAIT_DISPLAY_X, C_WHITE, C_BLACK, CPG.FLLFRQ.SELXM ? "XM 1/2" : "XM 1");
@@ -333,14 +329,12 @@ void express_menu()
         # endif
         #endif
 
-        u32 freq[6] =
-            {f.FLL * 32768, f.FLL * f.PLL * 32768, f.Iphi_f, f.Sphi_f, f.Bphi_f, f.Pphi_f};
-        static const u32 red_zone[6] =
-            {FLL_RED_ZONE, PLL_RED_ZONE, IFC_RED_ZONE, SFC_RED_ZONE, BFC_RED_ZONE, PFC_RED_ZONE};
         for (int i = 0; i < 6; i++)
         {
-            row_print_color(i + 1, SPEED_DISPLAY_X, freq[i] > red_zone[i]
-                ? C_RED : C_BLACK, C_WHITE, "%.3D", freq[i] / 1000);
+            static const u32 red_zone[6] =
+                {FLL_RED_ZONE, PLL_RED_ZONE, IFC_RED_ZONE, SFC_RED_ZONE, BFC_RED_ZONE, PFC_RED_ZONE};
+            row_print_color(i + 1, SPEED_DISPLAY_X, (&f.FLL_f)[i] > red_zone[i]
+                ? C_RED : C_BLACK, C_WHITE, "%.3D", (&f.FLL_f)[i] / 1000);
             row_print(i + 1, SPEED_DISPLAY_X + 7, "MHz");
         }
 
