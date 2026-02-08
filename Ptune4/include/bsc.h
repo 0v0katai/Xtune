@@ -1,11 +1,5 @@
 #include <gint/mpu/bsc.h>
 
-#define SH7305_SDMR3_CL2 ((volatile uint16_t *)0xfec15040)
-#define SH7305_SDMR3_CL3 ((volatile uint16_t *)0xfec15060)
-
-#define CL2 1
-#define CL3 2
-
 enum CSn_option
 {
     SELECT_CS0,

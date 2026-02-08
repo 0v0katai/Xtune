@@ -131,12 +131,12 @@ static void print_csnxcr(int row, int x, u8 check, BSC_option select)
 
 static void modify_A3CL(u8 value)
 {
-    if (value != CL2 && value != CL3)
+    if (value != SH4_A3CL_2 && value != SH4_A3CL_3)
         return;
     BSC.CS3WCR.A3CL = value;
     for (int i = 0; i < 10; i++)
         __asm__ volatile("nop");
-    if (value == CL2)
+    if (value == SH4_A3CL_2)
         *SH7305_SDMR3_CL2 = 0;
     else
         *SH7305_SDMR3_CL3 = 0;
