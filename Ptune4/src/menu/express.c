@@ -486,7 +486,6 @@ void express_menu()
                 break;
 
             case KEY_LEFT:
-                update = true;
                 static const u8 min[6] = {225, 1, 64, 64, 64, 64};
                 if ((&f.FLL)[select] == min[select])
                     break;
@@ -513,11 +512,11 @@ void express_menu()
                 }
                 if (select <= SELECT_PLL)
                     divs[SELECT_PFC - 2] >>= auto_up_PFC();
+                update = true;
                 break;
             case KEY_RIGHT:
-                update = true;
-                const u8 max[6] = {2047, 64 >> spread_spectrum,
-                                   2, 2, 2, 2};
+                const u16 max[6] = {2047, 64 >> spread_spectrum,
+                                    2, 2, 2, 2};
                 if ((&f.FLL)[select] == max[select])
                     break;
                 if (select == SELECT_FLL)
@@ -559,6 +558,7 @@ void express_menu()
                 }
                 if (select <= SELECT_PLL)
                     divs[SELECT_PFC - 2] <<= auto_down_PFC();
+                update = true;
                 break;
         }
         if (update)
