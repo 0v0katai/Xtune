@@ -118,6 +118,10 @@ void call_help_function();
 
 key_event_t xtune_getkey();
 
+int CALL(int r4, int r5, int r6, int r7, int address);
+
+int SYSCALL(int r4, int r5, int r6, int r7, int number);
+
 //---
 // USB commands
 //---

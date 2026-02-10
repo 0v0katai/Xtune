@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <gint/display.h>
 #include <gint/keyboard.h>
@@ -217,11 +218,16 @@ static void print_express_cpg_bsc(struct cpg_overclock_setting s)
 static int __GetBatteryVoltage()
 {
     #if defined CG20 || defined CG50
-    int SYSCALL(int r4, int r5, int r6, int r7, int number);
     return SYSCALL(1, 0, 0, 0, 0x1186);
     #elif defined CG100
-    int CALL(int r4, int r5, int r6, int r7, int address);
     return CALL(1, 0, 0, 0, 0x8022fb9e);
+    #elif defined CP400
+    if (strncmp((const char *)0x814fffe0, "2023.0209.1500", 16) == 0)
+        return CALL(0, 0, 0, 0, 0x8002a614);
+    else if (strncmp((const char *)0x814fffe0, "2017.0512.1515", 16) == 0)
+        return CALL(0, 0, 0, 0, 0x8002a62c);
+    else
+        return -1;
     #endif
 }
 
@@ -280,11 +286,7 @@ void express_menu()
         fkey_menu(6, "Bench");
         #endif
 
-        #if defined CG20 || defined CG50 || defined CG100
         row_title(VERSION " %.2Dv", gint_world_switch(GINT_CALL(__GetBatteryVoltage)));
-        #else
-        row_title(VERSION);
-        #endif
         print_express_cpg_bsc(s);
 
         const clock_frequency_t f = *clock_freq();
