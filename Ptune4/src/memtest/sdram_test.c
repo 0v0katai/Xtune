@@ -33,6 +33,8 @@ static void ram_write_test(bool TRC_3_check)
 {
     u32 temp[WRITE_N];
     u32 *write_area = NON_CACHE(temp);
+    struct cpg_overclock_setting s0;
+    cpg_get_overclock_setting(&s0);
 
     row_clear(SELECT_DISPLAY_ROW);
     row_print(SELECT_DISPLAY_ROW, 1, "RAM select: 0x%08X", write_area);
@@ -75,6 +77,7 @@ static void ram_write_test(bool TRC_3_check)
             dupdate();
         }
     }
+    cpg_set_overclock_setting(&s0);
     for (int i = 2; i >= 0; i--)
         if (raW_TRC[i] > raW_TRC[i + 1])
             raW_TRC[i] = raW_TRC[i + 1];
@@ -87,9 +90,6 @@ void sdram_test(bool TRC_3_check)
     row_title("SDRAM Test");
 
     CPG.SSCGCR.SSEN = false;
-    struct cpg_overclock_setting s0;
-    cpg_get_overclock_setting(&s0);
     ram_write_test(TRC_3_check);
-    cpg_set_overclock_setting(&s0);
 }
 #endif
