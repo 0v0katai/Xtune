@@ -210,9 +210,9 @@ void mem_data_menu()
             case KEY_MEMDATA_RAMTEST:
                 #if defined CP400
                 info_box(15, 7, C_RED, "WARNING",
-                    "RAM test may cause system errors!",
+                    "SDRAM test may cause system errors!",
                     "It is highly recommended to press the",
-                    "RESTART button after this test is"
+                    "RESTART button after this test is",
                     "finished.",
                     "",
                     "Are you sure you want to continue?",
