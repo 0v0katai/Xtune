@@ -177,7 +177,7 @@ void bsc_modify(BSC_option select, i8 modify)
                 wcr_addr->lword = (wcr_addr->lword & ~(0b11 << mask)) | (check << mask);
             return;
         }
-        static const u8 max[4] = {7, 3, 3, WAIT_24};
+        static const u8 max[4] = {7, 3, 3, SH4_WR_24};
         static const u8 mask[4] = {16, 11, 0, 7};
         static const u8 field[4] = {0b111, 0b11, 0b11, 0b1111};
         i8 check = ((wcr_addr->lword >> mask[select.REG]) & field[select.REG]) + modify;
@@ -189,7 +189,7 @@ void bsc_modify(BSC_option select, i8 modify)
             u8 best_wait = best_ram_write(Bphi_f);
             if (((wcr_addr->lword >> mask[select.REG]) & field[select.REG]) == 0)
                 check = best_wait;
-            else if (check < best_wait || check > WAIT_6 + 1)
+            else if (check < best_wait || check > SH4_WR_6 + 1)
                 check = 0;
         }
         else if (!UNLOCKED_MODE && select.byte == CS2WCR_WR_ptr.byte)

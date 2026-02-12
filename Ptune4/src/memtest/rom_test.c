@@ -68,19 +68,19 @@ static void rom_read_test(mem_test_settings test_settings)
     }
 
     print_RAM_read_select(ROM_read_area);
-    for (int i = WAIT_0; i <= WAIT_12; i++)
+    for (int i = SH4_WR_0; i <= SH4_WR_12; i++)
     {
-        if (i == WAIT_10 && !test_settings.roR_10_check)
+        if (i == SH4_WR_10 && !test_settings.roR_10_check)
         {
-            roR[WAIT_10] = (roR[WAIT_8] * 2 - roR[WAIT_6]) / 100 * 99;
+            roR[SH4_WR_10] = (roR[SH4_WR_8] * 2 - roR[SH4_WR_6]) / 100 * 99;
             continue;
         }
-        else if (i == WAIT_12 && !test_settings.roR_12_check)
+        else if (i == SH4_WR_12 && !test_settings.roR_12_check)
         {
-            roR[WAIT_12] = (roR[WAIT_10] * 2 - roR[WAIT_8]) / 100 * 99;
+            roR[SH4_WR_12] = (roR[SH4_WR_10] * 2 - roR[SH4_WR_8]) / 100 * 99;
             continue;
         }
-        static const u8 IFC = DIV_4, SFC = DIV_4, BFC = DIV_4, PFC = DIV_32;
+        static const u8 IFC = SH4_DIV_4, SFC = SH4_DIV_4, BFC = SH4_DIV_4, PFC = SH4_DIV_32;
         s.FRQCR = ((PLL(6) + i * 2) << 24) + (IFC << 20) + (SFC << 12) + (BFC << 8) + PFC;
         s.CS0WCR = 0x000005C0;
         cpg_set_overclock_setting(&s);
@@ -100,8 +100,8 @@ static void rom_read_test(mem_test_settings test_settings)
     }
 
     /* Rough guess */
-    roR[WAIT_14] = (roR[WAIT_12] * 2 - roR[WAIT_10]) / 100 * 99;
-    roR[WAIT_18] = (roR[WAIT_14] * 2 - roR[WAIT_10]) / 100 * 95;
+    roR[SH4_WR_14] = (roR[SH4_WR_12] * 2 - roR[SH4_WR_10]) / 100 * 99;
+    roR[SH4_WR_18] = (roR[SH4_WR_14] * 2 - roR[SH4_WR_10]) / 100 * 95;
 }
 
 void rom_test(mem_test_settings test_settings)

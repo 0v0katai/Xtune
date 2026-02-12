@@ -59,9 +59,9 @@ static void ram_read_test()
     }
 
     print_RAM_read_select(RAM_read_area);
-    for (int i = WAIT_0; i <= WAIT_8; i++)
+    for (int i = SH4_WR_0; i <= SH4_WR_8; i++)
     {
-        static const u8 IFC = DIV_4, SFC = DIV_4, BFC = DIV_4, PFC = DIV_32;
+        static const u8 IFC = SH4_DIV_4, SFC = SH4_DIV_4, BFC = SH4_DIV_4, PFC = SH4_DIV_32;
         s.FRQCR = ((PLL(8) + i * 3) << 24) + (IFC << 20) + (SFC << 12) + (BFC << 8) + PFC;
         cpg_set_overclock_setting(&s);
         for (int FLF = raR_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF += 2)
@@ -86,17 +86,17 @@ static void ram_write_test()
     u32 *write_area = NON_CACHE(temp);
     static const u32 raW_default[] = {raW_0, raW_1, raW_2, raW_3, raW_4, raW_5, raW_6};
 
-    for (int i = 0; i <= WAIT_8; i++)
+    for (int i = 0; i <= SH4_WR_8; i++)
         row_clear(i + 2);
     row_clear(14);
     row_print(14, 1, "RAM write select: 0x%08X", write_area);
     struct cpg_overclock_setting s;
-    BSC.CS2WCR.WR = WAIT_18;
+    BSC.CS2WCR.WR = SH4_WR_18;
     cpg_get_overclock_setting(&s);
     
-    for (int i = WAIT_0; i <= WAIT_6; i++)
+    for (int i = SH4_WR_0; i <= SH4_WR_6; i++)
     {
-        static const u8 IFC = DIV_4, SFC = DIV_4, BFC = DIV_4, PFC = DIV_32;
+        static const u8 IFC = SH4_DIV_4, SFC = SH4_DIV_4, BFC = SH4_DIV_4, PFC = SH4_DIV_32;
         s.FRQCR = ((PLL(8) + i * 3) << 24) + (IFC << 20) + (SFC << 12) + (BFC << 8) + PFC;
         cpg_set_overclock_setting(&s);
         for (int FLF = raW_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF += 2)

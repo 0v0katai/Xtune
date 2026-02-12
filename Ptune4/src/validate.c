@@ -7,8 +7,8 @@
 #include "validate.h"
 #include "config.h"
 
-#define CS2WCR_DEFAULT WAIT_2
-#define CS0WCR_DEFAULT WAIT_3
+#define CS2WCR_DEFAULT SH4_WR_2
+#define CS0WCR_DEFAULT SH4_WR_3
 
 extern i32 roR[];
 
@@ -24,7 +24,7 @@ bool exceed_limit()
 unsigned int best_rom_wait(i32 Bphi_f)
 {
     int i;
-    for (i = WAIT_18; i >= WAIT_0; i--)
+    for (i = SH4_WR_18; i >= SH4_WR_0; i--)
         if (Bphi_f >= roR[i] / 100 * (100 - ROM_MARGIN))
             break;
     return i + 1;
@@ -43,7 +43,7 @@ unsigned int best_TRC(i32 Bphi_f)
 unsigned int best_ram_read(i32 Bphi_f)
 {
     int i;
-    for (i = WAIT_8; i >= WAIT_0; i--)
+    for (i = SH4_WR_8; i >= SH4_WR_0; i--)
         if (Bphi_f >= raR[i] / 100 * (100 - RAM_MARGIN))
             break;
     return i + 1;
@@ -52,7 +52,7 @@ unsigned int best_ram_read(i32 Bphi_f)
 unsigned int best_ram_write(i32 Bphi_f)
 {
     int i;
-    for (i = WAIT_6; i >= WAIT_0; i--)
+    for (i = SH4_WR_6; i >= SH4_WR_0; i--)
         if (Bphi_f >= raW[i] / 100 * (100 - RAM_MARGIN))
             break;
     return i + 2;

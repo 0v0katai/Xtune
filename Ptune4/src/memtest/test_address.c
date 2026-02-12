@@ -14,7 +14,7 @@ static void update(int FLF)
 
 static void slowdown()
 {
-    BSC.CS0WCR.WR = WAIT_18;
+    BSC.CS0WCR.WR = SH4_WR_18;
     BSC.CS2WCR.lword = 0x000005C0;
     BSC.CS3WCR.TRC = 3;
 }

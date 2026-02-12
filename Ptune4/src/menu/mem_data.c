@@ -113,7 +113,7 @@ void mem_data_menu()
         }
         #else
         if (mode == READ)
-            for (int i = WAIT_0; i <= WAIT_8; i++)
+            for (int i = SH4_WR_0; i <= SH4_WR_8; i++)
             {
                 row_print(i + 2, 25, "raR_%d", WR_equivalent(i));
                 row_print_color(i + 2, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
@@ -121,7 +121,7 @@ void mem_data_menu()
                     : raR[i] / 1000);
             }
         else
-            for (int i = WAIT_0; i <= WAIT_6; i++)
+            for (int i = SH4_WR_0; i <= SH4_WR_6; i++)
             {
                 row_print(i + 2, 25, "raW_%d", i);
                 row_print_color(i + 2, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
@@ -166,12 +166,12 @@ void mem_data_menu()
         switch (key.key)
         { 
             case KEY_MEMDATA_RESET:
-                for (int i = WAIT_0; i <= WAIT_18; i++)
+                for (int i = SH4_WR_0; i <= SH4_WR_18; i++)
                     roR[i] = roR_default[i];
                 #if !defined CG50 && !defined CG100 && !defined CP400
-                for (int i = WAIT_0; i <= WAIT_8; i++)
+                for (int i = SH4_WR_0; i <= SH4_WR_8; i++)
                     raR[i] = raR_default[i];
-                for (int i = WAIT_0; i <= WAIT_6; i++)
+                for (int i = SH4_WR_0; i <= SH4_WR_6; i++)
                     raW[i] = raW_default[i];
                 #else
                 for (int i = 0; i < 4; i++)
