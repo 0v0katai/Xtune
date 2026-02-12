@@ -107,18 +107,18 @@ static void print_preset(int current)
 #if defined CG50 || defined CG100
 static void alpha_f5_preset()
 {
-    /* dupdate: 3851 μs/259 FPS, INT: 263109 Dhrystone/s */
+    /* dupdate: 259.80 FPS, INT: 257023 Dhrystone/s */
     static struct cpg_overclock_setting const settings_fxcg50_100_alpha_f5 =
-        { .FLLFRQ   = 0x00004384,
-          .FRQCR    = 0x1F001103,   // PLL: x32, IFC: 1/2, SFC: 1/4, BFC: 1/4, PFC: 1/16
-          .CS0BCR   = 0x46D80400,   // IWW: 6, IWRRS: 0
+        { .FLLFRQ   = (SH4_SELXM<<14)+900,
+          .FRQCR    = SH4_FRQCR(32,SH4_DIV_2,SH4_DIV_4,SH4_DIV_4,SH4_DIV_16),
+          .CS0BCR   = SH4_CS0BCR(SH4_BCR_6,SH4_BCR_4,SH4_BCR_4,SH4_BCR_4,SH4_BCR_0),
           .CS2BCR   = 0x36DA3400,
-          .CS3BCR   = 0x04904400,   // IWW: 0, IWRWD: 2, IWRWS: 2, IWRRD: 2, IWRRS: 0
-          .CS5aBCR  = 0x17DF0400,
-          .CS0WCR   = 0x000004C0,   // WR: 12
+          .CS3BCR   = SH4_CS3BCR(SH4_BCR_0,SH4_BCR_4,SH4_BCR_4,SH4_BCR_4,SH4_BCR_0),
+          .CS5aBCR  = SH4_CS5ABCR(SH4_BCR_1,SH4_BCR_4,SH4_BCR_12,SH4_BCR_4,SH4_BCR_12),
+          .CS0WCR   = SH4_CSnWCR(SH4_WW_EQWR,SH4_SW_0_5,SH4_WR_12,SH4_HW_0_5),
           .CS2WCR   = 0x000003C0,
-          .CS3WCR   = 0x000024D2,   // TRC: 6
-          .CS5aWCR  = 0x000103C0    // WW: 0, HW: 0.5
+          .CS3WCR   = SH4_CS3WCR(SH4_TRP_2,SH4_TRCD_2,SH4_A3CL_2,SH4_TRWL_2,SH4_TRC_6),
+          .CS5aWCR  = SH4_CSnWCR(SH4_WW_0,SH4_SW_0_5,SH4_WR_8,SH4_HW_0_5)
         };
     cpg_set_overclock_setting(&settings_fxcg50_100_alpha_f5);
 }
