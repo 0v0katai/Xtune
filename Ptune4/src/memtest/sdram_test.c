@@ -33,16 +33,14 @@ static void ram_write_test(bool TRC_3_check)
 {
     u32 temp[WRITE_N];
     u32 *write_area = NON_CACHE(temp);
-    struct cpg_overclock_setting s0;
+    struct cpg_overclock_setting s0, s;
     cpg_get_overclock_setting(&s0);
 
     row_clear(SELECT_DISPLAY_ROW);
     row_print(SELECT_DISPLAY_ROW, 1, "RAM select: 0x%08X", write_area);
-    struct cpg_overclock_setting s;
-    cpg_get_overclock_setting(&s);
-    static const u8 IFC = SH4_DIV_4, SFC = SH4_DIV_4, BFC = SH4_DIV_4, PFC = SH4_DIV_32;
-    s.FLLFRQ = 0x4000 + 600;
-    s.FRQCR = (PLL(24) << 24) + (IFC << 20) + (SFC << 12) + (BFC << 8) + PFC;
+    s = s0;
+    s.FLLFRQ = (SH4_SELXM << 14) + 600;
+    s.FRQCR = SH4_FRQCR(24, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
     cpg_set_overclock_setting(&s);
     
     int FLF_max = 600;

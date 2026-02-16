@@ -60,9 +60,8 @@ static void ram_read_test()
 
     print_RAM_read_select(RAM_read_area);
     for (int i = SH4_WR_0; i <= SH4_WR_8; i++)
-    {
-        static const u8 IFC = SH4_DIV_4, SFC = SH4_DIV_4, BFC = SH4_DIV_4, PFC = SH4_DIV_32;
-        s.FRQCR = ((PLL(8) + i * 3) << 24) + (IFC << 20) + (SFC << 12) + (BFC << 8) + PFC;
+    { 
+        s.FRQCR = SH4_FRQCR(8 + i * 3, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
         cpg_set_overclock_setting(&s);
         for (int FLF = raR_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF += 2)
         {
@@ -96,8 +95,7 @@ static void ram_write_test()
     
     for (int i = SH4_WR_0; i <= SH4_WR_6; i++)
     {
-        static const u8 IFC = SH4_DIV_4, SFC = SH4_DIV_4, BFC = SH4_DIV_4, PFC = SH4_DIV_32;
-        s.FRQCR = ((PLL(8) + i * 3) << 24) + (IFC << 20) + (SFC << 12) + (BFC << 8) + PFC;
+        s.FRQCR = SH4_FRQCR(8 + i * 3, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
         cpg_set_overclock_setting(&s);
         for (int FLF = raW_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF += 2)
         {

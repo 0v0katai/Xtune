@@ -80,8 +80,7 @@ static void rom_read_test(mem_test_settings test_settings)
             roR[SH4_WR_12] = (roR[SH4_WR_10] * 2 - roR[SH4_WR_8]) / 100 * 99;
             continue;
         }
-        static const u8 IFC = SH4_DIV_4, SFC = SH4_DIV_4, BFC = SH4_DIV_4, PFC = SH4_DIV_32;
-        s.FRQCR = ((PLL(6) + i * 2) << 24) + (IFC << 20) + (SFC << 12) + (BFC << 8) + PFC;
+        s.FRQCR = SH4_FRQCR(6 + i * 2, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
         s.CS0WCR = 0x000005C0;
         cpg_set_overclock_setting(&s);
         u32 Bphi_f;
