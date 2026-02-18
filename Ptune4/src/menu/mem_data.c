@@ -88,7 +88,7 @@ void mem_data_menu()
     while (true)
     {
         dclear(C_WHITE);
-        row_title("Memory data");
+        row_title("Memory data %s @%s", XTUNE_VERSION, XTUNE_HASH);
         row_print(1, 1, "ROM Margin: %d%%", ROM_MARGIN);
         #if defined CP400
         row_print(13, 1, "RAM Margin: %d%%", RAM_MARGIN);
