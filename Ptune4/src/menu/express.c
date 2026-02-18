@@ -232,13 +232,13 @@ static int __GetBatteryVoltage()
     #endif
 }
 
+bool benchmark_update = true;
 
 void express_menu()
 {
     key_event_t key;
     u8 select = SELECT_FLL;
     bool benchmark = false;
-    bool benchmark_update = false;
     u32 benchmark_data[9] = {0};
     bool update = false;
     bool spread_spectrum = false;
@@ -421,8 +421,6 @@ void express_menu()
         };
         u8 divs[4] = {f.Iphi_div, f.Sphi_div, f.Bphi_div, f.Pphi_div};
         update = false;
-        if (key.key != KEY_UP && key.key != KEY_DOWN)
-            benchmark_update = true;
         #ifdef CG100
         cg100_getkey(key);
         #elif defined CP400
@@ -442,6 +440,7 @@ void express_menu()
             else
             # endif
             clock_set_speed(key.key - KEY_F1 + 1);
+            benchmark_update = true;
             break;
             #endif
 

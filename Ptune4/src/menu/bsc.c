@@ -145,6 +145,8 @@ static void modify_A3CL(u8 value)
 
 void bsc_modify(BSC_option select, i8 modify)
 {
+    extern bool benchmark_update;
+    benchmark_update = true;
     if (select.MODE == SELECT_BCR)
     {
         sh7305_bsc_CSnBCR_t *bcr_addr = &BSC.CS0BCR + select.CSn;
