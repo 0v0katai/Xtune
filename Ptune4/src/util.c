@@ -370,7 +370,7 @@ void call_help_function()
 key_event_t xtune_getkey()
 {
 	dupdate();
-	#if defined CG50
+	#if defined CG50 && !defined TARGET_FXCG50_FASTLOAD
 	return getkey_opt(GETKEY_DEFAULT ^ GETKEY_POWEROFF, NULL);
 	#else
 	return getkey();

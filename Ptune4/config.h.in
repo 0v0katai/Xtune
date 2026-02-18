@@ -27,7 +27,11 @@
 # define HARDWARE_TARGET HWCALC_PRIZM
 # define PLATFORM "fx-CG10/20"
 #elif defined CG50
-# define ADDIN_NAME "Ptune4 CG50"
+# if defined TARGET_FXCG50_FASTLOAD
+#  define ADDIN_NAME "Ptune4 Fastload"
+# else
+#  define ADDIN_NAME "Ptune4 CG50"
+# endif
 # define HARDWARE_TARGET HWCALC_FXCG50
 # define PLATFORM "fx-CG50(AU)/Graph 90+E"
 #elif defined CG100
