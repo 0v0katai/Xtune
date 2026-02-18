@@ -46,7 +46,7 @@ static void help_info()
     	"[y]: Memory data & tests",
     	"[Clear]: Close help / Quit CPtune4");
     #elif defined CG100
-    info_box(1, 13, C_BLACK, "HELP",
+    info_box(0, 14, C_BLACK, "HELP",
     	"[ON]: Reset to default",
     	"[|<-][->|]: Select preset, [OK]: Confirm",
     	"[PGUP]: Toggle benchmark",
@@ -58,7 +58,8 @@ static void help_info()
     	"[SETTINGS]: Settings",
     	"[VARIABLE]: BSC settings",
     	"[TOOLS]: Memory data & tests",
-    	"[BACK]: Close help / Quit Ptune4");
+        "[HOME]: Quit Ptune4",
+    	"[BACK]: Close help");
     #else
     info_box(1, 12, C_BLACK, "HELP",
     	"[F1]-[F5]: Apply preset",
@@ -76,8 +77,8 @@ static void help_info()
     	"[OPTN]: Memory data & tests",
     	"[VARS]: BSC settings",
     	"[SHIFT][MENU]: Settings",
-        "",
-    	"[EXIT]: Close help / Quit Ptune4");
+        "[MENU]: Return to OS",
+    	"[EXIT]: Close help");
     #endif
     while (xtune_getkey().key != KEY_EXIT);
 }
@@ -593,6 +594,12 @@ void express_menu()
                 BSC.CS2WCR.WW = new_CS2WCR_WW;
             #endif
         }
+    #if defined CG100
+    } while (key.key != KEY_HOME);
+    #elif defined CP400
     } while (key.key != KEY_EXIT);
+    #else
+    } while (true);
+    #endif
     return;
 }
