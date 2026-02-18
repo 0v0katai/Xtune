@@ -207,6 +207,7 @@ void bsc_menu()
     key_event_t key;
     BSC_option select;
     select.byte = 0;
+    u8 max_option = SELECT_IWRRS;
     #ifdef ENABLE_HELP
     set_help_function(help_info);
     #endif
@@ -283,20 +284,27 @@ void bsc_menu()
                 break;
 
             case KEY_LEFT:
-                if (select.CSn)
-                    select.CSn--;
+                select.CSn = (select.CSn - 1 + 8) % 8;
                 break;
             case KEY_RIGHT:
-                if (select.CSn < SELECT_CS6B)
-                    select.CSn++;
+                select.CSn = (select.CSn + 1) % 8;
                 break;
             case KEY_UP:
                 if (select.REG)
                     select.REG--;
+                else if (select.CSn >= SELECT_CS5A)
+                {
+                    select.CSn -= 4;
+                    select.REG = 4;
+                }
                 break;
             case KEY_DOWN:
-                if (select.REG < SELECT_IWRRS)
-                    select.REG++;
+                select.REG++;
+                if (select.CSn <= SELECT_CS4 && select.REG > max_option)
+                {
+                    select.CSn += 4;
+                    select.REG = 0;
+                }
                 break;
             
             #ifdef CG100
@@ -313,8 +321,9 @@ void bsc_menu()
             case KEY_EXIT:
                 return;
         }
-        if (select.MODE == SELECT_WCR && select.CSn != SELECT_CS3 && select.REG == SELECT_TRC)
-            select.REG--;
+        max_option = 4 - (select.MODE == SELECT_BCR || select.CSn == SELECT_CS3);
+        if (select.REG > max_option)
+            select.REG = max_option;
         if (select.byte == CS0WCR_WW_ptr.byte)
             select.REG++;
     }
