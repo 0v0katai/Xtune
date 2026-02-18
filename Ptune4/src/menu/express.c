@@ -348,15 +348,15 @@ void express_menu()
             row_print(KEY_DISPLAY_ROW + 3, 2, "%s %s", description[select], type[select >= SELECT_IFC]);
             #if defined CP400
             if (select == SELECT_FLL)
-                row_print(11, 27, "(Max x1023)");
+                row_print(11, 25, "(Max x2047)");
             else
-                row_print(11, 27, "(Max %d MHz)", settings[select + 1] / 1000000);
+                row_print(11, 25, "(Max %.3D MHz)", settings[select + 1] / 1000);
             row_highlight(11);
             #else
             if (select == SELECT_FLL)
-                row_print(12, 35, "(Max x1023)");
+                row_print(12, 33, "(Max x2047)");
             else
-                row_print(12, 35, "(Max %d MHz)", settings[select + 1] / 1000000);
+                row_print(12, 33, "(Max %.3D MHz)", settings[select + 1] / 1000);
             row_highlight(12);
             #endif
         }
