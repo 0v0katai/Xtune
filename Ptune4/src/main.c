@@ -16,7 +16,7 @@
 
 HHK_NAME("CPtune4")
 HHK_AUTHOR("CalcLoverHK, Sentaro21")
-HHK_VERSION(VERSION)
+HHK_VERSION(XTUNE_VERSION " @" XTUNE_HASH)
 HHK_DESCRIPTION("Overclocking utility for fx-CP calculator")
 
 bool help_status = false;

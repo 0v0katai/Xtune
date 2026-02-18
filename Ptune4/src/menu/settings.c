@@ -1,5 +1,7 @@
 #include <gint/display.h>
 #include <gint/keyboard.h>
+#include <gint/config.h>
+#include <stdio.h>
 #include <util.h>
 
 #include "settings.h"
@@ -71,19 +73,26 @@ enum select_option
 
 static void about()
 {
+    char gint_str[32];
+    sprintf(gint_str, "w/ gint %s @%07x",
+        GINT_VERSION,
+        GINT_HASH);
     #if defined CP400
-    info_box(15, 7, C_BLACK, "About",
+    info_box(15, 8, C_BLACK, "About",
     	"",
-        VERSION,
+        XTUNE_STR,
+        gint_str,
     	"Copyright (C) 2025-2026",
     	"Sentaro21, CalcLoverHK.",
         "This software is licensed under",
     	"MIT/Expat.",
     	"");
     #else
-    info_box(4, 6, C_BLACK, "About",
-    	VERSION,
+    info_box(3, 8, C_BLACK, "About",
     	"",
+    	XTUNE_STR,
+        gint_str,
+        "",
         "Copyright (C) 2025-2026 Sentaro21, CalcLoverHK.",
     	"This software is licensed under MIT/Expat.",
         "This build targets " PLATFORM ".",

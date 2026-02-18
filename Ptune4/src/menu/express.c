@@ -286,7 +286,9 @@ void express_menu()
         fkey_menu(6, "Bench");
         #endif
 
-        row_title(VERSION " %.2Dv", gint_world_switch(GINT_CALL(__GetBatteryVoltage)));
+        row_title("%s %.2Dv",
+            XTUNE_STR,
+            gint_world_switch(GINT_CALL(__GetBatteryVoltage)));
         print_express_cpg_bsc(s);
 
         const clock_frequency_t f = *clock_freq();

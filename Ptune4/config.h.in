@@ -6,32 +6,37 @@
 // #define MONO_SH3    /* All SH3 monochrome calculators */
 // #define MONO_SH4A   /* All SH4A monochrome calculators */
 // #define CG20        /* fx-CG10, fx-CG20 */
-// #define CG50        /* fx-CG50, Graph 90+E */
+// #define CG50        /* fx-CG50(AU), Graph 90+E */
 #define CG100       /* fx-CG100, fx-1AU Graph, Graph Math+ */
 // #define CP400       /* fx-CP400(+E), fx-CG500 */
 
+#define XTUNE_VERSION "@XTUNE_GIT_VERSION@"
+#define XTUNE_HASH "@XTUNE_GIT_HASH@"
+
 #if defined CP400
-# define VERSION "CPtune4 v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define ADDIN_NAME "CPtune4"
 # define HARDWARE_TARGET HWCALC_FXCP400
 #elif defined MONO_SH3
-# define VERSION "Ftune4 SH3 v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define ADDIN_NAME "Ftune4 SH3"
 # define HARDWARE_TARGET HWCALC_FX9860G_SH3
 #elif defined MONO_SH4A
-# define VERSION "Ftune4 SH4A v@VERSTR@ SH4A @@COMMIT_ID_SHORT@"
+# define ADDIN_NAME "Ftune4 SH4A"
 # define HARDWARE_TARGET HWCALC_FX9860G_SH4
 #elif defined CG20
-# define VERSION "Ptune4 Prizm v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define ADDIN_NAME "Ptune4 Prizm"
 # define HARDWARE_TARGET HWCALC_PRIZM
 # define PLATFORM "fx-CG10/20"
 #elif defined CG50
-# define VERSION "Ptune4 CG50 v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define ADDIN_NAME "Ptune4 CG50"
 # define HARDWARE_TARGET HWCALC_FXCG50
-# define PLATFORM "fx-CG50/Graph 90+E"
+# define PLATFORM "fx-CG50(AU)/Graph 90+E"
 #elif defined CG100
-# define VERSION "Ptune4 MPM v@VERSTR@ @@COMMIT_ID_SHORT@"
+# define ADDIN_NAME "Ptune4 MPM"
 # define HARDWARE_TARGET HWCALC_FXCG100
-# define PLATFORM "fx-CG100/Graph Math+"
+# define PLATFORM "fx-CG100/1AU Graph/Graph Math+"
 #endif
+
+#define XTUNE_STR ADDIN_NAME " " XTUNE_VERSION " @" XTUNE_HASH
 
 /* Feature toggles */
 
