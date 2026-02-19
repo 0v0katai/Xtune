@@ -26,7 +26,7 @@ static bool global_getkey(key_event_t key)
     if (key.key == KEY_SHIFT)
         shift = !shift;
     #ifdef ENABLE_USB
-    if (shift && key.key == KEY_ENABLE_USB)
+    if (key.key == KEY_ENABLE_USB)
     {
         shift = false;
         if (!usb_is_open())
@@ -40,9 +40,6 @@ static bool global_getkey(key_event_t key)
     }
     #endif
     #ifdef ENABLE_HELP
-    # if !defined CG100
-    if (shift)
-    # endif
     if (key.key == KEY_OPEN_HELP && !help_status)
         call_help_function();
     if (shift && key.key == KEY_ACON)

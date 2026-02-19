@@ -315,25 +315,21 @@ void express_menu()
 
         #ifdef ENABLE_USB
         row_print(KEY_DISPLAY_ROW, 2, "Capture");
-        row_print_color(KEY_DISPLAY_ROW, 12,
-                        shift ? C_BLUE : C_BLACK, C_WHITE,
-                        "[SHIFT]");
         # ifdef CG100
-        row_print(KEY_DISPLAY_ROW, 19, "[x10^]");
+        row_print(KEY_DISPLAY_ROW, 12, "[x10^]");
         # else
-        row_print(KEY_DISPLAY_ROW, 19, "[7]");
+        row_print(KEY_DISPLAY_ROW, 12, "[7]");
         # endif
         #endif
 
         #ifdef ENABLE_HELP
         row_print(KEY_DISPLAY_ROW + 1, 2, "Help");
-        # ifdef CG100
+        # if defined CG100
         row_print(KEY_DISPLAY_ROW + 1, 12, "[CATALOG]");
+        # elif defined CG400
+        row_print(KEY_DISPLAY_ROW + 1, 12, "[8]");
         # else
-        row_print_color(KEY_DISPLAY_ROW + 1, 12,
-                        shift ? C_BLUE : C_BLACK, C_WHITE,
-                        "[SHIFT]");
-        row_print(KEY_DISPLAY_ROW + 1, 19, "[4]");
+        row_print(KEY_DISPLAY_ROW + 1, 12, "[4]");
         # endif
         #endif
 
