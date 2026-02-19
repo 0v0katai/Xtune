@@ -116,6 +116,7 @@ void set_help_function(help_function_t function);
 
 void call_help_function();
 
+extern bool shift;
 key_event_t xtune_getkey();
 
 int CALL(int r4, int r5, int r6, int r7, int address);

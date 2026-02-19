@@ -23,9 +23,12 @@ bool help_status = false;
 
 static bool global_getkey(key_event_t key)
 {
+    if (key.key == KEY_SHIFT)
+        shift = !shift;
     #ifdef ENABLE_USB
-    if (key.shift && key.key == KEY_ENABLE_USB)
+    if (shift && key.key == KEY_ENABLE_USB)
     {
+        shift = false;
         if (!usb_is_open())
         {
             usb_interface_t const *interfaces[] = {&usb_ff_bulk, NULL};
@@ -38,13 +41,13 @@ static bool global_getkey(key_event_t key)
     #endif
     #ifdef ENABLE_HELP
     # if !defined CG100
-    if (key.shift)
+    if (shift)
     # endif
     if (key.key == KEY_OPEN_HELP && !help_status)
         call_help_function();
-    # if defined CG50 && !defined TARGET_FXCG50_FASTLOAD
-    if (key.shift && key.key == KEY_ACON)
+    if (shift && key.key == KEY_ACON)
     {
+        # if defined CG50 && !defined TARGET_FXCG50_FASTLOAD
         info_box(4, 6, C_BLACK, "Caution",
             "",
             "Poweroff function is disabled in this build.",
@@ -53,8 +56,11 @@ static bool global_getkey(key_event_t key)
             "turning off your calculator.",
             "");
         xtune_getkey();
+        # else
+        gint_poweroff(true);
+        # endif
+        shift = false;
     }
-    # endif
     #endif
     return false;
 }

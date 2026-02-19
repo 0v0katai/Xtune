@@ -47,6 +47,7 @@ void row_title(char const *format, ...)
 	dtext(1, 0, C_BLACK, str);
 	#elif GINT_RENDER_RGB
 	dtext(ROW_X, 3, C_BLACK, str);
+	if (shift) dtext(370, 3, C_BLUE, "[S]");
 	drect(0, 0, DWIDTH-1, 15, C_INVERT);
 	#endif
 }
@@ -360,6 +361,7 @@ void set_help_function(help_function_t function)
 void call_help_function()
 {
 	extern bool help_status;
+	shift = false;
 	if (help_status)
 		return;
 	help_status = true;
@@ -370,9 +372,7 @@ void call_help_function()
 key_event_t xtune_getkey()
 {
 	dupdate();
-	#if defined CG50 && !defined TARGET_FXCG50_FASTLOAD
-	return getkey_opt(GETKEY_DEFAULT ^ GETKEY_POWEROFF, NULL);
-	#else
-	return getkey();
-	#endif
+	u16 modifier = GETKEY_DEFAULT ^ GETKEY_MOD_SHIFT;
+	if (shift) modifier ^= GETKEY_MENU;
+	return getkey_opt(modifier, NULL);
 }

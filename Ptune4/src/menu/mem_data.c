@@ -64,6 +64,7 @@ static void help_info()
 void mem_data_menu()
 {
     key_event_t key;
+    shift = false;
     bool margin = false;
     mem_test_settings test_settings = {.byte = 0b111};
 
@@ -164,7 +165,9 @@ void mem_data_menu()
 
         key = xtune_getkey();
         switch (key.key)
-        { 
+        {
+            case KEY_SHIFT:
+                continue;
             case KEY_MEMDATA_RESET:
                 for (int i = SH4_WR_0; i <= SH4_WR_18; i++)
                     roR[i] = roR_default[i];
@@ -236,5 +239,6 @@ void mem_data_menu()
             case KEY_EXIT:
                 return;
         }
+        shift = false;
     }
 }

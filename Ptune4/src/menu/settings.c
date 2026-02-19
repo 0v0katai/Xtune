@@ -105,6 +105,7 @@ static void about()
 void settings_menu()
 {
     key_event_t key;
+    shift = false;
     i8 select = 0;
     static const char *option[] = {"PLL", "CPU", "SHW", "Bus", "I/O"};
     static const char *off_on[] = {"Off", "On"};
@@ -158,6 +159,8 @@ void settings_menu()
         bool scale = false;
         switch (key.key)
         {
+            case KEY_SHIFT:
+                continue;
             case KEY_UP:
                 select = (select + select_max - 1) % select_max;
                 break;
@@ -195,6 +198,7 @@ void settings_menu()
             case KEY_EXIT:
                 return;
         }
+        shift = false;
 
         if (select >= SELECT_PLL)
         {

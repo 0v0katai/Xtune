@@ -233,6 +233,7 @@ static int __GetBatteryVoltage()
 }
 
 bool benchmark_update = true;
+bool shift = false;
 
 void express_menu()
 {
@@ -314,10 +315,13 @@ void express_menu()
 
         #ifdef ENABLE_USB
         row_print(KEY_DISPLAY_ROW, 2, "Capture");
+        row_print_color(KEY_DISPLAY_ROW, 12,
+                        shift ? C_BLUE : C_BLACK, C_WHITE,
+                        "[SHIFT]");
         # ifdef CG100
-        row_print(KEY_DISPLAY_ROW, 12, "[SHIFT][x10^]");
+        row_print(KEY_DISPLAY_ROW, 19, "[x10^]");
         # else
-        row_print(KEY_DISPLAY_ROW, 12, "[SHIFT][7]");
+        row_print(KEY_DISPLAY_ROW, 19, "[7]");
         # endif
         #endif
 
@@ -326,7 +330,10 @@ void express_menu()
         # ifdef CG100
         row_print(KEY_DISPLAY_ROW + 1, 12, "[CATALOG]");
         # else
-        row_print(KEY_DISPLAY_ROW + 1, 12, "[SHIFT][4]");
+        row_print_color(KEY_DISPLAY_ROW + 1, 12,
+                        shift ? C_BLUE : C_BLACK, C_WHITE,
+                        "[SHIFT]");
+        row_print(KEY_DISPLAY_ROW + 1, 19, "[4]");
         # endif
         #endif
 
@@ -428,6 +435,8 @@ void express_menu()
         #endif
         switch (key.key)
         {
+            case KEY_SHIFT:
+                continue; 
             #if !defined CG100 && !defined CP400
             case KEY_F1:
             case KEY_F2:
@@ -469,15 +478,15 @@ void express_menu()
             case KEY_PLUS:
             case KEY_MINUS:
                 #if defined CG50 || defined CG100 || defined CP400
-                bsc_modify(key.shift ? CS3WCR_TRC_ptr : CS3WCR_CL_ptr, key.key == KEY_PLUS ? 1 : -1);
+                bsc_modify(shift ? CS3WCR_TRC_ptr : CS3WCR_CL_ptr, key.key == KEY_PLUS ? 1 : -1);
                 #else
-                bsc_modify(key.shift ? CS2WCR_WW_ptr : CS2WCR_WR_ptr, key.key == KEY_PLUS ? 1 : -1);
+                bsc_modify(shift ? CS2WCR_WW_ptr : CS2WCR_WR_ptr, key.key == KEY_PLUS ? 1 : -1);
                 #endif
                 break;
 
             case KEY_EXPRESS_SETTINGS:
             #if !defined CG100 && !defined CP400
-                if (!key.shift)
+                if (!shift)
                     break;
             #endif
                 settings_menu();
@@ -565,6 +574,7 @@ void express_menu()
                 update = true;
                 break;
         }
+        shift = false;
         if (update)
         {
             benchmark_update = true;
