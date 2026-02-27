@@ -23,6 +23,7 @@ bool load_config()
     UNLOCKED_MODE = config.settings_data.unlocked_mode;
     AUTO_REDUCE_WAIT = config.settings_data.reduce_wait;
     AUTO_UP_PFC = config.settings_data.auto_up_PFC;
+    STARTUP_MEMORY_TEST = config.settings_data.startup_test;
     memcpy(&PRESET_F2, config.preset_save, sizeof(config.preset_save));
     memcpy(roR, config.ROM_read_data, sizeof(config.ROM_read_data));
     #if defined CG50 || defined CG100 || defined CP400
@@ -41,7 +42,8 @@ bool save_config()
     memcpy(config.div_max_freq, &PLL_CLK_MAX, sizeof(config.div_max_freq));
     config.settings_data.lword = (ROM_MARGIN << 28)    | (RAM_MARGIN << 24) |
                                  (UNLOCKED_MODE << 23) | (AUTO_REDUCE_WAIT << 22) |
-                                 (AUTO_UP_PFC << 21)   | HARDWARE_TARGET;
+                                 (AUTO_UP_PFC << 21)   | (STARTUP_MEMORY_TEST << 20);
+    config.settings_data.lword |= HARDWARE_TARGET;
     memcpy(config.preset_save, &PRESET_F2, sizeof(config.preset_save));
     memcpy(config.ROM_read_data, roR, sizeof(config.ROM_read_data));
     #if defined CG50 || defined CG100 || defined CP400

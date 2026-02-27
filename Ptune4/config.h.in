@@ -114,6 +114,7 @@
 #define UNLOCKED_MODE_DEF false
 #define AUTO_REDUCE_WAIT_DEF true
 #define AUTO_UP_PFC_DEF true
+#define STARTUP_MEMORY_TEST_DEF true
 
 #define ROM_MARGIN_MAX 15
 #define RAM_MARGIN_MAX 15

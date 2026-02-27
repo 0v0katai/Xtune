@@ -54,7 +54,8 @@ i32 settings[] =
     PFC_CLK_MAX_DEF,
     UNLOCKED_MODE_DEF,
     AUTO_REDUCE_WAIT_DEF,
-    AUTO_UP_PFC_DEF
+    AUTO_UP_PFC_DEF,
+    STARTUP_MEMORY_TEST_DEF
 };
 
 enum select_option
@@ -68,7 +69,8 @@ enum select_option
     SELECT_PFC,
     SELECT_UNLOCKED_MODE,
     SELECT_AUTO_REDUCE_WAIT,
-    SELECT_AUTO_UP_PFC
+    SELECT_AUTO_UP_PFC,
+    SELECT_STARTUP_MEMORY_TEST
 };
 
 static void about()
@@ -118,7 +120,7 @@ void settings_menu()
     static const i32 settings_max[] =
         {ROM_MARGIN_MAX, RAM_MARGIN_MAX, PLL_MAX, CPU_MAX, SHW_MAX, BUS_MAX, IO_MAX, true, true, true};
 
-    static const i8 select_max = SELECT_AUTO_UP_PFC + 1;
+    static const i8 select_max = SELECT_STARTUP_MEMORY_TEST + 1;
 
     #ifdef ENABLE_HELP
     set_help_function(help_info);
@@ -138,10 +140,11 @@ void settings_menu()
             row_print(i + 3, 25, "%.3D", settings[i + 2] / 1000);
             row_print(i + 3, 33, "MHz");
         }
-        row_print(8, 1, "Unrestricted mode");
+        row_print(8, 1, "Unrestricted Mode");
         row_print(9, 1, "Auto Reduce Wait");
         row_print(10, 1, "Auto Up PFC");
-        for (int i = 0; i < 3; i++)
+        row_print(11, 1, "Startup Memory Test");
+        for (int i = 0; i < 4; i++)
             row_print(8 + i, 25, off_on[settings[7 + i]]);
 
         row_highlight(select + 1);

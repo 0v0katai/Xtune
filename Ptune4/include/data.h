@@ -9,7 +9,8 @@ typedef struct
         bool unlocked_mode :  1;
         bool reduce_wait   :  1;
         bool auto_up_PFC   :  1;
-        u32 reserved       : 17;
+        bool startup_test  :  1;
+        u32 reserved       : 16;
         u8 platform        :  4;
     );
     u32 div_max_freq[5];

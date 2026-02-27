@@ -254,27 +254,30 @@ void express_menu()
     static const char *option[] = {"FLL:", "PLL:", "IFC:", "SFC:", "BFC:", "PFC:", 0};
 
     dclear(C_WHITE);
-    info_box(MEMTEST_DISPLAY_ROW, 6, C_BLACK, "Start memory tests?",
-        "",
-        "Select option:",
-        "[1] RAM only",
-        "[2] ROM & RAM",
-        "[3] None",
-        "");
-    while (key.key < KEY_1 || key.key > KEY_3)
-        key = xtune_getkey();
-    switch (key.key)
-    {
-        case KEY_2:
-            mem_test_settings test_settings = {.byte = 0b111};    
-            rom_test(test_settings);
-            __attribute__((fallthrough));
-        case KEY_1:
-            #if defined CG50 || defined CG100 || defined CP400
-            sdram_test(true);
-            #else
-            sram_test();
-            #endif
+
+    if (STARTUP_MEMORY_TEST) {
+        info_box(MEMTEST_DISPLAY_ROW, 6, C_BLACK, "Start memory tests?",
+            "",
+            "Select option:",
+            "[1] RAM only",
+            "[2] ROM & RAM",
+            "[3] None",
+            "");
+        while (key.key < KEY_1 || key.key > KEY_3)
+            key = xtune_getkey();
+        switch (key.key)
+        {
+            case KEY_2:
+                mem_test_settings test_settings = {.byte = 0b111};
+                rom_test(test_settings);
+                __attribute__((fallthrough));
+            case KEY_1:
+                #if defined CG50 || defined CG100 || defined CP400
+                sdram_test(true);
+                #else
+                sram_test();
+                #endif
+        }
     }
 
     do
