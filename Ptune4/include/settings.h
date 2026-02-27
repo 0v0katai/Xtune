@@ -20,6 +20,7 @@ extern i32 settings[];
 #define AUTO_REDUCE_WAIT settings[8]
 #define AUTO_UP_PFC settings[9]
 #define STARTUP_MEMORY_TEST settings[10]
+#define F1_YES_NO settings[11]
 
 #define PRESET_F1 preset[0]
 #define PRESET_F2 preset[1]

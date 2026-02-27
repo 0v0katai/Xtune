@@ -10,7 +10,8 @@ typedef struct
         bool reduce_wait   :  1;
         bool auto_up_PFC   :  1;
         bool startup_test  :  1;
-        u32 reserved       : 16;
+        bool F1_yes_no     :  1;
+        u32 reserved       : 15;
         u8 platform        :  4;
     );
     u32 div_max_freq[5];

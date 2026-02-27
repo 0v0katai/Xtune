@@ -109,8 +109,17 @@ static void print_preset(int current)
 #ifdef CG100
 static void cg100_getkey(key_event_t key, struct cpg_overclock_setting s)
 {
-    if (key.key == KEY_ON)
+    if (key.key == KEY_ON) {
+        if (F1_YES_NO) {
+            info_box(5, 3, C_BLACK, "Caution",
+                "Reset to default preset?",
+                "",
+                "");
+            if (!yes_no(8))
+                return;
+        }
         clock_set_speed(CLOCK_SPEED_DEFAULT);
+    }
     else if (key.key == KEY_SHIFT || key.key == KEY_PREVTAB || key.key == KEY_NEXTTAB)
     {
         u8 select_preset = CLOCK_SPEED_F2 - 2;
@@ -162,12 +171,18 @@ static void cp400_getkey(key_event_t key, struct cpg_overclock_setting s)
                         "");
                 }
                 xtune_getkey();
+            } else {
+                if (F1_YES_NO) {
+                    info_box(15, 3, C_BLACK, "Caution",
+                        "Reset to default preset?",
+                        "",
+                        "");
+                    if (!yes_no(18))
+                        return;
+                }
+                clock_set_speed(CLOCK_SPEED_DEFAULT);
             }
             break;
-        case KEY_1:
-            if (shift)
-                break;
-            __attribute__((fallthrough));
         case KEY_2:
         case KEY_3:
             if (shift)
@@ -471,6 +486,13 @@ void express_menu()
                 }
                 xtune_getkey();
                 break;
+            } else if (F1_YES_NO) {
+                info_box(5, 3, C_BLACK, "Caution",
+                    "Reset to default preset?",
+                    "",
+                    "");
+                if (!yes_no(8))
+                    break;
             }
             __attribute__((fallthrough));
             case KEY_F2:
