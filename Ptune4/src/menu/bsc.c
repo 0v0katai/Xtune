@@ -52,17 +52,6 @@ BSC_option const CS3WCR_TRC_ptr = { .CSn = SELECT_CS3, .MODE = SELECT_WCR, .REG 
 
 const char *csn_name[] = {"0", "2", "3", "4", "5A", "5B", "6A", "6B"};
 
-struct cpg_overclock_setting s_default;
-
-static void get_default_preset()
-{
-    static struct cpg_overclock_setting s_current;
-    cpg_get_overclock_setting(&s_current);
-    clock_set_speed(CLOCK_SPEED_DEFAULT);
-    cpg_get_overclock_setting(&s_default);
-    cpg_set_overclock_setting(&s_current);
-}
-
 static void print_csnxcr(int row, int x, u8 check, BSC_option select)
 {
     static const char *bcr_reg_name[] = {"IWW", "IWRWD", "IWRWS", "IWRRD", "IWRRS", 0};
@@ -103,7 +92,7 @@ static void print_csnxcr(int row, int x, u8 check, BSC_option select)
             field = csnwcr_field[REG];
         }
         value = (lword >> mask) & field;
-        const u32 s_select = *(&s_default.CS0BCR + read.MODE * 4 + read.CSn - (read.CSn == SELECT_CS5A));
+        const u32 s_select = *(&preset[CLOCK_SPEED_DEFAULT-1].CS0BCR + read.MODE * 4 + read.CSn - (read.CSn == SELECT_CS5A));
         const i8 diff = value - ((s_select >> mask) & field);
         if (read.MODE == SELECT_BCR)
             sprintf(str, "%d", BCR_equivalent(value));
@@ -213,7 +202,6 @@ void bsc_menu()
     #ifdef ENABLE_HELP
     set_help_function(help_info);
     #endif
-    get_default_preset();
 
     while (true)
     {

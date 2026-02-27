@@ -10,8 +10,6 @@
 #define CS2WCR_DEFAULT SH4_WR_2
 #define CS0WCR_DEFAULT SH4_WR_3
 
-extern i32 roR[];
-
 bool exceed_limit()
 {
     cpg_compute_freq();

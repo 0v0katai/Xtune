@@ -10,6 +10,7 @@
 #include <gint/keyboard.h>
 #include <gint/usb-ff-bulk.h>
 #include <gint/config.h>
+#include <gint/clock.h>
 
 //---
 //	Platform disambiguation functions
@@ -122,6 +123,8 @@ key_event_t xtune_getkey();
 int CALL(int r4, int r5, int r6, int r7, int address);
 
 int SYSCALL(int r4, int r5, int r6, int r7, int number);
+
+extern struct cpg_overclock_setting preset[5];
 
 //---
 // USB commands

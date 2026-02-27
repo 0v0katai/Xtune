@@ -21,6 +21,7 @@ git_version_number(GIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.git"
 
 set(SOURCES
   src/main.c
+  src/data.c
   src/validate.c
   src/util.c
   src/syscall.s

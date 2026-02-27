@@ -274,7 +274,7 @@ void info_box(int row, int size, int bg, const char *title, ...)
 	va_list args;
 	va_start(args, title);
 	for (int i = 1; i <= size; i++)
-		row_print(row + i, 2, va_arg(args, char *));
+		row_print_color(row + i, 2, bg, C_WHITE ,va_arg(args, char *));
 	va_end(args);
 }
 

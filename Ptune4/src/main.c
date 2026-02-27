@@ -13,6 +13,7 @@
 #include "config.h"
 #include "menu.h"
 #include "util.h"
+#include "data.h"
 
 HHK_NAME("CPtune4")
 HHK_AUTHOR("CalcLoverHK, Sentaro21")
@@ -20,6 +21,7 @@ HHK_VERSION(XTUNE_VERSION " @" XTUNE_HASH)
 HHK_DESCRIPTION("Overclocking utility for fx-CP calculator")
 
 bool help_status = false;
+struct cpg_overclock_setting preset[5];
 
 static bool global_getkey(key_event_t key)
 {
@@ -78,6 +80,16 @@ int main()
     cpg_set_overclock_permanent(true);
     gint_setrestart(true);
     getkey_set_feature_function(global_getkey);
+
+    struct cpg_overclock_setting s;
+    cpg_get_overclock_setting(&s);
+    for (int i = CLOCK_SPEED_F1; i <= CLOCK_SPEED_F5; i++)
+    {
+        clock_set_speed(i);
+        cpg_get_overclock_setting(&preset[i-1]);
+    }
+    cpg_set_overclock_setting(&s);
+    load_config();
 
     express_menu();
     return 1;

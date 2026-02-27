@@ -18,6 +18,7 @@
 #include "bsc.h"
 #include "config.h"
 #include "menu.h"
+#include "data.h"
 
 enum select_option
 {
@@ -126,53 +127,82 @@ static void alpha_f5_preset()
 #endif
 
 #ifdef CG100
-static void cg100_getkey(key_event_t key)
+static void cg100_getkey(key_event_t key, struct cpg_overclock_setting s)
 {
     if (key.key == KEY_ON)
         clock_set_speed(CLOCK_SPEED_DEFAULT);
     else if (key.key == KEY_NEXTTAB && key.alpha)
         alpha_f5_preset();
-    else if (key.key == KEY_PREVTAB || key.key == KEY_NEXTTAB)
+    else if (key.key == KEY_SHIFT || key.key == KEY_PREVTAB || key.key == KEY_NEXTTAB)
     {
-        u8 select_preset = CLOCK_SPEED_DEFAULT - 1;
+        u8 select_preset = CLOCK_SPEED_F2 - 2;
         while (true)
         {
             tab_clear(2, 5);
-            tab_action(2, 5, "%-10sSet preset: F%d%10s", "|<-", select_preset + 1, "->|");
+            tab_action(2, 5, "%-10s%s preset: F%d%10s", "|<-", shift ? "Save" : "Set", select_preset + 2, "->|");
             switch (xtune_getkey().key)
             {
+                case KEY_SHIFT:
+                    continue;
                 case KEY_PREVTAB:
-                    select_preset = (select_preset - 1 + CLOCK_SPEED_F5) % CLOCK_SPEED_F5;
+                    select_preset = (select_preset - 1 + 4) % 4;
                     break;
                 case KEY_NEXTTAB:
-                    select_preset = (select_preset + 1) % CLOCK_SPEED_F5;
+                    select_preset = (select_preset + 1) % 4;
                     break;
                 case KEY_OK:
                 case KEY_EXE:
-                    clock_set_speed(select_preset + 1);
+                    if (shift)
+                        preset[select_preset + 1] = s;
+                    else
+                        clock_set_speed(select_preset + 2);
                     __attribute__((fallthrough));
                 case KEY_BACK:
                     return;
-            }  
+            }
         }
     }
 }
 #endif
 
 #ifdef CP400
-static void cp400_getkey(key_event_t key)
+static void cp400_getkey(key_event_t key, struct cpg_overclock_setting s)
 {
     switch (key.key)
     {
+        case KEY_KBD:
+            if (shift) {
+                if (save_config()) {
+                    info_box(5, 3, C_RED, "ERROR",
+                        "",
+                        "Failed to write config to file!",
+                        "");
+                } else {
+                    info_box(5, 3, C_GREEN, "Success",
+                        "",
+                        "Config saved to xtune.sav!",
+                        "");
+                }
+                xtune_getkey();
+            }
+            break;
         case KEY_1:
+            if (shift)
+                break;
+            __attribute__((fallthrough));
         case KEY_2:
         case KEY_3:
-            clock_set_speed(key.key - KEY_1 + 1);
+            if (shift)
+                preset[key.key - KEY_1] = s;
+            else
+                clock_set_speed(key.key - KEY_1 + 1);
             break;
         case KEY_4:
         case KEY_5:
             clock_set_speed(key.key - KEY_4 + 4);
             break;
+        case KEY_DEL:
+
     }
 }
 #endif
@@ -278,14 +308,25 @@ void express_menu()
         if (update && AUTO_REDUCE_WAIT)
             BSC.CS0WCR.WR = best_rom_wait(clock_freq()->Bphi_f);
 
-        u8 current_preset = clock_get_speed();
         dclear(C_WHITE);
         #ifdef ENABLE_HELP
         set_help_function(help_info);
         #endif
         #if !defined CP400
-        print_preset(current_preset);
-        fkey_menu(6, "Bench");
+        if (shift)
+        {
+            fkey_menu(1, "Save");
+            for (int i = 2; i <= 5; i++)
+                fkey_action(i, "v");
+            fkey_menu(6, "Load");
+        }
+        else
+        {
+            u8 current_preset = clock_get_speed();
+            print_preset(current_preset);
+            fkey_menu(6, "Bench");
+        }
+
         #endif
 
         row_title("%s %.2Dv",
@@ -425,9 +466,9 @@ void express_menu()
         u8 divs[4] = {f.Iphi_div, f.Sphi_div, f.Bphi_div, f.Pphi_div};
         update = false;
         #ifdef CG100
-        cg100_getkey(key);
+        cg100_getkey(key, s);
         #elif defined CP400
-        cp400_getkey(key);
+        cp400_getkey(key, s);
         #endif
         switch (key.key)
         {
@@ -435,6 +476,22 @@ void express_menu()
                 continue; 
             #if !defined CG100 && !defined CP400
             case KEY_F1:
+            if (shift) {
+                if (save_config()) {
+                    info_box(5, 3, C_RED, "ERROR",
+                        "",
+                        "Failed to write config to file!",
+                        "");
+                } else {
+                    info_box(5, 3, C_GREEN, "Success",
+                        "",
+                        "Config saved to xtune.sav!",
+                        "");
+                }
+                xtune_getkey();
+                break;
+            }
+            __attribute__((fallthrough));
             case KEY_F2:
             case KEY_F3:
             case KEY_F4:
@@ -442,15 +499,43 @@ void express_menu()
             # ifdef CG50
             if (key.alpha)
                 alpha_f5_preset();
-            else
+            else if (shift)
+            {
+                char buffer[12];
+                sprintf(buffer, "Save to F%d?", key.key - KEY_F1 + 1);
+                info_box(5, 3, C_BLACK, "Caution",
+                    buffer,
+                    "",
+                    "");
+                if (yes_no(8))
+                    preset[key.key - KEY_F1] = s;
+                break;
+            }
+            cpg_set_overclock_setting(&preset[key.key - KEY_F1]);
             # endif
-            clock_set_speed(key.key - KEY_F1 + 1);
             benchmark_update = true;
             break;
             #endif
 
             case KEY_EXPRESS_BENCHMARK:
-                benchmark = !benchmark;
+                if (shift)
+                {
+                    info_box(5, 3, C_BLACK, "Caution",
+                        "Load config?",
+                        "",
+                        "");
+                    if (yes_no(8)) {
+                        if (load_config()) {
+                            info_box(5, 3, C_RED, "ERROR",
+                                "",
+                                "Failed to load config file!",
+                                "");
+                            xtune_getkey();
+                        }
+                    }
+                }
+                else
+                    benchmark = !benchmark;
                 break;
 
             case KEY_UP:
