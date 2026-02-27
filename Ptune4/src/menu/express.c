@@ -106,33 +106,11 @@ static void print_preset(int current)
     #endif
 }
 
-#if defined CG50 || defined CG100
-static void alpha_f5_preset()
-{
-    /* dupdate: 259.80 FPS, INT: 257023 Dhrystone/s */
-    static struct cpg_overclock_setting const settings_fxcg50_100_alpha_f5 =
-        { .FLLFRQ   = (SH4_SELXM<<14)+900,
-          .FRQCR    = SH4_FRQCR(32,SH4_DIV_2,SH4_DIV_4,SH4_DIV_4,SH4_DIV_16),
-          .CS0BCR   = SH4_CS0BCR(SH4_BCR_6,SH4_BCR_4,SH4_BCR_4,SH4_BCR_4,SH4_BCR_0),
-          .CS2BCR   = 0x36DA3400,
-          .CS3BCR   = SH4_CS3BCR(SH4_BCR_0,SH4_BCR_4,SH4_BCR_4,SH4_BCR_4,SH4_BCR_0),
-          .CS5aBCR  = SH4_CS5ABCR(SH4_BCR_1,SH4_BCR_4,SH4_BCR_12,SH4_BCR_4,SH4_BCR_12),
-          .CS0WCR   = SH4_CSnWCR(SH4_WW_EQWR,SH4_SW_0_5,SH4_WR_12,SH4_HW_0_5),
-          .CS2WCR   = 0x000003C0,
-          .CS3WCR   = SH4_CS3WCR(SH4_TRP_2,SH4_TRCD_2,SH4_A3CL_2,SH4_TRWL_2,SH4_TRC_6),
-          .CS5aWCR  = SH4_CSnWCR(SH4_WW_0,SH4_SW_0_5,SH4_WR_8,SH4_HW_0_5)
-        };
-    cpg_set_overclock_setting(&settings_fxcg50_100_alpha_f5);
-}
-#endif
-
 #ifdef CG100
 static void cg100_getkey(key_event_t key, struct cpg_overclock_setting s)
 {
     if (key.key == KEY_ON)
         clock_set_speed(CLOCK_SPEED_DEFAULT);
-    else if (key.key == KEY_NEXTTAB && key.alpha)
-        alpha_f5_preset();
     else if (key.key == KEY_SHIFT || key.key == KEY_PREVTAB || key.key == KEY_NEXTTAB)
     {
         u8 select_preset = CLOCK_SPEED_F2 - 2;
@@ -497,10 +475,7 @@ void express_menu()
             case KEY_F4:
             case KEY_F5:
             # ifdef CG50
-            if (key.alpha)
-                alpha_f5_preset();
-            else if (shift)
-            {
+            if (shift) {
                 char buffer[12];
                 sprintf(buffer, "Save to F%d?", key.key - KEY_F1 + 1);
                 info_box(5, 3, C_BLACK, "Caution",
