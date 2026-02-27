@@ -78,22 +78,24 @@ static void about()
         GINT_VERSION,
         GINT_HASH);
     #if defined CP400
-    info_box(15, 8, C_BLACK, "About",
+    info_box(14, 9, C_BLACK, "About",
     	"",
         XTUNE_STR,
         gint_str,
-    	"Copyright (C) 2025-2026",
-    	"Sentaro21, CalcLoverHK.",
+    	"Special thanks: Sentaro21, Lephe",
+    	"",
+    	"Copyright (C) 2025-2026 CalcLoverHK.",
         "This software is licensed under",
     	"MIT/Expat.",
     	"");
     #else
-    info_box(3, 8, C_BLACK, "About",
+    info_box(3, 9, C_BLACK, "About",
     	"",
     	XTUNE_STR,
         gint_str,
+        "Special thanks: Sentaro21, Lephe",
         "",
-        "Copyright (C) 2025-2026 Sentaro21, CalcLoverHK.",
+        "Copyright (C) 2025-2026 CalcLoverHK.",
     	"This software is licensed under MIT/Expat.",
         "This build targets " PLATFORM ".",
     	"");

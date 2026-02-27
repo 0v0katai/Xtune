@@ -16,7 +16,7 @@
 #include "data.h"
 
 HHK_NAME("CPtune4")
-HHK_AUTHOR("CalcLoverHK, Sentaro21")
+HHK_AUTHOR("CalcLoverHK")
 HHK_VERSION(XTUNE_VERSION " @" XTUNE_HASH)
 HHK_DESCRIPTION("Overclocking utility for fx-CP calculator")
 
