@@ -265,7 +265,6 @@ void express_menu()
     bool benchmark = false;
     u32 benchmark_data[9] = {0};
     bool update = false;
-    bool spread_spectrum = false;
     static const char *option[] = {"FLL:", "PLL:", "IFC:", "SFC:", "BFC:", "PFC:", 0};
 
     dclear(C_WHITE);
@@ -300,7 +299,7 @@ void express_menu()
         static struct cpg_overclock_setting s;
         cpg_get_overclock_setting(&s);
         cpg_set_overclock_setting(&s);
-        CPG.SSCGCR.SSEN = spread_spectrum;
+        bool spread_spectrum = CPG.SSCGCR.SSEN;
         if (update && AUTO_REDUCE_WAIT)
             BSC.CS0WCR.WR = best_rom_wait(clock_freq()->Bphi_f);
 
@@ -550,7 +549,8 @@ void express_menu()
             case KEY_EXPRESS_SS:
                 if (f.PLL > 32)
                     break;
-                spread_spectrum = !spread_spectrum;
+                CPG.SSCGCR.SSEN = !spread_spectrum;
+                benchmark_update = true;
                 break;
             case KEY_MUL:
             case KEY_DIV:
