@@ -583,14 +583,8 @@ void express_menu()
                 static const u8 min[6] = {225, 1, 64, 64, 64, 64};
                 if ((&f.FLL)[select] == min[select])
                     break;
-                if (select == SELECT_FLL) {
-                    if (f.FLL == 1024)
-                    {
-                        CPG.FLLFRQ.SELXM = 1;
-                        CPG.FLLFRQ.FLF <<= 1;
-                    }
-                    CPG.FLLFRQ.FLF -= 1 + CPG.FLLFRQ.SELXM;
-                }
+                if (select == SELECT_FLL)
+                    CPG.FLLFRQ.FLF--;
                 else if (select == SELECT_PLL)
                     CPG.FRQCR.STC--;
                 else
@@ -615,15 +609,10 @@ void express_menu()
                     break;
                 if (select == SELECT_FLL)
                 {
-                    if (f.FLL == 1023)
-                    {
-                        CPG.FLLFRQ.SELXM = 0;
-                        CPG.FLLFRQ.FLF >>= 1;
-                    }
-                    CPG.FLLFRQ.FLF += 1 + CPG.FLLFRQ.SELXM;
+                    CPG.FLLFRQ.FLF++;
                     if (exceed_limit())
                     {
-                        CPG.FLLFRQ.FLF -= 1 + CPG.FLLFRQ.SELXM;
+                        CPG.FLLFRQ.FLF--;
                         break;
                     }
                 }
