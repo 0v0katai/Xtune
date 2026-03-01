@@ -586,11 +586,15 @@ void express_menu()
                 break;
 
             case KEY_LEFT:
-                static const u8 min[6] = {225, 1, 64, 64, 64, 64};
+                static const u16 min[6] = {450, 1, 64, 64, 64, 64};
                 if ((&f.FLL)[select] == min[select])
                     break;
-                if (select == SELECT_FLL)
-                    CPG.FLLFRQ.FLF--;
+                if (select == SELECT_FLL) {
+                    u16 new_FLL = f.FLL - (shift ? 50 : 1);
+                    if (new_FLL < min[SELECT_FLL])
+                        new_FLL = min[SELECT_FLL];
+                    CPG.FLLFRQ.FLF = new_FLL;
+                }
                 else if (select == SELECT_PLL)
                     CPG.FRQCR.STC--;
                 else
@@ -614,8 +618,12 @@ void express_menu()
                 if ((&f.FLL)[select] == max[select])
                     break;
                 if (select == SELECT_FLL) {
-                    if (!compute_limit((32768 >> selxm) * f.PLL))
-                        CPG.FLLFRQ.FLF++;
+                    const u8 increment = shift ? 50 : 1;
+                    u16 new_FLL = f.FLL + increment;
+                    if (new_FLL > max[SELECT_FLL])
+                        new_FLL = max[SELECT_FLL];
+                    if (!compute_limit(increment * (32768 >> selxm) * f.PLL))
+                        CPG.FLLFRQ.FLF = new_FLL;
                     else
                         break;
                 }
