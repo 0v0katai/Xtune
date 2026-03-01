@@ -1,10 +1,12 @@
 #include <gint/display.h>
 #include <gint/timer.h>
 #include <gint/prof.h>
+#include <gint/mpu/cpg.h>
 
 #include "util.h"
 #include "config.h"
 #include "menu.h"
+#include "validate.h"
 
 #include "cBench/dhry.h"
 #include "cBench/whet.h"
@@ -29,7 +31,7 @@ static int disable_bench_flag()
     return TIMER_STOP;
 }
 
-void run_benchmark(u32 benchmark_data[])
+void run_benchmark(u32 benchmark_data[], u8 PLL)
 {
     bench_flag = true;
     timer_start(timer_configure(TIMER_TMU, 100000, GINT_CALL(disable_bench_flag)));
@@ -59,4 +61,14 @@ void run_benchmark(u32 benchmark_data[])
     #ifdef WHET_LOOP
     benchmark_data[7] = prof_exec(whetstone(WHET_LOOP));
     #endif
+
+    if (CPG.SSCGCR.SSEN && PLL >= 3) {
+        for (int i = 0; i <= 7; i++) {
+            const u32 correction = benchmark_data[i] * 256 / PLL / 1000;
+            if (i <= 3)
+                benchmark_data[i] -= correction;
+            else
+                benchmark_data[i] += correction;
+        }
+    }
 }

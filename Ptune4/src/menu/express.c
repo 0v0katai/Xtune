@@ -404,7 +404,7 @@ void express_menu()
         if (benchmark)
         {
             if (benchmark_update)
-                run_benchmark(benchmark_data);
+                run_benchmark(benchmark_data, f.PLL);
             benchmark_update = false;
 
             #if defined CP400
