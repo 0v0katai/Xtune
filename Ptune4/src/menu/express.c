@@ -40,8 +40,8 @@ static void help_info()
     	"[UP][DOWN]: Select option",
     	"[LEFT][RIGHT]: -/+ option value",
     	"[/][x]: -/+ roR",
-    	"[-][+]: -/+ CL",
-    	"[SHIFT][-][+]: -/+ TRC",
+    	"[-][+]: -/+ TRC",
+    	"[SHIFT][-][+]: -/+ CL",
     	"[=]: Settings",
     	"[x]: BSC settings",
     	"[y]: Memory data & tests",
@@ -54,8 +54,8 @@ static void help_info()
     	"[UP][DOWN]: Select option",
     	"[LEFT][RIGHT]: -/+ option value",
     	"[x][/]: +/- roR",
-    	"[+][-]: +/- CL",
-    	"[SHIFT][+][-]: +/- TRC",
+    	"[+][-]: +/- TRC",
+    	"[SHIFT][+][-]: +/- CL",
     	"[SETTINGS]: Settings",
     	"[VARIABLE]: BSC settings",
     	"[TOOLS]: Memory data & tests",
@@ -69,8 +69,8 @@ static void help_info()
     	"[LEFT][RIGHT]: -/+ option value",
     	"[x][/]: +/- roR",
     # ifdef CG50
-    	"[+][-]: +/- CL",
-    	"[SHIFT][+][-]: +/- TRC",
+    	"[+][-]: +/- TRC",
+    	"[SHIFT][+][-]: +/- CL",
     # else
     	"[+]/[-]: +/- raR",
     	"[SHIFT][+]/[-]: +/- raW",
@@ -346,8 +346,8 @@ void express_menu()
         else
             row_print_color(6, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "raW =R");
         #elif defined CG50 || defined CG100 || defined CP400
-        row_print_color(5, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "CL %d", BSC.CS3WCR.A3CL + 1);
-        row_print_color(6, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "TRC %d", TRC_equivalent(BSC.CS3WCR.TRC));
+        row_print_color(5, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "TRC %d", TRC_equivalent(BSC.CS3WCR.TRC));
+        row_print_color(6, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "CL %d", BSC.CS3WCR.A3CL + 1);
         #endif
 
         #ifdef ENABLE_USB
@@ -565,7 +565,7 @@ void express_menu()
             case KEY_PLUS:
             case KEY_MINUS:
                 #if defined CG50 || defined CG100 || defined CP400
-                bsc_modify(shift ? CS3WCR_TRC_ptr : CS3WCR_CL_ptr, key.key == KEY_PLUS ? 1 : -1);
+                bsc_modify(shift ? CS3WCR_CL_ptr : CS3WCR_TRC_ptr, key.key == KEY_PLUS ? 1 : -1);
                 #else
                 bsc_modify(shift ? CS2WCR_WW_ptr : CS2WCR_WR_ptr, key.key == KEY_PLUS ? 1 : -1);
                 #endif
