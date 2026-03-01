@@ -614,7 +614,7 @@ void express_menu()
                 if ((&f.FLL)[select] == max[select])
                     break;
                 if (select == SELECT_FLL) {
-                    if (!compute_limit(32768 * f.PLL))
+                    if (!compute_limit((32768 >> selxm) * f.PLL))
                         CPG.FLLFRQ.FLF++;
                     else
                         break;
