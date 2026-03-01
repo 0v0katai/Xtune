@@ -10,13 +10,20 @@
 #define CS2WCR_DEFAULT SH4_WR_2
 #define CS0WCR_DEFAULT SH4_WR_3
 
-bool exceed_limit()
-{
-    cpg_compute_freq();
+bool compute_limit(int PLL_add) {
+    if (UNLOCKED_MODE)
+        return false;
+
     const clock_frequency_t *freq = clock_freq();
-    return !UNLOCKED_MODE && (freq->PLL_f > PLL_CLK_MAX ||
-           freq->Iphi_f > CPU_CLK_MAX || freq->Sphi_f > SHW_CLK_MAX ||
-           freq->Bphi_f > BUS_CLK_MAX || (freq->Pphi_f > IO_CLK_MAX && freq->Pphi_div == 64));
+    const int PLL_f = freq->PLL_f + PLL_add;
+    if (PLL_f > PLL_CLK_MAX)
+        return true;
+
+    for (int i = 0; i < 4; i++)
+        if (PLL_f / freq->div[i] > settings[i + 3])
+            return i == 3 ? freq->div[i] == 64 : true;
+
+    return false;
 }
 
 unsigned int best_rom_wait(i32 Bphi_f)

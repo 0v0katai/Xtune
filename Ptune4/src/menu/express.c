@@ -300,6 +300,7 @@ void express_menu()
         cpg_get_overclock_setting(&s);
         cpg_set_overclock_setting(&s);
         bool spread_spectrum = CPG.SSCGCR.SSEN;
+        bool selxm = CPG.FLLFRQ.SELXM;
         if (update && AUTO_REDUCE_WAIT)
             BSC.CS0WCR.WR = best_rom_wait(clock_freq()->Bphi_f);
 
@@ -334,7 +335,7 @@ void express_menu()
             row_print(1 + i, REG_DISPLAY_X, i < 2 ? "x%d" : "1/%d", (&f.FLL)[i]);
 
         print_options(1, 1, option, select);
-        row_print_color(1, WAIT_DISPLAY_X, C_WHITE, C_BLACK, CPG.FLLFRQ.SELXM ? "XM 1/2" : "XM 1");
+        row_print_color(1, WAIT_DISPLAY_X, C_WHITE, C_BLACK, selxm ? "XM 1/2" : "XM 1");
         row_print_color(2, WAIT_DISPLAY_X, spread_spectrum ? C_GREEN : C_WHITE, C_BLACK, spread_spectrum ? "SS On" : "SS Off");
         row_print_color(3, WAIT_DISPLAY_X, C_WHITE, f.Iphi_f > IFC_RED_ZONE ? C_RED : C_BLUE, "CPU");
         row_print_color(4, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "roR %d", WR_equivalent(BSC.CS0WCR.WR));
@@ -546,6 +547,11 @@ void express_menu()
                     select++;
                 break;
 
+            case KEY_EXPRESS_SELXM:
+                selxm = !selxm || compute_limit(f.PLL_f);
+                update = true;
+                break;
+
             case KEY_EXPRESS_SS:
                 if (f.PLL > 32)
                     break;
@@ -607,23 +613,18 @@ void express_menu()
                                     2, 2, 2, 2};
                 if ((&f.FLL)[select] == max[select])
                     break;
-                if (select == SELECT_FLL)
-                {
-                    CPG.FLLFRQ.FLF++;
-                    if (exceed_limit())
-                    {
-                        CPG.FLLFRQ.FLF--;
+                if (select == SELECT_FLL) {
+                    if (!compute_limit(32768 * f.PLL))
+                        CPG.FLLFRQ.FLF++;
+                    else
                         break;
-                    }
                 }
                 else if (select == SELECT_PLL)
                 {
-                    CPG.FRQCR.STC++;
-                    if (exceed_limit())
-                    {
-                        CPG.FRQCR.STC--;
+                    if (!compute_limit(f.FLL_f))
+                        CPG.FRQCR.STC++;
+                    else
                         break;
-                    }
                 }
                 else
                 {
@@ -656,7 +657,7 @@ void express_menu()
                     CPG.FRQCR.lword += 1 << field[i];
             }
             cpg_compute_freq();
-            const u32 Bphi_f = clock_freq()->Bphi_f;
+            u32 Bphi_f = clock_freq()->Bphi_f << !selxm;
             const u8 new_CS0WCR_WR = best_rom_wait(Bphi_f);
             if (!UNLOCKED_MODE && new_CS0WCR_WR > BSC.CS0WCR.WR)
                 BSC.CS0WCR.WR = new_CS0WCR_WR;
@@ -672,6 +673,7 @@ void express_menu()
             if (!UNLOCKED_MODE && (new_CS2WCR_WW > BSC.CS2WCR.WW || AUTO_REDUCE_WAIT))
                 BSC.CS2WCR.WW = new_CS2WCR_WW;
             #endif
+            CPG.FLLFRQ.SELXM = selxm;
         }
     #if defined CG100
     } while (key.key != KEY_HOME);
