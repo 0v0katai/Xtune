@@ -40,7 +40,7 @@ static void rom_read_test(mem_test_settings test_settings)
     clock_set_speed(CLOCK_SPEED_DEFAULT);
     cpg_get_overclock_setting(&s);
     int FLF_max;
-    for (int FLF = ROM_SEARCH_FLF_START; FLF < 2048; FLF += 2)
+    for (int FLF = ROM_SEARCH_FLF_START; FLF < 2048; FLF++)
     {
         BSC.CS0WCR.WR = ROM_WAIT(s.CS0WCR);
         if (read_address(FLF, ROM_read_area))
@@ -84,7 +84,7 @@ static void rom_read_test(mem_test_settings test_settings)
         s.CS0WCR = 0x000005C0;
         cpg_set_overclock_setting(&s);
         u32 Bphi_f;
-        for (int FLF = roR_default[i] / (PLL(6) + i * 2 + 1) / 4096; FLF < 2048; FLF += 2)
+        for (int FLF = roR_default[i] / (PLL(6) + i * 2 + 1) / 4096; FLF < 2048; FLF++)
         {
             BSC.CS0WCR.WR = i;
             if (read_address(FLF, ROM_read_area))

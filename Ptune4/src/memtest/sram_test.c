@@ -31,7 +31,7 @@ static void ram_read_test()
     clock_set_speed(CLOCK_SPEED_DEFAULT);
     cpg_get_overclock_setting(&s);
     int FLF_max;
-    for (int FLF = RAM_SEARCH_FLF_START; FLF < 2048; FLF += 2)
+    for (int FLF = RAM_SEARCH_FLF_START; FLF < 2048; FLF++)
     {
         BSC.CS2WCR.WR = RAM_WAIT(s.CS2WCR);
         if (read_address(FLF, RAM_read_area))
@@ -63,7 +63,7 @@ static void ram_read_test()
     { 
         s.FRQCR = SH4_FRQCR(8 + i * 3, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
         cpg_set_overclock_setting(&s);
-        for (int FLF = raR_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF += 2)
+        for (int FLF = raR_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF++)
         {
             BSC.CS2WCR.WR = i;
             if (read_address(FLF, RAM_read_area))
@@ -97,7 +97,7 @@ static void ram_write_test()
     {
         s.FRQCR = SH4_FRQCR(8 + i * 3, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
         cpg_set_overclock_setting(&s);
-        for (int FLF = raW_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF += 2)
+        for (int FLF = raW_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF++)
         {
             BSC.CS2WCR.WW = i + 1;
             if (write_address(FLF, write_area))

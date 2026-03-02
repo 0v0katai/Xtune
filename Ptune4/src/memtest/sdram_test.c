@@ -47,7 +47,7 @@ static void ram_write_test(bool TRC_3_check)
     u32 Bphi_f;
     for (int TRC = !TRC_3_check; TRC <= 3; TRC++)
     {
-        for (int FLF = FLF_max; FLF < 2048; FLF += 2)
+        for (int FLF = FLF_max; FLF < 2048; FLF++)
         {
             BSC.CS3WCR.TRC = TRC;
             if (write_address(FLF, write_area))
@@ -59,7 +59,7 @@ static void ram_write_test(bool TRC_3_check)
                     if (write_address(FLF_max, write_area))
                     {
                         trial = 0;
-                        FLF_max -= 2;
+                        FLF_max--;
                         continue;
                     }
                     Bphi_f = clock_freq()->Bphi_f;
