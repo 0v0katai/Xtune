@@ -59,7 +59,7 @@ static void help_info()
     	"[SETTINGS]: Settings\n"
     	"[VARIABLE]: BSC settings\n"
     	"[TOOLS]: Memory data & tests\n"
-        "[HOME]: Quit Ptune4\n"
+        "[SHIFT][HOME]: Quit Ptune4\n"
     	"[BACK]: Close help");
     #else
     info_box(0, 1, C_BLACK, "HELP",
@@ -88,20 +88,27 @@ static void help_info()
 static void print_preset(int current)
 {
     #if defined CG100
-    fkey_action(1, "Default");
+    if (shift)
+        fkey_menu(1, "Save");
+    else
+        fkey_action(1, "Default");
     if (current == CLOCK_SPEED_UNKNOWN)
         tab_menu(2, 5, "Current preset: Custom");
     else
         tab_menu(2, 5, "Current preset: F%d", current);
     #else
-    char string[3];
-    for (int i = 1; i <= 5; i++)
-    {
-        sprintf(string, "F%d", i);
-        if (i == current)
-            fkey_button(i, string);
-        else
-            fkey_action(i, string);
+    if (shift) {
+        for (int i = 2; i <= 5; i++)
+            fkey_action(i, "v");
+    } else {
+        char string[3];
+        for (int i = 1; i <= 5; i++) {
+            sprintf(string, "F%d", i);
+            if (i == current)
+                fkey_button(i, string);
+            else
+                fkey_action(i, string);
+        }
     }
     #endif
 }
@@ -110,15 +117,26 @@ static void print_preset(int current)
 static void cg100_getkey(key_event_t key, struct cpg_overclock_setting s)
 {
     if (key.key == KEY_ON) {
-        if (F1_YES_NO) {
-            info_box(5, 0, C_BLACK, "Caution",
-                "Reset to default preset?\n\n");
-            if (!yes_no(8))
-                return;
+        if (shift) {
+            if (save_config()) {
+                info_box(5, 1, C_RED, "ERROR",
+                    "Failed to write config to file!");
+            } else {
+                info_box(5, 1, C_GREEN, "Success",
+                    "Config saved to xtune.sav!");
+            }
+            xtune_getkey();
+        } else {
+            if (F1_YES_NO) {
+                info_box(5, 0, C_BLACK, "Caution",
+                    "Reset to default preset?\n\n");
+                if (!yes_no(8))
+                    return;
+            }
+            clock_set_speed(CLOCK_SPEED_DEFAULT);
         }
-        clock_set_speed(CLOCK_SPEED_DEFAULT);
     }
-    else if (key.key == KEY_SHIFT || key.key == KEY_PREVTAB || key.key == KEY_NEXTTAB)
+    else if (key.key == KEY_PREVTAB || key.key == KEY_NEXTTAB)
     {
         u8 select_preset = CLOCK_SPEED_F2 - 2;
         while (true)
@@ -140,9 +158,10 @@ static void cg100_getkey(key_event_t key, struct cpg_overclock_setting s)
                     if (shift)
                         preset[select_preset + 1] = s;
                     else
-                        clock_set_speed(select_preset + 2);
+                        cpg_set_overclock_setting(&preset[select_preset + 1]);
                     __attribute__((fallthrough));
                 case KEY_BACK:
+                    shift = false;
                     return;
             }
         }
@@ -297,20 +316,8 @@ void express_menu()
         set_help_function(help_info);
         #endif
         #if !defined CP400
-        if (shift)
-        {
-            fkey_menu(1, "Save");
-            for (int i = 2; i <= 5; i++)
-                fkey_action(i, "v");
-            fkey_menu(6, "Load");
-        }
-        else
-        {
-            u8 current_preset = clock_get_speed();
-            print_preset(current_preset);
-            fkey_menu(6, "Bench");
-        }
-
+        print_preset(clock_get_speed());
+        fkey_menu(6, shift ? "Load" : "Bench");
         #endif
 
         row_title("%s %s @%07x %.2Dv",
