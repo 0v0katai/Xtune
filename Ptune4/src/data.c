@@ -6,6 +6,13 @@
 #include "util.h"
 #include "settings.h"
 
+static u32 get_file_size(FILE *f) {
+    fseek(f, 0, SEEK_END);
+    u32 size = ftell(f);
+    fseek(f, 0, SEEK_SET);
+    return size;
+}
+
 bool load_config()
 {   
     Xtune_config_t config;
@@ -13,6 +20,10 @@ bool load_config()
     FILE *f = fopen("xtune.sav", "rb");
     if (f == NULL)
         return true;
+    if (get_file_size(f) != sizeof(Xtune_config_t)) {
+        fclose(f);
+        return true;
+    }
 
     fread(&config, sizeof(Xtune_config_t), 1, f);
     fclose(f);
