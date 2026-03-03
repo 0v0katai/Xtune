@@ -17,7 +17,7 @@
 
 HHK_NAME("CPtune4")
 HHK_AUTHOR("CalcLoverHK")
-HHK_VERSION(XTUNE_VERSION " @" XTUNE_HASH)
+HHK_VERSION(XTUNE_STR)
 HHK_DESCRIPTION("Overclocking utility for fx-CP calculator")
 
 bool help_status = false;
@@ -47,13 +47,10 @@ static bool global_getkey(key_event_t key)
     if (shift && key.key == KEY_ACON)
     {
         # if defined CG50 && !defined TARGET_FXCG50_FASTLOAD
-        info_box(4, 6, C_BLACK, "Caution",
-            "",
-            "Poweroff function is disabled in this build.",
-            "",
-            "Please return to the main menu before",
-            "turning off your calculator.",
-            "");
+        info_box(5, 1, C_BLACK, "Caution",
+            "Poweroff function is disabled in this build.\n"
+            "Please return to the main menu before\n"
+            "turning off your calculator.");
         xtune_getkey();
         # else
         gint_poweroff(true);

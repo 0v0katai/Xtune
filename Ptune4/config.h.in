@@ -11,11 +11,12 @@
 // #define CP400       /* fx-CP400(+E), fx-CG500 */
 
 #define XTUNE_VERSION "@XTUNE_GIT_VERSION@"
-#define XTUNE_HASH "@XTUNE_GIT_HASH@"
+#define XTUNE_HASH 0x@XTUNE_GIT_HASH@
 
 #if defined CP400
 # define ADDIN_NAME "CPtune4"
 # define HARDWARE_TARGET HWCALC_FXCP400
+# define XTUNE_STR ADDIN_NAME " " XTUNE_VERSION " @@XTUNE_GIT_HASH@"
 #elif defined MONO_SH3
 # define ADDIN_NAME "Ftune4 SH3"
 # define HARDWARE_TARGET HWCALC_FX9860G_SH3
@@ -37,10 +38,8 @@
 #elif defined CG100
 # define ADDIN_NAME "Ptune4 MPM"
 # define HARDWARE_TARGET HWCALC_FXCG100
-# define PLATFORM "fx-CG100/1AU Graph/Graph Math+"
+# define PLATFORM "fx-CG100/1AU/Graph Math+"
 #endif
-
-#define XTUNE_STR ADDIN_NAME " " XTUNE_VERSION " @" XTUNE_HASH
 
 /* Feature toggles */
 

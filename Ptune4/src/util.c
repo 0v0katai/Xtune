@@ -2,11 +2,12 @@
 
 #include <gint/display.h>
 #include <gint/gint.h>
-#include <gint/bfile.h>
 #include <gint/config.h>
 
 #include <util.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "config.h"
 
 /* Short-shorthand for calling out vsprintf() */
@@ -266,16 +267,26 @@ static void msg_box_frame(int row, int size, int color)
 		color);
 }
 
-void info_box(int row, int size, int bg, const char *title, ...)
-{
-	msg_box_frame(row, size, bg);
+void info_box(int row, int pad, int bg, const char *title, const char *format, ...) {
+	char *str = NULL;
+	va_list args;
+	va_start(args, format);
+	vasprintf(&str, format, args);
+	va_end(args);
+
+	int size = 1;
+	for (char *ptr = str; *ptr; ptr++)
+		if (*ptr == '\n')
+			size++;
+	msg_box_frame(row, size + 2 * pad, bg);
 	row_print_color(row, 2, C_WHITE, bg, title);
 
-	va_list args;
-	va_start(args, title);
-	for (int i = 1; i <= size; i++)
-		row_print_color(row + i, 2, bg, C_WHITE ,va_arg(args, char *));
-	va_end(args);
+	char *token = strtok(str, "\n");
+	int current_row = row + pad + 1;
+	while (token != NULL) {
+		row_print_color(current_row++, 2, bg, C_WHITE, token);
+		token = strtok(NULL, "\n");
+	}
 }
 
 bool yes_no(int row)

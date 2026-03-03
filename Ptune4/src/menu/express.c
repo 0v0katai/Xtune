@@ -34,51 +34,51 @@ enum select_option
 static void help_info()
 {
     #if defined CP400
-    info_box(12, 11, C_BLACK, "HELP",
-    	"[KBD]: Reset to default",
-    	"[DEL]: Toggle benchmark",
-    	"[UP][DOWN]: Select option",
-    	"[LEFT][RIGHT]: -/+ option value",
-    	"[/][x]: -/+ roR",
-    	"[-][+]: -/+ TRC",
-    	"[SHIFT][-][+]: -/+ CL",
-    	"[=]: Settings",
-    	"[x]: BSC settings",
-    	"[y]: Memory data & tests",
+    info_box(12, 1, C_BLACK, "HELP",
+    	"[KBD]: Reset to default\n"
+    	"[DEL]: Toggle benchmark\n"
+    	"[UP][DOWN]: Select option\n"
+    	"[LEFT][RIGHT]: -/+ option value\n"
+    	"[/][x]: -/+ roR\n"
+    	"[-][+]: -/+ TRC\n"
+    	"[SHIFT][-][+]: -/+ CL\n"
+    	"[=]: Settings\n"
+    	"[x]: BSC settings\n"
+    	"[y]: Memory data & tests\n"
     	"[Clear]: Close help / Quit CPtune4");
     #elif defined CG100
-    info_box(0, 14, C_BLACK, "HELP",
-    	"[ON]: Reset to default",
-    	"[|<-][->|]: Select preset, [OK]: Confirm",
-    	"[PGUP]: Toggle benchmark",
-    	"[UP][DOWN]: Select option",
-    	"[LEFT][RIGHT]: -/+ option value",
-    	"[x][/]: +/- roR",
-    	"[+][-]: +/- TRC",
-    	"[SHIFT][+][-]: +/- CL",
-    	"[SETTINGS]: Settings",
-    	"[VARIABLE]: BSC settings",
-    	"[TOOLS]: Memory data & tests",
-        "[HOME]: Quit Ptune4",
+    info_box(0, 1, C_BLACK, "HELP",
+    	"[ON]: Reset to default\n"
+    	"[|<-][->|]: Select preset, [OK]: Confirm\n"
+    	"[PGUP]: Toggle benchmark\n"
+    	"[UP][DOWN]: Select option\n"
+    	"[LEFT][RIGHT]: -/+ option value\n"
+    	"[x][/]: +/- roR\n"
+    	"[+][-]: +/- TRC\n"
+    	"[SHIFT][+][-]: +/- CL\n"
+    	"[SETTINGS]: Settings\n"
+    	"[VARIABLE]: BSC settings\n"
+    	"[TOOLS]: Memory data & tests\n"
+        "[HOME]: Quit Ptune4\n"
     	"[BACK]: Close help");
     #else
-    info_box(1, 12, C_BLACK, "HELP",
-    	"[F1]-[F5]: Apply preset",
-    	"[F6]: Toggle benchmark",
-    	"[UP][DOWN]: Select option",
-    	"[LEFT][RIGHT]: -/+ option value",
-    	"[x][/]: +/- roR",
+    info_box(0, 1, C_BLACK, "HELP",
+    	"[F1]-[F5]: Apply preset\n"
+    	"[F6]: Toggle benchmark\n"
+    	"[UP][DOWN]: Select option\n"
+    	"[LEFT][RIGHT]: -/+ option value\n"
+    	"[x][/]: +/- roR\n"
     # ifdef CG50
-    	"[+][-]: +/- TRC",
-    	"[SHIFT][+][-]: +/- CL",
+    	"[+][-]: +/- TRC\n"
+    	"[SHIFT][+][-]: +/- CL\n"
     # else
-    	"[+]/[-]: +/- raR",
-    	"[SHIFT][+]/[-]: +/- raW",
+    	"[+]/[-]: +/- raR\n"
+    	"[SHIFT][+]/[-]: +/- raW\n"
     # endif
-    	"[OPTN]: Memory data & tests",
-    	"[VARS]: BSC settings",
-    	"[SHIFT][MENU]: Settings",
-        "[MENU]: Return to OS",
+    	"[OPTN]: Memory data & tests\n"
+    	"[VARS]: BSC settings\n"
+    	"[SHIFT][MENU]: Settings\n"
+        "[MENU]: Return to OS\n"
     	"[EXIT]: Close help");
     #endif
     while (xtune_getkey().key != KEY_EXIT);
@@ -111,10 +111,8 @@ static void cg100_getkey(key_event_t key, struct cpg_overclock_setting s)
 {
     if (key.key == KEY_ON) {
         if (F1_YES_NO) {
-            info_box(5, 3, C_BLACK, "Caution",
-                "Reset to default preset?",
-                "",
-                "");
+            info_box(5, 0, C_BLACK, "Caution",
+                "Reset to default preset?\n\n");
             if (!yes_no(8))
                 return;
         }
@@ -160,24 +158,18 @@ static void cp400_getkey(key_event_t key, struct cpg_overclock_setting s)
         case KEY_KBD:
             if (shift) {
                 if (save_config()) {
-                    info_box(5, 3, C_RED, "ERROR",
-                        "",
-                        "Failed to write config to file!",
-                        "");
+                    info_box(5, 1, C_RED, "ERROR",
+                        "Failed to write config to file!");
                 } else {
-                    info_box(5, 3, C_GREEN, "Success",
-                        "",
-                        "Config saved to xtune.sav!",
-                        "");
+                    info_box(5, 1, C_GREEN, "Success",
+                        "Config saved to xtune.sav!");
                 }
                 xtune_getkey();
             } else {
                 if (F1_YES_NO) {
-                    info_box(15, 3, C_BLACK, "Caution",
-                        "Reset to default preset?",
-                        "",
-                        "");
-                    if (!yes_no(18))
+                    info_box(15, 1, C_BLACK, "Caution",
+                        "Reset to default preset?\n\n");
+                    if (!yes_no(19))
                         return;
                 }
                 clock_set_speed(CLOCK_SPEED_DEFAULT);
@@ -194,8 +186,6 @@ static void cp400_getkey(key_event_t key, struct cpg_overclock_setting s)
         case KEY_5:
             clock_set_speed(key.key - KEY_4 + 4);
             break;
-        case KEY_DEL:
-
     }
 }
 #endif
@@ -270,13 +260,11 @@ void express_menu()
     dclear(C_WHITE);
 
     if (STARTUP_MEMORY_TEST) {
-        info_box(MEMTEST_DISPLAY_ROW, 6, C_BLACK, "Start memory tests?",
-            "",
-            "Select option:",
-            "[1] RAM only",
-            "[2] ROM & RAM",
-            "[3] None",
-            "");
+        info_box(MEMTEST_DISPLAY_ROW, 1, C_BLACK, "Start memory tests?",
+            "Select option:\n"
+            "[1] RAM only\n"
+            "[2] ROM & RAM\n"
+            "[3] None");
         while (key.key < KEY_1 || key.key > KEY_3)
             key = xtune_getkey();
         switch (key.key)
@@ -325,8 +313,8 @@ void express_menu()
 
         #endif
 
-        row_title("%s %.2Dv",
-            XTUNE_STR,
+        row_title("%s %s @%07x %.2Dv",
+            ADDIN_NAME, XTUNE_VERSION, XTUNE_HASH,
             gint_world_switch(GINT_CALL(__GetBatteryVoltage)));
         print_express_cpg_bsc(s);
 
@@ -363,7 +351,7 @@ void express_menu()
         row_print(KEY_DISPLAY_ROW + 1, 2, "Help");
         # if defined CG100
         row_print(KEY_DISPLAY_ROW + 1, 12, "[CATALOG]");
-        # elif defined CG400
+        # elif defined CP400
         row_print(KEY_DISPLAY_ROW + 1, 12, "[8]");
         # else
         row_print(KEY_DISPLAY_ROW + 1, 12, "[4]");
@@ -474,23 +462,17 @@ void express_menu()
             case KEY_F1:
             if (shift) {
                 if (save_config()) {
-                    info_box(5, 3, C_RED, "ERROR",
-                        "",
-                        "Failed to write config to file!",
-                        "");
+                    info_box(5, 1, C_RED, "ERROR",
+                        "Failed to write config to file!");
                 } else {
-                    info_box(5, 3, C_GREEN, "Success",
-                        "",
-                        "Config saved to xtune.sav!",
-                        "");
+                    info_box(5, 1, C_GREEN, "Success",
+                        "Config saved to xtune.sav!");
                 }
                 xtune_getkey();
                 break;
             } else if (F1_YES_NO) {
-                info_box(5, 3, C_BLACK, "Caution",
-                    "Reset to default preset?",
-                    "",
-                    "");
+                info_box(5, 0, C_BLACK, "Caution",
+                    "Reset to default preset?\n\n");
                 if (!yes_no(8))
                     break;
             }
@@ -501,12 +483,9 @@ void express_menu()
             case KEY_F5:
             # ifdef CG50
             if (shift) {
-                char buffer[12];
-                sprintf(buffer, "Save to F%d?", key.key - KEY_F1 + 1);
-                info_box(5, 3, C_BLACK, "Caution",
-                    buffer,
-                    "",
-                    "");
+                info_box(5, 0, C_BLACK, "Caution",
+                    "Save to F%d?\n\n",
+                    key.key - KEY_F1 + 1);
                 if (yes_no(8))
                     preset[key.key - KEY_F1] = s;
                 break;
@@ -518,18 +497,13 @@ void express_menu()
             #endif
 
             case KEY_EXPRESS_BENCHMARK:
-                if (shift)
-                {
-                    info_box(5, 3, C_BLACK, "Caution",
-                        "Load config?",
-                        "",
-                        "");
+                if (shift) {
+                    info_box(5, 0, C_BLACK, "Caution",
+                        "Load config?\n\n");
                     if (yes_no(8)) {
                         if (load_config()) {
-                            info_box(5, 3, C_RED, "ERROR",
-                                "",
-                                "Failed to load config file!",
-                                "");
+                            info_box(5, 1, C_RED, "ERROR",
+                                "Failed to load config file!");
                             xtune_getkey();
                         }
                     }

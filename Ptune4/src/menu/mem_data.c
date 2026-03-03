@@ -13,38 +13,33 @@
 static void help_info()
 {
     #if defined CP400
-    info_box(15, 6, C_BLACK, "HELP",
-    	"[=]: Reset to default",
-    	"[x]: Toggle margin view",
-    	"[y]: ROM read test",
-    	"[z]: SDRAM write test",
-        "",
+    info_box(15, 1, C_BLACK, "HELP",
+    	"[=]: Reset to default\n"
+    	"[x]: Toggle margin view\n"
+    	"[y]: ROM read test\n"
+    	"[z]: SDRAM write test\n"
     	"[Clear]: Close help / < Express menu");
     #elif defined CG100
-    info_box(4, 6, C_BLACK, "HELP",
-    	"[ON]: Reset to default",
-    	"[|<-]: Toggle margin view",
-    	"[->|]: ROM read test",
-    	"[PGUP]: SDRAM write test",
-        "",
+    info_box(4, 1, C_BLACK, "HELP",
+    	"[ON]: Reset to default\n"
+    	"[|<-]: Toggle margin view\n"
+    	"[->|]: ROM read test\n"
+    	"[PGUP]: SDRAM write test\n"
     	"[BACK]: Close help / < Express menu");
     #elif defined CG50
-    info_box(4, 6, C_BLACK, "HELP",
-    	"[F1]: Reset to default",
-    	"[F3]: Toggle margin view",
-    	"[F5]: ROM read test",
-    	"[F6]: SDRAM write test",
-        "",
+    info_box(4, 1, C_BLACK, "HELP",
+    	"[F1]: Reset to default\n"
+    	"[F3]: Toggle margin view\n"
+    	"[F5]: ROM read test\n"
+    	"[F6]: SDRAM write test\n"
     	"[EXIT]: Close help / < Express menu");
     #else
-    info_box(3, 8, C_BLACK, "HELP",
-    	"[F1]: Reset to default",
-    	"[F2]: Toggle SRAM read/write view",
-    	"[F3]: Toggle margin view",
-    	"[F5]: ROM read test",
-    	"[F6]: SRAM read/write test",
-        "",
-        "",
+    info_box(3, 1, C_BLACK, "HELP"
+    	"[F1]: Reset to default\n"
+    	"[F2]: Toggle SRAM read/write view\n"
+    	"[F3]: Toggle margin view\n"
+    	"[F5]: ROM read test\n"
+    	"[F6]: SRAM read/write test\n"
     	"[EXIT]: Close help / < Express menu");
     #endif
     while (xtune_getkey().key != KEY_EXIT);
@@ -89,7 +84,7 @@ void mem_data_menu()
     while (true)
     {
         dclear(C_WHITE);
-        row_title("Memory data %s @%s", XTUNE_VERSION, XTUNE_HASH);
+        row_title("Memory data %s @%07x", XTUNE_VERSION, XTUNE_HASH);
         row_print(1, 1, "ROM Margin: %d%%", ROM_MARGIN);
         #if defined CP400
         row_print(13, 1, "RAM Margin: %d%%", RAM_MARGIN);
@@ -212,23 +207,20 @@ void mem_data_menu()
             
             case KEY_MEMDATA_RAMTEST:
                 #if defined CP400
-                info_box(15, 7, C_RED, "WARNING",
-                    "SDRAM test may cause system errors!",
-                    "It is highly recommended to press the",
-                    "RESTART button after this test is",
-                    "finished.",
-                    "",
-                    "Are you sure you want to continue?",
-                    "");
-                if (yes_no(22))
+                info_box(15, 1, C_RED, "WARNING",
+                    "SDRAM test may cause system errors!\n"
+                    "It is highly recommended to press the\n"
+                    "RESTART button after this test is\n"
+                    "finished.\n"
+                    "Are you sure you want to continue?\n\n");
+                if (yes_no(23))
                     sdram_test(test_settings.TRC_3_check);
                 #elif defined CG50 || defined CG100
-                info_box(5, 5, C_RED, "WARNING",
-                    "SDRAM test may cause system errors!",
-                    "It is highly recommended to press the RESTART",
-                    "button after this test is finished.",
-                    "Are you sure you want to continue?",
-                    "");
+                info_box(4, 1, C_RED, "WARNING",
+                    "SDRAM test may cause system errors!\n"
+                    "It is highly recommended to press the RESTART\n"
+                    "button after this test is finished.\n"
+                    "Are you sure you want to continue?\n");
                 if (yes_no(10))
                     sdram_test(test_settings.TRC_3_check);
                 #else

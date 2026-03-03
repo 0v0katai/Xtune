@@ -13,30 +13,29 @@
 static void help_info()
 {
     #if defined CP400
-    info_box(15, 6, C_BLACK, "HELP"
-    	"[=]: Reset to default",
-    	"[-][+]: -/+ option value (1 MHz)",
-    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)",
-    	"[UP][DOWN]: Select option",
-    	"[/]: About this add-in",
+    info_box(15, 1, C_BLACK, "HELP",
+    	"[=]: Reset to default\n"
+    	"[-][+]: -/+ option value (1 MHz)\n"
+    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)\n"
+    	"[UP][DOWN]: Select option\n"
+    	"[/]: About this add-in\n"
     	"[Clear]: Close help / < Express menu");
     #elif defined CG100
-    info_box(4, 6, C_BLACK, "HELP",
-    	"[ON]: Reset to default",
-    	"[+][-]: +/- option value (1 MHz)",
-    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)",
-    	"[UP][DOWN]: Select option",
-    	"[PGUP]: About this add-in",
+    info_box(4, 1, C_BLACK, "HELP",
+    	"[ON]: Reset to default\n"
+    	"[+][-]: +/- option value (1 MHz)\n"
+    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)\n"
+    	"[UP][DOWN]: Select option\n"
+    	"[PGUP]: About this add-in\n"
     	"[BACK]: Close help / < Express menu");
     #else
-    info_box(3, 8, C_BLACK, "HELP",
-    	"[F1]: Reset to default",
-    	"[F2][+]: Increase option value (1 MHz)",
-    	"[F3][-]: Decrease option value (0.1 MHz)",
-    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)",
-    	"[UP][DOWN]: Select option",
-    	"[F6]: About this add-in",
-        "",
+    info_box(3, 1, C_BLACK, "HELP",
+    	"[F1]: Reset to default\n"
+    	"[F2][+]: Increase option value (1 MHz)\n"
+    	"[F3][-]: Decrease option value (0.1 MHz)\n"
+    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)\n"
+    	"[UP][DOWN]: Select option\n"
+    	"[F6]: About this add-in\n"
     	"[EXIT]: Close help / < Express menu");
     #endif
     while (xtune_getkey().key != KEY_EXIT);
@@ -77,32 +76,29 @@ enum select_option
 
 static void about()
 {
-    char gint_str[32];
-    sprintf(gint_str, "w/ gint %s @%07x",
-        GINT_VERSION,
-        GINT_HASH);
     #if defined CP400
-    info_box(14, 9, C_BLACK, "About",
-    	"",
-        XTUNE_STR,
-        gint_str,
-    	"Special thanks: Sentaro21, Lephe",
-    	"",
-    	"Copyright (C) 2025-2026 CalcLoverHK.",
-        "This software is licensed under",
+    info_box(14, 1, C_BLACK, "About",
+        "%s %s @%07x\n"
+        "w/ gint %s @%07x\n"
+    	"Special thanks: Sentaro21, Lephe\n"
+    	" \n"
+    	"Copyright (C) 2025-2026 CalcLoverHK.\n"
+        "This software is licensed under\n"
     	"MIT/Expat.",
-    	"");
+    	ADDIN_NAME, XTUNE_VERSION, XTUNE_HASH,
+    	GINT_VERSION, GINT_HASH
+    );
     #else
-    info_box(3, 9, C_BLACK, "About",
-    	"",
-    	XTUNE_STR,
-        gint_str,
-        "Special thanks: Sentaro21, Lephe",
-        "",
-        "Copyright (C) 2025-2026 CalcLoverHK.",
-    	"This software is licensed under MIT/Expat.",
-        "This build targets " PLATFORM ".",
-    	"");
+    info_box(3, 1, C_BLACK, "About",
+        "%s %s @%07x\n"
+        "w/ gint %s @%07x\n"
+        "Special thanks: Sentaro21, Lephe\n"
+        " \n"
+        "Copyright (C) 2025-2026 CalcLoverHK.\n"
+    	"This software is licensed under MIT/Expat.\n"
+        "This build targets %s.",
+    	ADDIN_NAME, XTUNE_VERSION, XTUNE_HASH,
+    	GINT_VERSION, GINT_HASH, PLATFORM);
     #endif
     
     xtune_getkey();

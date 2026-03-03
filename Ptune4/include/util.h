@@ -101,7 +101,7 @@ void fkey_menu(int position, char const *text);
 
 void tab_clear(int start, int end);
 
-void info_box(int row, int size, int bg, const char *title, ...);
+void info_box(int row, int pad, int bg, const char *title, const char *format, ...);
 
 bool yes_no(int row);
 
