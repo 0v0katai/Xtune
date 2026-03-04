@@ -6,6 +6,7 @@
 
 #include <util.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "config.h"
@@ -287,6 +288,7 @@ void info_box(int row, int pad, int bg, const char *title, const char *format, .
 		row_print_color(current_row++, 2, bg, C_WHITE, token);
 		token = strtok(NULL, "\n");
 	}
+	free(str);
 }
 
 bool yes_no(int row)

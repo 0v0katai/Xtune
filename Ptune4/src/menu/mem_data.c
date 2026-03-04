@@ -34,7 +34,7 @@ static void help_info()
     	"[F6]: SDRAM write test\n"
     	"[EXIT]: Close help / < Express menu");
     #else
-    info_box(3, 1, C_BLACK, "HELP"
+    info_box(3, 1, C_BLACK, "HELP",
     	"[F1]: Reset to default\n"
     	"[F2]: Toggle SRAM read/write view\n"
     	"[F3]: Toggle margin view\n"

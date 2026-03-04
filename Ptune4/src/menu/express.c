@@ -98,6 +98,7 @@ static void print_preset(int current)
         tab_menu(2, 5, "Current preset: F%d", current);
     #else
     if (shift) {
+        fkey_menu(1, "Save");
         for (int i = 2; i <= 5; i++)
             fkey_action(i, "v");
     } else {
