@@ -142,6 +142,9 @@ void mem_data_menu()
         }
         #endif
 
+        extern void print_exception(int row, int x);
+        print_exception(TEST_DISPLAY_ROW + 3, 1);
+
         #ifndef CP400
         fkey_action(1, "Reset");
         #if !defined CG50 && !defined CG100

@@ -7,13 +7,16 @@
 #include <gint/usb.h>
 #include <gint/usb-ff-bulk.h>
 #include <gint/prof.h>
+#include <gint/exc.h>
 #include <fxlibc/printf.h>
 #include <stdlib.h>
+#include <gint/mpu/cpg.h>
 
 #include "config.h"
 #include "menu.h"
 #include "util.h"
 #include "data.h"
+#include "validate.h"
 
 HHK_NAME("CPtune4")
 HHK_AUTHOR("CalcLoverHK")
@@ -21,6 +24,7 @@ HHK_VERSION(XTUNE_STR)
 HHK_DESCRIPTION("Overclocking utility for fx-CP calculator")
 
 bool help_status = false;
+int exception = 0;
 struct cpg_overclock_setting preset[5];
 
 static bool global_getkey(key_event_t key)
@@ -61,6 +65,16 @@ static bool global_getkey(key_event_t key)
     return false;
 }
 
+static int xtune_panic_handler(uint32_t code) {
+    CPG.FLLFRQ.FLF = 500;
+    exception++;
+    return 0;
+}
+
+void print_exception(int row, int x) {
+    row_print_color(row, x, exception ? C_RED : C_BLACK, C_WHITE, "Exception: %d", exception);
+}
+
 int main()
 {
     #ifdef ENABLE_GDB
@@ -77,6 +91,7 @@ int main()
     cpg_set_overclock_permanent(true);
     gint_setrestart(true);
     getkey_set_feature_function(global_getkey);
+    gint_exc_catch(xtune_panic_handler);
 
     struct cpg_overclock_setting s;
     cpg_get_overclock_setting(&s);
