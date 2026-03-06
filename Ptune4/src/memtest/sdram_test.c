@@ -88,6 +88,9 @@ void sdram_test(bool TRC_3_check)
     row_title("SDRAM Test");
 
     CPG.SSCGCR.SSEN = false;
+    cpu_sr_t SR = cpu_getSR();
+    cpu_setSR((cpu_sr_t)(SR.lword | 0xf0));
     ram_write_test(TRC_3_check);
+    cpu_setSR(SR);
 }
 #endif

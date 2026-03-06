@@ -118,10 +118,13 @@ void sram_test()
     row_title("SRAM Test");
 
     CPG.SSCGCR.SSEN = false;
+    cpu_sr_t SR = cpu_getSR();
+    cpu_setSR((cpu_sr_t)(SR.lword | 0xf0));
     struct cpg_overclock_setting s0;
     cpg_get_overclock_setting(&s0);
     ram_read_test();
     ram_write_test();
     cpg_set_overclock_setting(&s0);
+    cpu_setSR(SR);
 }
 #endif
