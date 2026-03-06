@@ -3,7 +3,6 @@
 #include <gint/prof.h>
 #include <gint/mpu/cpg.h>
 
-#include "util.h"
 #include "config.h"
 #include "menu.h"
 #include "validate.h"

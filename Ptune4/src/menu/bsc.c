@@ -5,39 +5,8 @@
 #include "validate.h"
 #include "util.h"
 #include "config.h"
+#include "help.h"
 #include "settings.h"
-
-#ifdef ENABLE_HELP
-static void help_info()
-{
-    #if defined CP400
-    info_box(15, 1, C_BLACK, "HELP",
-        "[-][+]: -/+ option value\n"
-        "[x]: Toggle BCR/WCR mode\n"
-        "[UP][DOWN]: Select option\n"
-        "[LEFT][RIGHT]: Select CSn area\n"
-        "[Clear]: Close help / < Express menu");
-    #elif defined CG100
-    info_box(3, 1, C_BLACK, "HELP",
-    	"[+]: Increase option value\n"
-    	"[-]: Decrease option value\n"
-    	"[|<-][->|]: Toggle BCR/WCR mode\n"
-    	"[UP][DOWN]: Select option\n"
-    	"[LEFT][RIGHT]: Select CSn area\n"
-    	"[PGUP][PGDW]: Quick jump to previous/next row\n"
-        "[BACK]: Close help / < Express menu");
-    #else
-    info_box(3, 1, C_BLACK, "HELP",
-    	"[F1][+]: Increase option value\n"
-    	"[F2][-]: Decrease option value\n"
-    	"[F6]: Toggle BCR/WCR mode\n"
-    	"[UP][DOWN]: Select option\n"
-    	"[LEFT][RIGHT]: Select CSn area\n"
-        "[EXIT]: Close help / < Express menu");
-    #endif
-    while (xtune_getkey().key != KEY_EXIT);
-}
-#endif
 
 BSC_option const CS0WCR_WR_ptr = { .CSn = SELECT_CS0, .MODE = SELECT_WCR, .REG = SELECT_WR };
 BSC_option const CS0WCR_WW_ptr = { .CSn = SELECT_CS0, .MODE = SELECT_WCR, .REG = SELECT_WW };
@@ -196,7 +165,7 @@ void bsc_menu()
     shift = false;
     u8 max_option = SELECT_IWRRS;
     #ifdef ENABLE_HELP
-    set_help_function(help_info);
+    set_help_function(HELP_BSC);
     #endif
 
     while (true)

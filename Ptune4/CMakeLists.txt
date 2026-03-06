@@ -22,16 +22,17 @@ git_version_number(GIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.git"
 set(SOURCES
   src/main.c
   src/data.c
+  src/help.c
   src/validate.c
   src/util.c
   src/syscall.s
   src/menu/express.c
   src/menu/settings.c
   src/menu/bsc.c
-  src/menu/benchmark.c
   src/menu/mem_data.c
   src/benchmark/mem_bench.s
   src/benchmark/tick_count.s
+  src/benchmark/benchmark.c
   src/memtest/rom_test.c
   src/memtest/sram_test.c
   src/memtest/sdram_test.c

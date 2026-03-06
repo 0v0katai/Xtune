@@ -364,24 +364,6 @@ void row_clear(int row)
 
 #endif /* FXCG50 */
 
-static help_function_t help_function = NULL;
-
-void set_help_function(help_function_t function)
-{
-	help_function = function;
-}
-
-void call_help_function()
-{
-	extern bool help_status;
-	shift = false;
-	if (help_status)
-		return;
-	help_status = true;
-	help_function();
-	help_status = false;
-}
-
 key_event_t xtune_getkey()
 {
 	dupdate();

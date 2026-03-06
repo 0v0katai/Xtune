@@ -6,41 +6,9 @@
 
 #include "settings.h"
 #include "config.h"
+#include "help.h"
 #include "validate.h"
 #include "mem_test.h"
-
-#ifdef ENABLE_HELP
-static void help_info()
-{
-    #if defined CP400
-    info_box(15, 1, C_BLACK, "HELP",
-    	"[=]: Reset to default\n"
-    	"[-][+]: -/+ option value (1 MHz)\n"
-    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)\n"
-    	"[UP][DOWN]: Select option\n"
-    	"[/]: About this add-in\n"
-    	"[Clear]: Close help / < Express menu");
-    #elif defined CG100
-    info_box(4, 1, C_BLACK, "HELP",
-    	"[ON]: Reset to default\n"
-    	"[+][-]: +/- option value (1 MHz)\n"
-    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)\n"
-    	"[UP][DOWN]: Select option\n"
-    	"[PGUP]: About this add-in\n"
-    	"[BACK]: Close help / < Express menu");
-    #else
-    info_box(3, 1, C_BLACK, "HELP",
-    	"[F1]: Reset to default\n"
-    	"[F2][+]: Increase option value (1 MHz)\n"
-    	"[F3][-]: Decrease option value (0.1 MHz)\n"
-    	"[LEFT][RIGHT]: -/+ option value (0.1 MHz)\n"
-    	"[UP][DOWN]: Select option\n"
-    	"[F6]: About this add-in\n"
-    	"[EXIT]: Close help / < Express menu");
-    #endif
-    while (xtune_getkey().key != KEY_EXIT);
-}
-#endif
 
 i32 settings[] =
 {
@@ -123,7 +91,7 @@ void settings_menu()
     static const i8 select_max = SELECT_F1_YES_NO + 1;
 
     #ifdef ENABLE_HELP
-    set_help_function(help_info);
+    set_help_function(HELP_SETUP);
     #endif
 
     while (true)

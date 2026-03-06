@@ -16,6 +16,7 @@
 #include "menu.h"
 #include "util.h"
 #include "data.h"
+#include "help.h"
 #include "validate.h"
 
 HHK_NAME("CPtune4")

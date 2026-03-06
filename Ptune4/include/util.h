@@ -111,12 +111,6 @@ void row_clear(int row);
 
 #endif /* FXCG50 */
 
-typedef void (*help_function_t)(void);
-
-void set_help_function(help_function_t function);
-
-void call_help_function();
-
 extern bool shift;
 key_event_t xtune_getkey();
 

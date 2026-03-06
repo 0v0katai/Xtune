@@ -7,44 +7,8 @@
 #include "mem_test.h"
 #include "settings.h"
 #include "config.h"
+#include "help.h"
 #include "menu.h"
-
-#ifdef ENABLE_HELP
-static void help_info()
-{
-    #if defined CP400
-    info_box(15, 1, C_BLACK, "HELP",
-    	"[=]: Reset to default\n"
-    	"[x]: Toggle margin view\n"
-    	"[y]: ROM read test\n"
-    	"[z]: SDRAM write test\n"
-    	"[Clear]: Close help / < Express menu");
-    #elif defined CG100
-    info_box(4, 1, C_BLACK, "HELP",
-    	"[ON]: Reset to default\n"
-    	"[|<-]: Toggle margin view\n"
-    	"[->|]: ROM read test\n"
-    	"[PGUP]: SDRAM write test\n"
-    	"[BACK]: Close help / < Express menu");
-    #elif defined CG50
-    info_box(4, 1, C_BLACK, "HELP",
-    	"[F1]: Reset to default\n"
-    	"[F3]: Toggle margin view\n"
-    	"[F5]: ROM read test\n"
-    	"[F6]: SDRAM write test\n"
-    	"[EXIT]: Close help / < Express menu");
-    #else
-    info_box(3, 1, C_BLACK, "HELP",
-    	"[F1]: Reset to default\n"
-    	"[F2]: Toggle SRAM read/write view\n"
-    	"[F3]: Toggle margin view\n"
-    	"[F5]: ROM read test\n"
-    	"[F6]: SRAM read/write test\n"
-    	"[EXIT]: Close help / < Express menu");
-    #endif
-    while (xtune_getkey().key != KEY_EXIT);
-}
-#endif
 
 #if defined CP400
 # define RAM_DISPLAY_ROW 14
@@ -78,7 +42,7 @@ void mem_data_menu()
     #endif
 
     #ifdef ENABLE_HELP
-    set_help_function(help_info);
+    set_help_function(HELP_MEM_DATA);
     #endif
 
     while (true)

@@ -19,6 +19,7 @@
 #include "config.h"
 #include "menu.h"
 #include "data.h"
+#include "help.h"
 
 enum select_option
 {
@@ -29,61 +30,6 @@ enum select_option
     SELECT_BFC,
     SELECT_PFC
 };
-
-#ifdef ENABLE_HELP
-static void help_info()
-{
-    #if defined CP400
-    info_box(12, 1, C_BLACK, "HELP",
-    	"[KBD]: Reset to default\n"
-    	"[DEL]: Toggle benchmark\n"
-    	"[UP][DOWN]: Select option\n"
-    	"[LEFT][RIGHT]: -/+ option value\n"
-    	"[/][x]: -/+ roR\n"
-    	"[-][+]: -/+ TRC\n"
-    	"[SHIFT][-][+]: -/+ CL\n"
-    	"[=]: Settings\n"
-    	"[x]: BSC settings\n"
-    	"[y]: Memory data & tests\n"
-    	"[Clear]: Close help / Quit CPtune4");
-    #elif defined CG100
-    info_box(0, 1, C_BLACK, "HELP",
-    	"[ON]: Reset to default\n"
-    	"[|<-][->|]: Select preset, [OK]: Confirm\n"
-    	"[PGUP]: Toggle benchmark\n"
-    	"[UP][DOWN]: Select option\n"
-    	"[LEFT][RIGHT]: -/+ option value\n"
-    	"[x][/]: +/- roR\n"
-    	"[+][-]: +/- TRC\n"
-    	"[SHIFT][+][-]: +/- CL\n"
-    	"[SETTINGS]: Settings\n"
-    	"[VARIABLE]: BSC settings\n"
-    	"[TOOLS]: Memory data & tests\n"
-        "[SHIFT][HOME]: Quit Ptune4\n"
-    	"[BACK]: Close help");
-    #else
-    info_box(0, 1, C_BLACK, "HELP",
-    	"[F1]-[F5]: Apply preset\n"
-    	"[F6]: Toggle benchmark\n"
-    	"[UP][DOWN]: Select option\n"
-    	"[LEFT][RIGHT]: -/+ option value\n"
-    	"[x][/]: +/- roR\n"
-    # ifdef CG50
-    	"[+][-]: +/- TRC\n"
-    	"[SHIFT][+][-]: +/- CL\n"
-    # else
-    	"[+]/[-]: +/- raR\n"
-    	"[SHIFT][+]/[-]: +/- raW\n"
-    # endif
-    	"[OPTN]: Memory data & tests\n"
-    	"[VARS]: BSC settings\n"
-    	"[SHIFT][MENU]: Settings\n"
-        "[MENU]: Return to OS\n"
-    	"[EXIT]: Close help");
-    #endif
-    while (xtune_getkey().key != KEY_EXIT);
-}
-#endif
 
 static void print_preset(int current)
 {
@@ -314,7 +260,7 @@ void express_menu()
 
         dclear(C_WHITE);
         #ifdef ENABLE_HELP
-        set_help_function(help_info);
+        set_help_function(HELP_EXPRESS);
         #endif
         #if !defined CP400
         print_preset(clock_get_speed());
