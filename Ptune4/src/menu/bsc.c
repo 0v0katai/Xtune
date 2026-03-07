@@ -280,7 +280,7 @@ void bsc_menu()
 
         }
         shift = false;
-        max_option = 4 - (select.MODE == SELECT_BCR || select.CSn == SELECT_CS3);
+        max_option = 3 + (select.MODE == SELECT_BCR || select.CSn == SELECT_CS3);
         if (select.REG > max_option)
             select.REG = max_option;
         if (select.byte == CS0WCR_WW_ptr.byte)
