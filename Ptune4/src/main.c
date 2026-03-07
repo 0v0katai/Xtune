@@ -46,6 +46,12 @@ static bool global_getkey(key_event_t key)
         return true;
     }
     #endif
+    #ifdef ENABLE_GDB
+    if (!shift && key.key == KEY_ACON) {
+        __asm__("trapa #42");
+        __asm__("trapa #42");
+    }
+    #endif
     #ifdef ENABLE_HELP
     if (key.key == KEY_OPEN_HELP && !help_status)
         call_help_function();
@@ -80,7 +86,8 @@ int main()
 {
     #ifdef ENABLE_GDB
     gdb_start_on_exception();
-    __asm__("trapa #42");
+    #else
+    gint_exc_catch(xtune_panic_handler);
     #endif
 
     __printf_enable_fixed();
@@ -92,7 +99,6 @@ int main()
     cpg_set_overclock_permanent(true);
     gint_setrestart(true);
     getkey_set_feature_function(global_getkey);
-    gint_exc_catch(xtune_panic_handler);
 
     struct cpg_overclock_setting s;
     cpg_get_overclock_setting(&s);

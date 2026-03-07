@@ -49,6 +49,13 @@
 // #define ENABLE_AZUR
 #define ENABLE_HELP
 
+/* GDB */
+
+#if 0
+# define ENABLE_GDB
+# undef ENABLE_USB
+#endif
+
 /* Keybinds */
 #if defined CP400
 # define KEY_EXPRESS_SELXM KEY_LEFTPAR
