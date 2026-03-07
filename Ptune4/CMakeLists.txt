@@ -1,7 +1,7 @@
 # Configure with [fxsdk build-fx] or [fxsdk build-cg], which provide the
 # toolchain file and module path of the fxSDK
 
-set(XTUNE_VERSION "00.14.0001")
+set(XTUNE_VERSION "00.20.0000")
 cmake_minimum_required(VERSION 3.15)
 project(Xtune LANGUAGES ASM C VERSION ${XTUNE_VERSION})
 
