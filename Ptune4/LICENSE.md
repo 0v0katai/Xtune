@@ -1,7 +1,7 @@
 The MIT License (MIT)
 =====================
 
-Copyright © 2025 Sentaro21, CalcLoverHK
+Copyright © 2025-2026 Xtune contributors
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
