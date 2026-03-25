@@ -14,7 +14,7 @@ Xtune is an overclocking and benchmarking utility for CASIO calculators with Sup
 
 ## Releases
 
-Xtune comes in 2 flavors: Legacy (GPLv2+) and gint (MIT). New features will appear on gint version first.
+Xtune comes in 2 flavors: Legacy and gint. New features will appear on gint version first.
 
 Legacy | Calculators | Remarks
 --- | --- | ---
@@ -29,3 +29,7 @@ gint | Calculators | Remarks
 Ftune4 (WIP) | All models supported by Ftune2/3 | Does not support SH3 models at the moment as [gint's getkey crashes in overclocked SH3 calculators](https://git.planet-casio.com/Lephenixnoir/gint/pulls/50)
 Ptune4 | All models supported by Ptune2/3, fx-CG100, fx-1AU Graph, Graph Math+ | Comes with unified and model-specific versions
 CPtune4 | fx-CP400(+E), fx-CG500 |
+
+## License
+
+Legacy and gint releases are licensed under [GPLv2+](__legacy__/LICENSE.md) and [MIT/expat](LICENSE.md) licenses respectively.

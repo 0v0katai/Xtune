@@ -15,7 +15,7 @@ find_package(cBench 1.0 REQUIRED)
 find_package(Azur 0.1)
 find_package(Git REQUIRED)
 
-git_version_number(GIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.git"
+git_version_number(GIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/.git"
   SHORT_HASH "XTUNE_GIT_HASH"
   TAG_RELATIVE "XTUNE_GIT_VERSION")
 
