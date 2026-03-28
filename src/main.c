@@ -72,22 +72,10 @@ static bool global_getkey(key_event_t key)
     return false;
 }
 
-static int xtune_panic_handler(uint32_t code) {
-    CPG.FLLFRQ.FLF = 500;
-    exception++;
-    return 0;
-}
-
-void print_exception(int row, int x) {
-    row_print_color(row, x, exception ? C_RED : C_BLACK, C_WHITE, "Exception: %d", exception);
-}
-
 int main()
 {
     #ifdef ENABLE_GDB
     gdb_start_on_exception();
-    #else
-    gint_exc_catch(xtune_panic_handler);
     #endif
 
     __printf_enable_fixed();

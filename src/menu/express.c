@@ -292,9 +292,6 @@ void express_menu()
         row_print_color(6, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "CL %d", BSC.CS3WCR.A3CL + 1);
         #endif
 
-        extern void print_exception(int row, int x);
-        print_exception(KEY_DISPLAY_ROW - 1, 2);
-
         #ifdef ENABLE_USB
         row_print(KEY_DISPLAY_ROW, 2, "Capture");
         # ifdef CG100
