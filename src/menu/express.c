@@ -245,6 +245,7 @@ void express_menu()
                 #else
                 sram_test();
                 #endif
+                mem_data_menu();
         }
     }
 
@@ -618,5 +619,4 @@ void express_menu()
     #else
     } while (true);
     #endif
-    return;
 }
