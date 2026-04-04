@@ -86,7 +86,6 @@ int main()
 
     prof_init();
     cpg_set_overclock_permanent(true);
-    gint_setrestart(true);
     getkey_set_feature_function(global_getkey);
 
     if (!load_config())
