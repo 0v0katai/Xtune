@@ -65,7 +65,7 @@ static void cg100_getkey(key_event_t key, struct cpg_overclock_setting s)
 {
     if (key.key == KEY_ON) {
         if (shift) {
-            if (save_config()) {
+            if (!save_config()) {
                 info_box(5, 1, C_RED, "ERROR",
                     "Failed to write config to file!");
             } else {
@@ -103,9 +103,9 @@ static void cg100_getkey(key_event_t key, struct cpg_overclock_setting s)
                 case KEY_OK:
                 case KEY_EXE:
                     if (shift)
-                        preset[select_preset + 1] = s;
+                        config.presets[select_preset] = s;
                     else
-                        cpg_set_overclock_setting(&preset[select_preset + 1]);
+                        cpg_set_overclock_setting(&config.presets[select_preset]);
                     __attribute__((fallthrough));
                 case KEY_BACK:
                     shift = false;
@@ -123,7 +123,7 @@ static void cp400_getkey(key_event_t key, struct cpg_overclock_setting s)
     {
         case KEY_KBD:
             if (shift) {
-                if (save_config()) {
+                if (!save_config()) {
                     info_box(5, 1, C_RED, "ERROR",
                         "Failed to write config to file!");
                 } else {
@@ -144,9 +144,9 @@ static void cp400_getkey(key_event_t key, struct cpg_overclock_setting s)
         case KEY_2:
         case KEY_3:
             if (shift)
-                preset[key.key - KEY_1] = s;
+                config.presets[key.key - KEY_2] = s;
             else
-                clock_set_speed(key.key - KEY_1 + 1);
+                clock_set_speed(key.key - KEY_2 + 2);
             break;
         case KEY_4:
         case KEY_5:
@@ -170,14 +170,12 @@ static void print_express_cpg_bsc(struct cpg_overclock_setting s)
     #else
     row_print(1, 29, "FLLFRQ:");
     row_print(2, 29, "FRQCR:");
-    for (int i = 0; i < 8; i++)
-    {
+    for (int i = 0; i < 8; i++) {
         static const char *csn_name[] = {"0", "2", "3", "5A"};
-        static const char reg_name[] = {'B', 'W'};
-        row_print(i + 3, 29, "CS%s%cCR:", csn_name[i % 4], reg_name[i >= 4]);
+        row_print(i + 3, 29, "CS%s%cCR:", csn_name[i % 4], i < 4 ? 'B' : 'W');
     }
     for (int i = 0; i < 10; i++)
-        row_print(i + 1, 38, "0x%08X", *(&(s.FLLFRQ) + i));
+        row_print(i + 1, 38, "0x%08X", s.regs[i]);
     #endif
 }
 
@@ -315,9 +313,7 @@ void express_menu()
 
         for (int i = 0; i < 6; i++)
         {
-            static const u32 red_zone[6] =
-                {FLL_RED_ZONE, PLL_RED_ZONE, IFC_RED_ZONE, SFC_RED_ZONE, BFC_RED_ZONE, PFC_RED_ZONE};
-            row_print_color(i + 1, SPEED_DISPLAY_X, (&f.FLL_f)[i] > red_zone[i]
+            row_print_color(i + 1, SPEED_DISPLAY_X, (&f.FLL_f)[i] > red_zone_defs[i]
                 ? C_RED : C_BLACK, C_WHITE, "%.3D", (&f.FLL_f)[i] / 1000);
             row_print(i + 1, SPEED_DISPLAY_X + 7, "MHz");
         }
@@ -327,19 +323,15 @@ void express_menu()
         #endif
         {
             static const char *description[] = {"FLL", "PLL", "CPU", "SuperHyway", "Bus", "I/O"};
-            static const char *type[] = {"multiplier", "clock divider"};
-            row_print(KEY_DISPLAY_ROW + 3, 2, "%s %s", description[select], type[select >= SELECT_IFC]);
+            row_print(KEY_DISPLAY_ROW + 3, 2, "%s %s", description[select],
+                select < SELECT_IFC ? "multiplier" : "clock divider");
             #if defined CP400
-            if (select == SELECT_FLL)
-                row_print(11, 25, "(Max x2047)");
-            else
-                row_print(11, 25, "(Max %.3D MHz)", settings[select + 1] / 1000);
+            if (select != SELECT_FLL)
+                row_print(11, 25, "(Max %.3D MHz)", config.clock_max[select - 1] / 1000);
             row_highlight(11);
             #else
-            if (select == SELECT_FLL)
-                row_print(12, 33, "(Max x2047)");
-            else
-                row_print(12, 33, "(Max %.3D MHz)", settings[select + 1] / 1000);
+            if (select != SELECT_FLL)
+                row_print(12, 33, "(Max %.3D MHz)", config.clock_max[select - 1] / 1000);
             row_highlight(12);
             #endif
         }
@@ -402,7 +394,7 @@ void express_menu()
             {8, 4, 0},
             {16, 8, 8}
         };
-        u8 divs[4] = {f.Iphi_div, f.Sphi_div, f.Bphi_div, f.Pphi_div};
+        u32 divs[4] = {f.Iphi_div, f.Sphi_div, f.Bphi_div, f.Pphi_div};
         update = false;
         #ifdef CG100
         cg100_getkey(key, s);
@@ -416,7 +408,7 @@ void express_menu()
             #if !defined CG100 && !defined CP400
             case KEY_F1:
             if (shift) {
-                if (save_config()) {
+                if (!save_config()) {
                     info_box(5, 1, C_RED, "ERROR",
                         "Failed to write config to file!");
                 } else {
@@ -424,14 +416,13 @@ void express_menu()
                         "Config saved to xtune.sav!");
                 }
                 xtune_getkey();
-                break;
             } else if (F1_YES_NO) {
                 info_box(5, 0, C_BLACK, "Caution",
                     "Reset to default preset?\n\n");
-                if (!yes_no(8))
-                    break;
+                if (yes_no(8))
+                    clock_set_speed(CLOCK_SPEED_DEFAULT);
             }
-            __attribute__((fallthrough));
+            break;
             case KEY_F2:
             case KEY_F3:
             case KEY_F4:
@@ -440,12 +431,12 @@ void express_menu()
             if (shift) {
                 info_box(5, 0, C_BLACK, "Caution",
                     "Save to F%d?\n\n",
-                    key.key - KEY_F1 + 1);
+                    key.key - KEY_F2 + 2);
                 if (yes_no(8))
-                    preset[key.key - KEY_F1] = s;
+                    config.presets[key.key - KEY_F2] = s;
                 break;
             }
-            cpg_set_overclock_setting(&preset[key.key - KEY_F1]);
+            cpg_set_overclock_setting(&config.presets[key.key - KEY_F2]);
             # endif
             benchmark_update = true;
             break;
@@ -566,7 +557,7 @@ void express_menu()
                 else
                 {
                     const u8 check = select - 2;
-                    const i32 limit[4] = {CPU_CLK_MAX, SHW_CLK_MAX, BUS_CLK_MAX, IO_CLK_MAX};
+                    const u32 limit[4] = {IFC_CLK_MAX, SFC_CLK_MAX, BFC_CLK_MAX, PFC_CLK_MAX};
                     if (!UNLOCKED_MODE && ((&f.Iphi_f)[check] << 1) > limit[check])
                         break;
                     for (int i = check - 1; i >= 0; i--)

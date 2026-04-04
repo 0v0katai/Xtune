@@ -26,7 +26,8 @@ HHK_DESCRIPTION("Overclocking utility for fx-CP calculator")
 
 bool help_status = false;
 int exception = 0;
-struct cpg_overclock_setting preset[5];
+Xtune_config_t config;
+struct cpg_overclock_setting F1;
 
 static bool global_getkey(key_event_t key)
 {
@@ -88,15 +89,8 @@ int main()
     gint_setrestart(true);
     getkey_set_feature_function(global_getkey);
 
-    struct cpg_overclock_setting s;
-    cpg_get_overclock_setting(&s);
-    for (int i = CLOCK_SPEED_F1; i <= CLOCK_SPEED_F5; i++)
-    {
-        clock_set_speed(i);
-        cpg_get_overclock_setting(&preset[i-1]);
-    }
-    cpg_set_overclock_setting(&s);
-    load_config();
+    if (!load_config())
+        init_config();
 
     express_menu();
     return 1;

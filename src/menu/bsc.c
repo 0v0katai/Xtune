@@ -57,7 +57,7 @@ static void print_csnxcr(int row, int x, u8 check, BSC_option select)
             field = csnwcr_field[REG];
         }
         value = (lword >> mask) & field;
-        const u32 s_select = *(&preset[CLOCK_SPEED_DEFAULT-1].CS0BCR + read.MODE * 4 + read.CSn - (read.CSn == SELECT_CS5A));
+        const u32 s_select = get_gint_preset(CLOCK_SPEED_DEFAULT).regs[2 + read.MODE * 4 + read.CSn - (read.CSn == SELECT_CS5A)];
         const i8 diff = value - ((s_select >> mask) & field);
         if (read.MODE == SELECT_BCR)
             sprintf(str, "%d", BCR_equivalent(value));

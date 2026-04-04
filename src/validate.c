@@ -15,50 +15,50 @@ bool compute_limit(int PLL_add) {
         return false;
 
     const clock_frequency_t *freq = clock_freq();
-    const int PLL_f = freq->PLL_f + PLL_add;
+    const u32 PLL_f = freq->PLL_f + PLL_add;
     if (PLL_f > PLL_CLK_MAX)
         return true;
 
     for (int i = 0; i < 4; i++)
-        if (PLL_f / freq->div[i] > settings[i + 3])
-            return i == 3 ? freq->div[i] == 64 : true;
+        if (PLL_f / freq->divs[i] > config.clock_max[i])
+            return i == 3 ? freq->divs[i] == 64 : true;
 
     return false;
 }
 
-unsigned int best_rom_wait(i32 Bphi_f)
+unsigned int best_rom_wait(u32 Bphi_f)
 {
     int i;
-    for (i = SH4_WR_18; i >= SH4_WR_0; i--)
-        if (Bphi_f >= roR[i] / 100 * (100 - ROM_MARGIN))
+    for (i = SH4_WR_12; i >= SH4_WR_0; i--)
+        if (Bphi_f >= config.roR[i] / 100 * (100 - ROM_MARGIN))
             break;
     return i + 1;
 }
 
 #if defined CG50 || defined CG100 || defined CP400
-unsigned int best_TRC(i32 Bphi_f)
+unsigned int best_TRC(u32 Bphi_f)
 {
     int i;
-    for (i = 2; i >= 0; i--)
-        if (Bphi_f >= raW_TRC[i] / 100 * (100 - RAM_MARGIN))
+    for (i = SH4_TRC_6; i >= SH4_TRC_3; i--)
+        if (Bphi_f >= config.TRC[i] / 100 * (100 - RAM_MARGIN))
             break;
     return i + 1;
 }
 #else
-unsigned int best_ram_read(i32 Bphi_f)
+unsigned int best_ram_read(u32 Bphi_f)
 {
     int i;
     for (i = SH4_WR_8; i >= SH4_WR_0; i--)
-        if (Bphi_f >= raR[i] / 100 * (100 - RAM_MARGIN))
+        if (Bphi_f >= config.raR[i] / 100 * (100 - RAM_MARGIN))
             break;
     return i + 1;
 }
 
-unsigned int best_ram_write(i32 Bphi_f)
+unsigned int best_ram_write(u32 Bphi_f)
 {
     int i;
     for (i = SH4_WR_6; i >= SH4_WR_0; i--)
-        if (Bphi_f >= raW[i] / 100 * (100 - RAM_MARGIN))
+        if (Bphi_f >= config.raW[i] / 100 * (100 - RAM_MARGIN))
             break;
     return i + 2;
 }
@@ -85,12 +85,12 @@ bool auto_up_PFC()
 {
     cpg_compute_freq();
     const clock_frequency_t *freq = clock_freq();
-    return AUTO_UP_PFC && freq->Pphi_f << 1 < IO_CLK_MAX && freq->Pphi_div != freq->Bphi_div;
+    return AUTO_UP_PFC && freq->Pphi_f << 1 < PFC_CLK_MAX && freq->Pphi_div != freq->Bphi_div;
 }
 
 bool auto_down_PFC()
 {
     cpg_compute_freq();
     const clock_frequency_t *freq = clock_freq();
-    return !UNLOCKED_MODE && freq->Pphi_f > IO_CLK_MAX && freq->Pphi_div != 64;
+    return !UNLOCKED_MODE && freq->Pphi_f > PFC_CLK_MAX && freq->Pphi_div != 64;
 }

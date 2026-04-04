@@ -25,21 +25,10 @@ void mem_data_menu()
     key_event_t key;
     shift = false;
     bool margin = false;
-    mem_test_settings test_settings = {.byte = 0b111};
-
-    static const i32 roR_default[] =
-    {
-        roR_0, roR_1, roR_2, roR_3, roR_4,
-        roR_5, roR_6, roR_8, roR_10, roR_12,
-        roR_14, roR_18
-    };
     #if !defined CG50 && !defined CG100 && !defined CP400
     bool mode = READ;
-    static const u32 raR_default[] = {raR_0, raR_1, raR_2, raR_3, raR_4, raR_5, raR_6, raR_8};
-    static const u32 raW_default[] = {raW_0, raW_1, raW_2, raW_3, raW_4, raW_5, raW_6};
-    #else
-    static const u32 raW_TRC_default[] = {raW_TRC_3, raW_TRC_4, raW_TRC_6, raW_TRC_9};
     #endif
+    mem_test_settings test_settings = {.byte = 0b111};
 
     #ifdef ENABLE_HELP
     set_help_function(HELP_MEM_DATA);
@@ -59,8 +48,8 @@ void mem_data_menu()
         {
             row_print(i + 2, 1, "roR_%d", WR_equivalent(i));
             row_print_color(i + 2, 11, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
-                ? roR[i] / 100 * (100 - ROM_MARGIN) / 1000
-                : roR[i] / 1000);
+                ? config.roR[i] / 100 * (100 - ROM_MARGIN) / 1000
+                : config.roR[i] / 1000);
         }
         #if defined CP400 || defined CG50 || defined CG100
         for (int i = 0; i < 4; i++)
@@ -68,8 +57,8 @@ void mem_data_menu()
             row_print(i + RAM_DISPLAY_ROW, OFFSET_X, "TRC_%d", TRC_equivalent(i));
             row_print_color(i + RAM_DISPLAY_ROW, OFFSET_X + 10,
                 margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
-                ? raW_TRC[i] / 100 * (100 - RAM_MARGIN) / 1000
-                : raW_TRC[i] / 1000);
+                ? config.TRC[i] / 100 * (100 - RAM_MARGIN) / 1000
+                : config.TRC[i] / 1000);
         }
         #else
         if (mode == READ)
@@ -77,16 +66,16 @@ void mem_data_menu()
             {
                 row_print(i + 2, 25, "raR_%d", WR_equivalent(i));
                 row_print_color(i + 2, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
-                    ? raR[i] / 100 * (100 - RAM_MARGIN) / 1000
-                    : raR[i] / 1000);
+                    ? config.raR[i] / 100 * (100 - RAM_MARGIN) / 1000
+                    : config.raR[i] / 1000);
             }
         else
             for (int i = SH4_WR_0; i <= SH4_WR_6; i++)
             {
                 row_print(i + 2, 25, "raW_%d", i);
                 row_print_color(i + 2, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
-                    ? raW[i] / 100 * (100 - RAM_MARGIN) / 1000
-                    : raW[i] / 1000);
+                    ? config.raW[i] / 100 * (100 - RAM_MARGIN) / 1000
+                    : config.raW[i] / 1000);
             }
         #endif
 
@@ -128,17 +117,7 @@ void mem_data_menu()
             case KEY_SHIFT:
                 continue;
             case KEY_MEMDATA_RESET:
-                for (int i = SH4_WR_0; i <= SH4_WR_18; i++)
-                    roR[i] = roR_default[i];
-                #if !defined CG50 && !defined CG100 && !defined CP400
-                for (int i = SH4_WR_0; i <= SH4_WR_8; i++)
-                    raR[i] = raR_default[i];
-                for (int i = SH4_WR_0; i <= SH4_WR_6; i++)
-                    raW[i] = raW_default[i];
-                #else
-                for (int i = 0; i < 4; i++)
-                    raW_TRC[i] = raW_TRC_default[i];
-                #endif
+                init_mem_data();
                 break;
 
             #if !defined CG50 && !defined CG100 && !defined CP400

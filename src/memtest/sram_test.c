@@ -12,9 +12,6 @@
 #if !defined CG50 && !defined CG100 && !defined CP400
 # define RAM_WAIT(CS2WCR) (((CS2WCR) >> 7) & 0b1111)
 
-u32 raR[] = {raR_0, raR_1, raR_2, raR_3, raR_4, raR_5, raR_6, raR_8};
-u32 raW[] = {raW_0, raW_1, raW_2, raW_3, raW_4, raW_5, raW_6};
-
 static void print_RAM_read_select(u32 *RAM_read_area)
 {
     row_clear(14);
@@ -24,7 +21,6 @@ static void print_RAM_read_select(u32 *RAM_read_area)
 static void ram_read_test()
 {
     u32 *RAM_read_area = SRAM_BASE;
-    static const u32 raR_default[] = {raR_0, raR_1, raR_2, raR_3, raR_4, raR_5, raR_6, raR_8};
     
     /* Slowest RAM read area search */
     struct cpg_overclock_setting s;
@@ -63,7 +59,7 @@ static void ram_read_test()
     { 
         s.FRQCR = SH4_FRQCR(8 + i * 3, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
         cpg_set_overclock_setting(&s);
-        for (int FLF = raR_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF++)
+        for (int FLF = raR_defs[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF++)
         {
             BSC.CS2WCR.WR = i;
             if (read_address(FLF, RAM_read_area))
@@ -72,7 +68,7 @@ static void ram_read_test()
             row_clear(2 + i);
             row_print(2 + i, 25, "raR_%d", WR_equivalent(i));
             row_print(2 + i, 35, "%.3D MHz", Bphi_f / 1000);
-            raR[i] = Bphi_f;
+            config.raR[i] = Bphi_f;
             dupdate();
         }
     }
@@ -106,7 +102,7 @@ static void ram_write_test()
             row_clear(2 + i);
             row_print(2 + i, 25, "raW_%d", i);
             row_print(2 + i, 35, "%.3D MHz", Bphi_f / 1000);
-            raW[i] = Bphi_f;
+            config.raW[i] = Bphi_f;
             dupdate();
         }
     }

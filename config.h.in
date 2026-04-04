@@ -1,3 +1,5 @@
+#pragma once
+
 #include <gint/keycodes.h>
 #include <gint/hardware.h>
 
@@ -148,3 +150,71 @@
 #else
 # define PFC_RED_ZONE 25 * 1000000
 #endif
+
+/* Memory data default tables */
+
+enum roR_default_table {
+    roR_0  =  13 * 1000000, roR_1  =  23 * 1000000, roR_2  =  33 * 1000000,
+    roR_3  =  43 * 1000000, roR_4  =  53 * 1000000, roR_5  =  62 * 1000000,
+    roR_6  =  72 * 1000000, roR_8  =  92 * 1000000, roR_10 = 110 * 1000000,
+    roR_12 = 127 * 1000000
+};
+enum raR_default_table {
+    raR_0  =  15 * 1000000, raR_1  =  30 * 1000000, raR_2  =  52 * 1000000,
+    raR_3  =  70 * 1000000, raR_4  =  88 * 1000000, raR_5  = 106 * 1000000,
+    raR_6  = 124 * 1000000, raR_8  = 150 * 1000000
+};
+enum raW_default_table {
+    raW_0  =  28 * 1000000, raW_1  =  57 * 1000000, raW_2  =  85 * 1000000,
+    raW_3  = 109 * 1000000, raW_4  = 137 * 1000000, raW_5  = 142 * 1000000,
+    raW_6  = 147 * 1000000
+};
+enum TRC_default_table {
+    TRC_3  =  50 * 1000000, TRC_4  =  80 * 1000000,
+    TRC_6  = 120 * 1000000, TRC_9  = 130 * 1000000
+};
+
+/* DO NOT CHANGE */
+
+#define SETUP0_DEF \
+    ROM_MARGIN_DEF << 28 \
+    | RAM_MARGIN_DEF << 24 \
+    | UNLOCKED_MODE_DEF << 23 \
+    | AUTO_REDUCE_WAIT_DEF << 22 \
+    | AUTO_UP_PFC_DEF << 21 \
+    | STARTUP_MEMORY_TEST_DEF << 20 \
+    | F1_YES_NO_DEF << 19
+
+static const u32 setup_defs[] = {
+    SETUP0_DEF,
+    PLL_CLK_MAX_DEF,
+    IFC_CLK_MAX_DEF,
+    SFC_CLK_MAX_DEF,
+    BFC_CLK_MAX_DEF,
+    PFC_CLK_MAX_DEF
+};
+
+static const u32 roR_defs[] = {
+    roR_0, roR_1, roR_2, roR_3, roR_4,
+    roR_5, roR_6, roR_8, roR_10, roR_12
+};
+
+static const u32 raR_defs[] = {
+    raR_0, raR_1, raR_2, raR_3, raR_4,
+    raR_5, raR_6, raR_8
+};
+
+static const u32 raW_defs[] = {
+    raW_0, raW_1, raW_2, raW_3, raW_4,
+    raW_5, raW_6
+};
+
+static const u32 TRC_defs[] = {
+    TRC_3, TRC_4, TRC_6, TRC_9
+};
+
+static const u32 red_zone_defs[6] = {
+    FLL_RED_ZONE, PLL_RED_ZONE,
+    IFC_RED_ZONE, SFC_RED_ZONE,
+    BFC_RED_ZONE, PFC_RED_ZONE
+};

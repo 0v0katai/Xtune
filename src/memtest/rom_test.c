@@ -17,11 +17,6 @@
 # define SELECT_DISPLAY_ROW 14
 #endif
 
-i32 roR[] =
-    { roR_0, roR_1, roR_2, roR_3, roR_4,
-      roR_5, roR_6, roR_8, roR_10, roR_12,
-      roR_14, roR_18 };
-
 static void print_RAM_read_select(u32 *ROM_read_area)
 {
     row_clear(SELECT_DISPLAY_ROW);
@@ -31,9 +26,6 @@ static void print_RAM_read_select(u32 *ROM_read_area)
 static void rom_read_test(mem_test_settings test_settings)
 {
     u32 *ROM_read_area = ROM_BASE;
-    static const u32 roR_default[] =
-    { roR_0, roR_1, roR_2, roR_3, roR_4,
-      roR_5, roR_6, roR_8, roR_10, roR_12};
     
     /* Slowest ROM read area search */
     struct cpg_overclock_setting s;
@@ -72,19 +64,19 @@ static void rom_read_test(mem_test_settings test_settings)
     {
         if (i == SH4_WR_10 && !test_settings.roR_10_check)
         {
-            roR[SH4_WR_10] = (roR[SH4_WR_8] * 2 - roR[SH4_WR_6]) / 100 * 99;
+            config.roR[SH4_WR_10] = (config.roR[SH4_WR_8] * 2 - config.roR[SH4_WR_6]) / 100 * 99;
             continue;
         }
         else if (i == SH4_WR_12 && !test_settings.roR_12_check)
         {
-            roR[SH4_WR_12] = (roR[SH4_WR_10] * 2 - roR[SH4_WR_8]) / 100 * 99;
+            config.roR[SH4_WR_12] = (config.roR[SH4_WR_10] * 2 - config.roR[SH4_WR_8]) / 100 * 99;
             continue;
         }
         s.FRQCR = SH4_FRQCR(6 + i * 2, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
         s.CS0WCR = 0x000005C0;
         cpg_set_overclock_setting(&s);
         u32 Bphi_f;
-        for (int FLF = roR_default[i] / (PLL(6) + i * 2 + 1) / 4096; FLF < 2048; FLF++)
+        for (int FLF = roR_defs[i] / (PLL(6) + i * 2 + 1) / 4096; FLF < 2048; FLF++)
         {
             BSC.CS0WCR.WR = i;
             if (read_address(FLF, ROM_read_area))
@@ -95,12 +87,8 @@ static void rom_read_test(mem_test_settings test_settings)
             row_print(2 + i, 11, "%.3D MHz", Bphi_f / 1000);
             dupdate();
         }
-        roR[i] = Bphi_f;
+        config.roR[i] = Bphi_f;
     }
-
-    /* Rough guess */
-    roR[SH4_WR_14] = (roR[SH4_WR_12] * 2 - roR[SH4_WR_10]) / 100 * 99;
-    roR[SH4_WR_18] = (roR[SH4_WR_14] * 2 - roR[SH4_WR_10]) / 100 * 95;
 }
 
 void rom_test(mem_test_settings test_settings)

@@ -10,7 +10,6 @@
 #include "config.h"
 
 #if defined CG50 || defined CG100 || defined CP400
-u32 raW_TRC[4] = {raW_TRC_3, raW_TRC_4, raW_TRC_6, raW_TRC_9};
 
 #if defined CP400
 # define TRC_DISPLAY_ROW 14
@@ -68,7 +67,7 @@ static void ram_write_test(bool TRC_3_check)
                     dupdate();
                     row_clear(TRC_DISPLAY_ROW - 1);
                 }
-                raW_TRC[TRC] = Bphi_f;
+                config.TRC[TRC] = Bphi_f;
                 FLF = 2048;
             }
             print_SDRAM_speed(clock_freq()->Bphi_f, TRC);
@@ -77,13 +76,12 @@ static void ram_write_test(bool TRC_3_check)
     }
     cpg_set_overclock_setting(&s0);
     for (int i = 2; i >= 0; i--)
-        if (raW_TRC[i] > raW_TRC[i + 1])
-            raW_TRC[i] = raW_TRC[i + 1];
-    BUS_CLK_MAX = raW_TRC[3] / 100 * (100 - RAM_MARGIN);
+        if (config.TRC[i] > config.TRC[i + 1])
+            config.TRC[i] = config.TRC[i + 1];
+    BFC_CLK_MAX = config.TRC[SH4_TRC_9] / 100 * (100 - RAM_MARGIN);
 }
 
-void sdram_test(bool TRC_3_check)
-{
+void sdram_test(bool TRC_3_check) {
     dclear(C_WHITE);
     row_title("SDRAM Test");
 
@@ -93,4 +91,5 @@ void sdram_test(bool TRC_3_check)
     ram_write_test(TRC_3_check);
     cpu_setSR(SR);
 }
+
 #endif
