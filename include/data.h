@@ -4,10 +4,8 @@
 #include <gint/defs/types.h>
 
 typedef struct {
-    lword_union(version,
-        u8 target :  4;
-        u32 hash  : 28;
-    );
+    u32 hash;
+    char model[4];
     array_union(u32, setup,
         u8 ROM_margin      :  4;
         u8 RAM_margin      :  4;

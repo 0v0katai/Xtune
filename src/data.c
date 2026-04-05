@@ -13,6 +13,11 @@ static u32 get_file_size(FILE *f) {
     return size;
 }
 
+static void set_header() {
+    config.hash = XTUNE_HASH;
+    memcpy(config.model, (char *)0x80000300, sizeof(config.model));
+}
+
 struct cpg_overclock_setting get_gint_preset(int i) {
     struct cpg_overclock_setting cur, ret;
     cpg_get_overclock_setting(&cur);
@@ -34,7 +39,7 @@ void init_mem_data() {
 
 void init_config() {
     memset(&config, 0, sizeof(Xtune_config_t));
-    config.version.lword = HARDWARE_TARGET << 28 | XTUNE_HASH;
+    set_header();
     memcpy(config.setup, setup_defs, sizeof(config.setup));
     init_mem_data();
 
@@ -54,6 +59,7 @@ bool load_config() {
     fread(&config, sizeof(Xtune_config_t), 1, f);
     fclose(f);
 
+    set_header();
     return true;
 }
 
