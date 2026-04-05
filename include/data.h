@@ -16,7 +16,8 @@ typedef struct {
         bool auto_up_PFC   :  1;
         bool startup_test  :  1;
         bool F1_yes_no     :  1;
-        u32 reserved       : 19;
+        bool roR_10_12     :  1;
+        u32 reserved       : 18;
         array_union(u32, clock_max,
             u32 PLL, IFC, SFC, BFC, PFC;
         );
@@ -28,8 +29,8 @@ typedef struct {
             u32 TRC[4];
         };
     );
-    u32 ROM_read_addr;
-    u32 RAM_read_addr;
+    u32 *ROM_read_addr;
+    u32 *SRAM_read_addr;
     array_union(struct cpg_overclock_setting, presets,
         struct cpg_overclock_setting F2, F3, F4, F5;
     );

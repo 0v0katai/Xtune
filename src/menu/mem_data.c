@@ -28,21 +28,21 @@ void mem_data_menu()
     #if !defined CG50 && !defined CG100 && !defined CP400
     bool mode = READ;
     #endif
-    mem_test_settings test_settings = {.byte = 0b111};
 
     #ifdef ENABLE_HELP
     set_help_function(HELP_MEM_DATA);
     #endif
 
-    while (true)
-    {
+    while (true) {
         dclear(C_WHITE);
         row_title("Memory data %s @%07x", XTUNE_VERSION, XTUNE_HASH);
-        row_print(1, 1, "ROM Margin: %d%%", ROM_MARGIN);
+        row_print(1, 1, "ROM %d%% / 0x%08X", ROM_MARGIN, config.ROM_read_addr);
         #if defined CP400
-        row_print(13, 1, "RAM Margin: %d%%", RAM_MARGIN);
+        row_print(13, 1, "SDRAM %d%%", RAM_MARGIN);
+        #elif defined CG50 || defined CG100
+        row_print(1, 25, "SDRAM %d%%", RAM_MARGIN);
         #else
-        row_print(1, 25, "RAM Margin: %d%%", RAM_MARGIN);
+        row_print(1, 25, "SRAM %d%% / 0x%08X", RAM_MARGIN, config.SRAM_read_addr);
         #endif
         for (int i = 0; i < 10; i++)
         {
@@ -78,10 +78,6 @@ void mem_data_menu()
                     : config.raW[i] / 1000);
             }
         #endif
-        for (int i = 0; i < 2; i++) {
-            row_print(TEST_DISPLAY_ROW + i, OFFSET_X, "roR_%d Check [%d]", i ? 12 : 10, i + 1);
-            row_print_color(TEST_DISPLAY_ROW + i, OFFSET_X + 18, C_WHITE, C_BLACK, test_settings.byte >> (1 - i) & 1 ? "On" : "Off");
-        }
 
         #ifndef CP400
         fkey_action(1, "Reset");
@@ -108,23 +104,12 @@ void mem_data_menu()
                 break;
             #endif
 
-            case KEY_1:
-                test_settings.roR_10_check = !test_settings.roR_10_check;
-                if (!test_settings.roR_10_check && test_settings.roR_12_check)
-                    test_settings.roR_12_check = false;
-                break;
-            case KEY_2:
-                test_settings.roR_12_check = !test_settings.roR_12_check;
-                if (!test_settings.roR_10_check && test_settings.roR_12_check)
-                    test_settings.roR_10_check = true;
-                break;
-
             case KEY_MEMDATA_MARGIN:
                 margin = !margin;
                 break;
 
             case KEY_MEMDATA_ROMTEST:
-                rom_test(test_settings);
+                rom_test();
                 break;
             
             case KEY_MEMDATA_RAMTEST:
@@ -136,7 +121,7 @@ void mem_data_menu()
                     "finished.\n"
                     "Are you sure you want to continue?\n\n");
                 if (yes_no(23))
-                    sdram_test(test_settings.TRC_3_check);
+                    sdram_test();
                 #elif defined CG50 || defined CG100
                 info_box(4, 1, C_RED, "WARNING",
                     "SDRAM test may cause system errors!\n"

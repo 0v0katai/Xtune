@@ -13,6 +13,7 @@
 #define AUTO_UP_PFC config.auto_up_PFC
 #define STARTUP_MEMORY_TEST config.startup_test
 #define F1_YES_NO config.F1_yes_no
+#define TEST_ROR_10_12 config.roR_10_12
 
 #define PRESET_F2 config.preset.F2
 #define PRESET_F3 config.preset.F3

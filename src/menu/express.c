@@ -223,11 +223,9 @@ void express_menu()
             "[3] None");
         while (key.key < KEY_1 || key.key > KEY_3)
             key = xtune_getkey();
-        switch (key.key)
-        {
+        switch (key.key) {
             case KEY_2:
-                mem_test_settings test_settings = {.byte = 0b111};
-                rom_test(test_settings);
+                rom_test();
                 __attribute__((fallthrough));
             case KEY_1:
                 #if defined CG50 || defined CG100 || defined CP400

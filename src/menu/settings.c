@@ -25,6 +25,7 @@ enum select_option
     SELECT_AUTO_UP_PFC,
     SELECT_STARTUP_MEMORY_TEST,
     SELECT_F1_YES_NO,
+    SELECT_TEST_ROR_10_12,
 
     SELECT_MAX
 };
@@ -73,18 +74,23 @@ void settings_menu()
         ROM_MARGIN, RAM_MARGIN, PLL_CLK_MAX,
         IFC_CLK_MAX, SFC_CLK_MAX, BFC_CLK_MAX,
         PFC_CLK_MAX, UNLOCKED_MODE, AUTO_REDUCE_WAIT,
-        AUTO_UP_PFC, STARTUP_MEMORY_TEST, F1_YES_NO
+        AUTO_UP_PFC, STARTUP_MEMORY_TEST, F1_YES_NO,
+        TEST_ROR_10_12
     };
     static const i32 settings_def[SELECT_MAX] = {
         ROM_MARGIN_DEF, RAM_MARGIN_DEF, PLL_CLK_MAX_DEF,
         IFC_CLK_MAX_DEF, SFC_CLK_MAX_DEF, BFC_CLK_MAX_DEF,
         PFC_CLK_MAX_DEF, UNLOCKED_MODE_DEF, AUTO_REDUCE_WAIT_DEF,
-        AUTO_UP_PFC_DEF, STARTUP_MEMORY_TEST_DEF, F1_YES_NO_DEF};
+        AUTO_UP_PFC_DEF, STARTUP_MEMORY_TEST_DEF, F1_YES_NO_DEF,
+        TEST_ROR_10_12_DEF
+    };
     static const i32 settings_max[SELECT_MAX] = {
         ROM_MARGIN_MAX, RAM_MARGIN_MAX, PLL_MAX,
         CPU_MAX, SHW_MAX, BUS_MAX,
         IO_MAX, true, true,
-        true, true, true};
+        true, true, true,
+        true
+    };
 
     #ifdef ENABLE_HELP
     set_help_function(HELP_SETUP);
@@ -103,13 +109,14 @@ void settings_menu()
             row_print(i + 3, 25, "%.3D", config.clock_max[i] / 1000);
             row_print(i + 3, 33, "MHz");
         }
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < SELECT_MAX - 7; i++) {
             static const char *option[] = {
                 "Unrestricted Mode",
                 "Auto Reduce Wait",
                 "Auto Up PFC",
                 "Startup Memory Test",
-                "F1 Yes/No"
+                "F1 Yes/No",
+                "Test roR_10/12"
             };
             row_print(i + 8, 1, option[i]);
             row_print(i + 8, 25, config.setup[0] >> (23 - i) & 1 ? "On" : "Off");
@@ -189,7 +196,8 @@ void settings_menu()
                         | settings[8] << 22
                         | settings[9] << 21
                         | settings[10] << 20
-                        | settings[11] << 19;
+                        | settings[11] << 19
+                        | settings[12] << 18;
         memcpy(&config.clock_max, &settings[SELECT_PLL], sizeof(config.clock_max));
     };
 }

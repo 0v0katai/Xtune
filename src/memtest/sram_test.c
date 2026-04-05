@@ -20,49 +20,52 @@ static void print_RAM_read_select(u32 *RAM_read_area)
 
 static void ram_read_test()
 {
-    u32 *RAM_read_area = SRAM_BASE;
-    
-    /* Slowest RAM read area search */
     struct cpg_overclock_setting s;
     clock_set_speed(CLOCK_SPEED_DEFAULT);
     cpg_get_overclock_setting(&s);
-    int FLF_max;
-    for (int FLF = RAM_SEARCH_FLF_START; FLF < 2048; FLF++)
-    {
-        BSC.CS2WCR.WR = RAM_WAIT(s.CS2WCR);
-        if (read_address(FLF, RAM_read_area))
-            break;
-        FLF_max = FLF;
-        print_RAM_read_select(RAM_read_area);
-        row_print(1, 1, "%.3D MHz", clock_freq()->Bphi_f / 1000);
-        dupdate();
-        row_clear(1);
-    }
-    u32 *pointer = SRAM_BASE;
-    for (int i = 0; i < 124; i++)
-    {
-        BSC.CS2WCR.WR = RAM_WAIT(s.CS2WCR);
-        if (read_address(FLF_max, RAM_read_area))
+    u32 *read_area;
+
+    if (!config.SRAM_read_addr) {
+        /* Slowest RAM read area search */
+
+        int FLF_max;
+        for (int FLF = RAM_SEARCH_FLF_START; FLF < 2048; FLF++)
         {
-            FLF_max -= 2;
-            RAM_read_area = pointer;
+            BSC.CS2WCR.WR = RAM_WAIT(s.CS2WCR);
+            if (read_address(FLF, SRAM_BASE))
+                break;
+            FLF_max = FLF;
+            print_RAM_read_select(SRAM_BASE);
+            row_print(1, 1, "%.3D MHz", clock_freq()->Bphi_f / 1000);
+            dupdate();
+            row_clear(1);
         }
-        print_RAM_read_select(RAM_read_area);
-        row_print_color(14, 30, C_RED, C_WHITE, "0x%08X", pointer);
-        dupdate();
-        row_clear(14);
-        pointer += 0x1000/4;
+        read_area = SRAM_BASE;
+        for (int i = 0; i < 124; i++)
+        {
+            BSC.CS2WCR.WR = RAM_WAIT(s.CS2WCR);
+            if (read_address(FLF_max, read_area))
+            {
+                FLF_max -= 2;
+                config.SRAM_read_addr = read_area;
+            }
+            print_RAM_read_select(config.SRAM_read_addr);
+            row_print_color(14, 30, C_RED, C_WHITE, "0x%08X", read_area);
+            dupdate();
+            row_clear(14);
+            read_area += 0x1000 >> 2;
+        }
     }
 
-    print_RAM_read_select(RAM_read_area);
-    for (int i = SH4_WR_0; i <= SH4_WR_8; i++)
-    { 
+    read_area = config.SRAM_read_addr;
+    print_RAM_read_select(read_area);
+    for (int i = SH4_WR_0; i <= SH4_WR_8; i++) {
         s.FRQCR = SH4_FRQCR(8 + i * 3, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
         cpg_set_overclock_setting(&s);
         for (int FLF = raR_defs[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF++)
         {
             BSC.CS2WCR.WR = i;
-            if (read_address(FLF, RAM_read_area))
+            if (read_address(FLF, read_area))
                 break;
             const u32 Bphi_f = clock_freq()->Bphi_f;
             row_clear(2 + i);
@@ -79,7 +82,6 @@ static void ram_write_test()
 {
     u32 temp[WRITE_N];
     u32 *write_area = NON_CACHE(temp);
-    static const u32 raW_default[] = {raW_0, raW_1, raW_2, raW_3, raW_4, raW_5, raW_6};
 
     for (int i = 0; i <= SH4_WR_8; i++)
         row_clear(i + 2);
@@ -93,7 +95,7 @@ static void ram_write_test()
     {
         s.FRQCR = SH4_FRQCR(8 + i * 3, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
         cpg_set_overclock_setting(&s);
-        for (int FLF = raW_default[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF++)
+        for (int FLF = raW_defs[i] / (PLL(8) + i * 3 + 1) / 4096; FLF < 2048; FLF++)
         {
             BSC.CS2WCR.WW = i + 1;
             if (write_address(FLF, write_area))

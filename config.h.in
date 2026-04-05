@@ -127,6 +127,7 @@
 #define AUTO_UP_PFC_DEF true
 #define STARTUP_MEMORY_TEST_DEF true
 #define F1_YES_NO_DEF true
+#define TEST_ROR_10_12_DEF true
 
 #define ROM_MARGIN_MAX 15
 #define RAM_MARGIN_MAX 15
@@ -183,7 +184,8 @@ enum TRC_default_table {
     | AUTO_REDUCE_WAIT_DEF << 22 \
     | AUTO_UP_PFC_DEF << 21 \
     | STARTUP_MEMORY_TEST_DEF << 20 \
-    | F1_YES_NO_DEF << 19
+    | F1_YES_NO_DEF << 19 \
+    | TEST_ROR_10_12_DEF << 18
 
 static const u32 setup_defs[] = {
     SETUP0_DEF,
