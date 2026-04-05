@@ -417,7 +417,7 @@ void express_menu()
             case KEY_F3:
             case KEY_F4:
             case KEY_F5:
-            # ifdef CG50
+            #if defined CG20 || defined CG50
             if (shift) {
                 info_box(5, 0, C_BLACK, "Caution",
                     "Save to F%d?\n\n",
