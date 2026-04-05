@@ -65,8 +65,8 @@ static void rom_read_test()
     print_ROM_read_select(read_area);
     for (int i = SH4_WR_0; i <= SH4_WR_12; i++) {
         if (i == SH4_WR_10 && !TEST_ROR_10_12) {
-            config.roR[SH4_WR_10] = config.roR[SH4_WR_8] / 100 * (123 - ROM_MARGIN);
-            config.roR[SH4_WR_12] = config.roR[SH4_WR_10] / 100 * (118 - ROM_MARGIN);
+            config.roR[SH4_WR_10] = config.roR[SH4_WR_8] / 100 * 120;
+            config.roR[SH4_WR_12] = config.roR[SH4_WR_10] / 100 * 115;
             break;
         }
         s.FRQCR = SH4_FRQCR(6 + i * 2, SH4_DIV_4, SH4_DIV_4, SH4_DIV_4, SH4_DIV_32);
