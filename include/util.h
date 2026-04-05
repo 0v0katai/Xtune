@@ -94,6 +94,8 @@ void tab_action(int start, int end, char const *format, ...);
 /* fkey_button(): A rectangular F-key */
 void fkey_button(int position, char const *text);
 
+void fkey_toggle(int position, char const *text, bool on);
+
 void tab_menu(int start, int end, char const *format, ...);
 
 /* fkey_menu(): A rectangular F-key with the bottom right corner removed */

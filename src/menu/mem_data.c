@@ -78,35 +78,17 @@ void mem_data_menu()
                     : config.raW[i] / 1000);
             }
         #endif
-
-        static const char *on_off[] = {"Off", "On"};
-        #if defined CP400 || defined CG50 || defined CG100
-        for (int i = 0; i < 3; i++)
-        {
-            static const char *test_settings_name[3] = {"TRC_3", "roR_10", "roR_12"};
-            row_print(TEST_DISPLAY_ROW - 1 + i, OFFSET_X, "%s Check [%d]", test_settings_name[i], i);
-            row_print_color(TEST_DISPLAY_ROW - 1 + i, OFFSET_X + 18, C_WHITE, C_BLACK, on_off[(test_settings.byte >> (2 - i)) & 0b1]);
-        }
-        #else
-        for (int i = 0; i < 2; i++)
-        {
+        for (int i = 0; i < 2; i++) {
             row_print(TEST_DISPLAY_ROW + i, OFFSET_X, "roR_%d Check [%d]", i ? 12 : 10, i + 1);
-            row_print_color(TEST_DISPLAY_ROW + i, OFFSET_X + 18, C_WHITE, C_BLACK, on_off[(test_settings.byte >> (1 - i)) & 0b1]);
+            row_print_color(TEST_DISPLAY_ROW + i, OFFSET_X + 18, C_WHITE, C_BLACK, test_settings.byte >> (1 - i) & 1 ? "On" : "Off");
         }
-        #endif
 
         #ifndef CP400
         fkey_action(1, "Reset");
         #if !defined CG50 && !defined CG100
-        if (mode)
-            fkey_button(2, "Write");
-        else
-            fkey_button(2, "Read");
+        fkey_button(2, mode ? "Write" : "Read");
         #endif
-        if (margin)
-            fkey_button(3, "Margin");
-        else
-            fkey_action(3, "Margin");
+        fkey_toggle(3, "Margin", margin);
         fkey_menu(5, "ROM");
         fkey_menu(6, "RAM");
         #endif
@@ -126,9 +108,6 @@ void mem_data_menu()
                 break;
             #endif
 
-            case KEY_0:
-                test_settings.TRC_3_check = !test_settings.TRC_3_check;
-                break;
             case KEY_1:
                 test_settings.roR_10_check = !test_settings.roR_10_check;
                 if (!test_settings.roR_10_check && test_settings.roR_12_check)
@@ -165,7 +144,7 @@ void mem_data_menu()
                     "button after this test is finished.\n"
                     "Are you sure you want to continue?\n");
                 if (yes_no(10))
-                    sdram_test(test_settings.TRC_3_check);
+                    sdram_test();
                 #else
                 sram_test();
                 #endif

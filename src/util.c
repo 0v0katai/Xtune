@@ -210,6 +210,14 @@ void fkey_button(int position, char const *text)
 	dtext(x + ((w - width) >> 1), y + 3, C_WHITE, text);
 }
 
+void fkey_toggle(int position, char const *text, bool on)
+{
+	if (on)
+		fkey_button(position, text);
+	else
+		fkey_action(position, text);
+}
+
 void tab_menu(int start, int end, char const *format, ...)
 {
 	char str[80];

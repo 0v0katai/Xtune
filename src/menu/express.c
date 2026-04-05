@@ -1,5 +1,3 @@
-#include <math.h>
-#include <stdio.h>
 #include <string.h>
 
 #include <gint/display.h>
@@ -31,30 +29,24 @@ enum select_option
     SELECT_PFC
 };
 
-static void print_preset(int current)
+static void print_preset()
 {
     #if defined CG100
     if (shift)
         fkey_menu(1, "Save");
     else
         fkey_action(1, "Default");
-    if (current == CLOCK_SPEED_UNKNOWN)
-        tab_menu(2, 5, "Current preset: Custom");
-    else
-        tab_menu(2, 5, "Current preset: F%d", current);
+    static const char *names[] = {"Custom", "F1", "F2", "F3", "F4", "F5"};
+    tab_menu(2, 5, "Current preset: %s", names[clock_get_speed()]);
     #else
     if (shift) {
         fkey_menu(1, "Save");
         for (int i = 2; i <= 5; i++)
             fkey_action(i, "v");
     } else {
-        char string[3];
         for (int i = 1; i <= 5; i++) {
-            sprintf(string, "F%d", i);
-            if (i == current)
-                fkey_button(i, string);
-            else
-                fkey_action(i, string);
+            static const char *names[] = {"F1", "F2", "F3", "F4", "F5"};
+            fkey_toggle(i, names[i - 1], i == clock_get_speed());
         }
     }
     #endif
@@ -262,7 +254,7 @@ void express_menu()
         set_help_function(HELP_EXPRESS);
         #endif
         #if !defined CP400
-        print_preset(clock_get_speed());
+        print_preset();
         fkey_menu(6, shift ? "Load" : "Bench");
         #endif
 

@@ -28,7 +28,7 @@ static void print_SDRAM_speed(u32 Bphi_f, u8 TRC)
     row_print(TRC_DISPLAY_ROW + TRC, TRC_DISPLAY_X + 10, "%.3D MHz", Bphi_f / 1000);
 }
 
-static void ram_write_test(bool TRC_3_check)
+static void ram_write_test()
 {
     u32 temp[WRITE_N];
     u32 *write_area = NON_CACHE(temp);
@@ -44,7 +44,7 @@ static void ram_write_test(bool TRC_3_check)
     
     int FLF_max = 600;
     u32 Bphi_f;
-    for (int TRC = !TRC_3_check; TRC <= 3; TRC++)
+    for (int TRC = SH4_TRC_3; TRC <= SH4_TRC_9; TRC++)
     {
         for (int FLF = FLF_max; FLF < 2048; FLF++)
         {
@@ -81,14 +81,14 @@ static void ram_write_test(bool TRC_3_check)
     BFC_CLK_MAX = config.TRC[SH4_TRC_9] / 100 * (100 - RAM_MARGIN);
 }
 
-void sdram_test(bool TRC_3_check) {
+void sdram_test() {
     dclear(C_WHITE);
     row_title("SDRAM Test");
 
     CPG.SSCGCR.SSEN = false;
     cpu_sr_t SR = cpu_getSR();
     cpu_setSR((cpu_sr_t)(SR.lword | 0xf0));
-    ram_write_test(TRC_3_check);
+    ram_write_test();
     cpu_setSR(SR);
 }
 
