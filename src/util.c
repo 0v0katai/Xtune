@@ -181,6 +181,7 @@ void tab_action(int start, int end, char const *format, ...)
 	int width;
 	dsize(str, NULL, &width, NULL);
 	
+	drect(x_start, y + 1, x_end + w - 1, y + 13, C_WHITE);
 	dline(x_start + 1, y, x_end + w - 2, y, C_BLACK);
 	dline(x_start + 1, y + 14, x_end + w - 2, y + 14, C_BLACK);
 	drect(x_start, y + 1, x_start + 1, y + 13, C_BLACK);
@@ -231,6 +232,7 @@ void tab_menu(int start, int end, char const *format, ...)
 	int width;
 	dsize(str, NULL, &width, NULL);
 	
+	drect(x_start, y + 1, x_end + w - 1, y + 13, C_WHITE);
 	dline(x_start + 1, y, x_end + w - 2, y, C_BLACK);
 	dline(x_start + 1, y + 14, x_end + w - 2, y + 14, C_BLACK);
 	drect(x_start, y + 1, x_end + w - 1, y + 13, C_BLACK);
@@ -254,16 +256,6 @@ void fkey_menu(int position, char const *text)
 	dline(x + w - 1, y + 11, x + w - 4, y + 14, C_WHITE);
 	dline(x + w - 1, y + 12, x + w - 3, y + 14, C_WHITE);
 	dline(x + w - 1, y + 13, x + w - 2, y + 14, C_WHITE);
-}
-
-void tab_clear(int start, int end)
-{
-	int x_start = 4 + 65 * (start - 1);
-	int x_end = 4 + 65 * (end - 1);
-	int y = 207;
-	int w = 63;
-
-	drect(x_start, y + 1, x_end + w - 1, y + 13, C_WHITE);
 }
 
 static void msg_box_frame(int row, int size, int color)

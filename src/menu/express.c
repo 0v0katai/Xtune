@@ -29,6 +29,7 @@ enum select_option
     SELECT_PFC
 };
 
+#if !defined CP400
 static void print_preset()
 {
     #if defined CG100
@@ -50,101 +51,6 @@ static void print_preset()
         }
     }
     #endif
-}
-
-#ifdef CG100
-static void cg100_getkey(key_event_t key, struct cpg_overclock_setting s)
-{
-    if (key.key == KEY_ON) {
-        if (shift) {
-            if (!save_config()) {
-                info_box(5, 1, C_RED, "ERROR",
-                    "Failed to write config to file!");
-            } else {
-                info_box(5, 1, C_GREEN, "Success",
-                    "Config saved to xtune.sav!");
-            }
-            xtune_getkey();
-        } else {
-            if (F1_YES_NO) {
-                info_box(5, 0, C_BLACK, "Caution",
-                    "Reset to default preset?\n\n");
-                if (!yes_no(8))
-                    return;
-            }
-            clock_set_speed(CLOCK_SPEED_DEFAULT);
-        }
-    }
-    else if (key.key == KEY_PREVTAB || key.key == KEY_NEXTTAB)
-    {
-        u8 select_preset = CLOCK_SPEED_F2 - 2;
-        while (true)
-        {
-            tab_clear(2, 5);
-            tab_action(2, 5, "%-10s%s preset: F%d%10s", "|<-", shift ? "Save" : "Set", select_preset + 2, "->|");
-            switch (xtune_getkey().key)
-            {
-                case KEY_SHIFT:
-                    continue;
-                case KEY_PREVTAB:
-                    select_preset = (select_preset - 1 + 4) % 4;
-                    break;
-                case KEY_NEXTTAB:
-                    select_preset = (select_preset + 1) % 4;
-                    break;
-                case KEY_OK:
-                case KEY_EXE:
-                    if (shift)
-                        config.presets[select_preset] = s;
-                    else
-                        cpg_set_overclock_setting(&config.presets[select_preset]);
-                    __attribute__((fallthrough));
-                case KEY_BACK:
-                    shift = false;
-                    return;
-            }
-        }
-    }
-}
-#endif
-
-#ifdef CP400
-static void cp400_getkey(key_event_t key, struct cpg_overclock_setting s)
-{
-    switch (key.key)
-    {
-        case KEY_KBD:
-            if (shift) {
-                if (!save_config()) {
-                    info_box(5, 1, C_RED, "ERROR",
-                        "Failed to write config to file!");
-                } else {
-                    info_box(5, 1, C_GREEN, "Success",
-                        "Config saved to xtune.sav!");
-                }
-                xtune_getkey();
-            } else {
-                if (F1_YES_NO) {
-                    info_box(15, 1, C_BLACK, "Caution",
-                        "Reset to default preset?\n\n");
-                    if (!yes_no(19))
-                        return;
-                }
-                clock_set_speed(CLOCK_SPEED_DEFAULT);
-            }
-            break;
-        case KEY_2:
-        case KEY_3:
-            if (shift)
-                config.presets[key.key - KEY_2] = s;
-            else
-                clock_set_speed(key.key - KEY_2 + 2);
-            break;
-        case KEY_4:
-        case KEY_5:
-            clock_set_speed(key.key - KEY_4 + 4);
-            break;
-    }
 }
 #endif
 
@@ -386,58 +292,96 @@ void express_menu()
         };
         u32 divs[4] = {f.Iphi_div, f.Sphi_div, f.Bphi_div, f.Pphi_div};
         update = false;
-        #ifdef CG100
-        cg100_getkey(key, s);
-        #elif defined CP400
-        cp400_getkey(key, s);
-        #endif
         switch (key.key)
         {
             case KEY_SHIFT:
                 continue; 
-            #if !defined CG100 && !defined CP400
-            case KEY_F1:
-            if (shift) {
-                if (!save_config()) {
-                    info_box(5, 1, C_RED, "ERROR",
-                        "Failed to write config to file!");
-                } else {
-                    info_box(5, 1, C_GREEN, "Success",
-                        "Config saved to xtune.sav!");
+
+            case KEY_DEFAULT_PRESET:
+                if (!shift && F1_YES_NO) {
+                    info_box(5, 0, C_BLACK, "Caution",
+                        "Reset to default preset?\n\n");
+                    if (yes_no(8))
+                        clock_set_speed(CLOCK_SPEED_DEFAULT);
                 }
-                xtune_getkey();
-            } else if (F1_YES_NO) {
-                info_box(5, 0, C_BLACK, "Caution",
-                    "Reset to default preset?\n\n");
-                if (yes_no(8))
-                    clock_set_speed(CLOCK_SPEED_DEFAULT);
-            }
             break;
+            #if defined CP400
+            case KEY_2:
+                if (shift)
+                    config.F2 = s;
+                else
+                    cpg_set_overclock_setting(&config.F2);
+                break;
+            case KEY_3:
+                if (shift)
+                    config.F3 = s;
+                else
+                    cpg_set_overclock_setting(&config.F3);
+                break;
+            case KEY_4:
+                if (shift)
+                    config.F4 = s;
+                else
+                    cpg_set_overclock_setting(&config.F4);
+                break;
+            case KEY_5:
+                if (shift)
+                    config.F5 = s;
+                else
+                    cpg_set_overclock_setting(&config.F5);
+                break;
+            #elif defined CG100
+            case KEY_PREVTAB:
+            case KEY_NEXTTAB:
+                u8 select_preset = CLOCK_SPEED_F2 - 2;
+                bool stay = true;
+                while (stay) {
+                    tab_action(2, 5, "%-10s%s preset: F%d%10s", "|<-",
+                        shift ? "Save" : "Set", select_preset + 2, "->|");
+                    switch (xtune_getkey().key) {
+                        case KEY_SHIFT:
+                            continue;
+                        case KEY_PREVTAB:
+                            select_preset = (select_preset - 1 + 4) % 4;
+                            break;
+                        case KEY_NEXTTAB:
+                            select_preset = (select_preset + 1) % 4;
+                            break;
+                        case KEY_OK:
+                        case KEY_EXE:
+                            if (shift)
+                                config.presets[select_preset] = s;
+                            else
+                                cpg_set_overclock_setting(&config.presets[select_preset]);
+                            __attribute__((fallthrough));
+                        case KEY_BACK:
+                            stay = false;
+                    }
+                }
+            #else
             case KEY_F2:
             case KEY_F3:
             case KEY_F4:
             case KEY_F5:
-            #if defined CG20 || defined CG50
-            if (shift) {
-                info_box(5, 0, C_BLACK, "Caution",
-                    "Save to F%d?\n\n",
-                    key.key - KEY_F2 + 2);
-                if (yes_no(8))
-                    config.presets[key.key - KEY_F2] = s;
-                break;
-            }
-            cpg_set_overclock_setting(&config.presets[key.key - KEY_F2]);
-            # endif
+                if (shift) {
+                    info_box(5, 0, C_BLACK, "Caution",
+                        "Save to F%d?\n\n",
+                        key.key - KEY_F2 + 2);
+                    if (yes_no(8))
+                        config.presets[key.key - KEY_F2] = s;
+                    break;
+                }
+                cpg_set_overclock_setting(&config.presets[key.key - KEY_F2]);
+            #endif
             benchmark_update = true;
             break;
-            #endif
 
             case KEY_EXPRESS_BENCHMARK:
                 if (shift) {
                     info_box(5, 0, C_BLACK, "Caution",
                         "Load config?\n\n");
                     if (yes_no(8)) {
-                        if (load_config()) {
+                        if (!load_config()) {
                             info_box(5, 1, C_RED, "ERROR",
                                 "Failed to load config file!");
                             xtune_getkey();

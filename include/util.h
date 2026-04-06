@@ -101,8 +101,6 @@ void tab_menu(int start, int end, char const *format, ...);
 /* fkey_menu(): A rectangular F-key with the bottom right corner removed */
 void fkey_menu(int position, char const *text);
 
-void tab_clear(int start, int end);
-
 void info_box(int row, int pad, int bg, const char *title, const char *format, ...);
 
 bool yes_no(int row);
