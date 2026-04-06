@@ -9,7 +9,7 @@
 #include "util.h"
 #include "config.h"
 
-#if !defined CG50 && !defined CG100 && !defined CP400
+#if !CG50 && !CG100 && !CP400
 # define RAM_WAIT(CS2WCR) (((CS2WCR) >> 7) & 0b1111)
 
 static void print_RAM_read_select(u32 *RAM_read_area)

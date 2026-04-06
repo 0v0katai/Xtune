@@ -29,7 +29,7 @@ struct cpg_overclock_setting get_gint_preset(int i) {
 
 void init_mem_data() {
     memcpy(config.roR, roR_defs, sizeof(config.roR));
-    #if !defined CG50 && !defined CG100 && !defined CP400
+    #if !CG50 && !CG100 && !CP400
         memcpy(config.raR, raR_defs, sizeof(config.raR));
         memcpy(config.raW, raW_defs, sizeof(config.raW));
     #else

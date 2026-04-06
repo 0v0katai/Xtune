@@ -29,10 +29,10 @@ enum select_option
     SELECT_PFC
 };
 
-#if !defined CP400
+#if !CP400
 static void print_preset()
 {
-    #if defined CG100
+    #if CG100
     if (shift)
         fkey_menu(1, "Save");
     else
@@ -56,7 +56,7 @@ static void print_preset()
 
 static void print_express_cpg_bsc(struct cpg_overclock_setting s)
 {
-    #ifdef CP400
+    #if CP400
     row_print(13, 2, "FLLFRQ: 0x%08X", s.FLLFRQ);
     row_print(13, 21, "FRQCR: 0x%08X", s.FRQCR);
     for (int i = 0; i < 4; i++)
@@ -77,7 +77,7 @@ static void print_express_cpg_bsc(struct cpg_overclock_setting s)
     #endif
 }
 
-#if defined CP400
+#if CP400
 # define MEMTEST_DISPLAY_ROW 15
 # define KEY_DISPLAY_ROW 8
 # define REG_DISPLAY_X 7
@@ -93,11 +93,11 @@ static void print_express_cpg_bsc(struct cpg_overclock_setting s)
 
 static int __GetBatteryVoltage()
 {
-    #if defined CG20 || defined CG50
+    #if CG20 || CG50
     return SYSCALL(1, 0, 0, 0, 0x1186);
-    #elif defined CG100
+    #elif CG100
     return CALL(1, 0, 0, 0, 0x8022fb9e);
-    #elif defined CP400
+    #elif CP400
     if (strncmp((const char *)0x814fffe0, "2023.0209.1500", 16) == 0)
         return CALL(0, 0, 0, 0, 0x8002a614);
     else if (strncmp((const char *)0x814fffe0, "2017.0512.1515", 16) == 0)
@@ -134,7 +134,7 @@ void express_menu()
                 rom_test();
                 __attribute__((fallthrough));
             case KEY_1:
-                #if defined CG50 || defined CG100 || defined CP400
+                #if CG50 || CG100 || CP400
                 sdram_test(true);
                 #else
                 sram_test();
@@ -154,10 +154,10 @@ void express_menu()
             BSC.CS0WCR.WR = best_rom_wait(clock_freq()->Bphi_f);
 
         dclear(C_WHITE);
-        #ifdef ENABLE_HELP
+        #if HELP
         set_help_function(HELP_EXPRESS);
         #endif
-        #if !defined CP400
+        #if !CP400
         print_preset();
         fkey_menu(6, shift ? "Load" : "Bench");
         #endif
@@ -176,31 +176,31 @@ void express_menu()
         row_print_color(2, WAIT_DISPLAY_X, spread_spectrum ? C_GREEN : C_WHITE, C_BLACK, spread_spectrum ? "SS On" : "SS Off");
         row_print_color(3, WAIT_DISPLAY_X, C_WHITE, f.Iphi_f > IFC_RED_ZONE ? C_RED : C_BLUE, "CPU");
         row_print_color(4, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "roR %d", WR_equivalent(BSC.CS0WCR.WR));
-        #if defined CG20
+        #if CG20
         row_print_color(5, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "raR %d", WR_equivalent(BSC.CS2WCR.WR));
         if (BSC.CS2WCR.WW)
             row_print_color(6, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "raW %d", BSC.CS2WCR.WW - 1);
         else
             row_print_color(6, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "raW =R");
-        #elif defined CG50 || defined CG100 || defined CP400
+        #elif CG50 || CG100 || CP400
         row_print_color(5, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "TRC %d", TRC_equivalent(BSC.CS3WCR.TRC));
         row_print_color(6, WAIT_DISPLAY_X, C_WHITE, C_BLACK, "CL %d", BSC.CS3WCR.A3CL + 1);
         #endif
 
-        #ifdef ENABLE_USB
+        #if USB
         row_print(KEY_DISPLAY_ROW, 2, "Capture");
-        # ifdef CG100
+        # if CG100
         row_print(KEY_DISPLAY_ROW, 12, "[x10^]");
         # else
         row_print(KEY_DISPLAY_ROW, 12, "[7]");
         # endif
         #endif
 
-        #ifdef ENABLE_HELP
+        #if HELP
         row_print(KEY_DISPLAY_ROW + 1, 2, "Help");
-        # if defined CG100
+        # if CG100
         row_print(KEY_DISPLAY_ROW + 1, 12, "[CATALOG]");
-        # elif defined CP400
+        # elif CP400
         row_print(KEY_DISPLAY_ROW + 1, 12, "[8]");
         # else
         row_print(KEY_DISPLAY_ROW + 1, 12, "[4]");
@@ -214,14 +214,14 @@ void express_menu()
             row_print(i + 1, SPEED_DISPLAY_X + 7, "MHz");
         }
 
-        #if !defined CP400
+        #if !CP400
         if (!benchmark)
         #endif
         {
             static const char *description[] = {"FLL", "PLL", "CPU", "SuperHyway", "Bus", "I/O"};
             row_print(KEY_DISPLAY_ROW + 3, 2, "%s %s", description[select],
                 select < SELECT_IFC ? "multiplier" : "clock divider");
-            #if defined CP400
+            #if CP400
             if (select != SELECT_FLL)
                 row_print(11, 25, "(Max %.3D MHz)", config.clock_max[select - 1] / 1000);
             row_highlight(11);
@@ -238,13 +238,13 @@ void express_menu()
                 run_benchmark(benchmark_data, f.PLL);
             benchmark_update = false;
 
-            #if defined CP400
+            #if CP400
             # define SCORE_X(i) 2
             # define SCORE_ROW(i) (19 + (i))
             # define UPDATE_ROW 23
             # define DHRYSTONE_ROW 24
             # define WHETSTONE_X 2
-            # if defined ENABLE_WHETSTONE
+            # if WHETSTONE
             #  define WHETSTONE_ROW 25
             # else
             #  define WHETSTONE_ROW 24
@@ -266,16 +266,16 @@ void express_menu()
             row_print_color(UPDATE_ROW, 2, benchmark_data[8] + 1 < 1000000 / benchmark_data[4] ? C_RGB(0,31,31) : C_RGB(31,0,31), C_WHITE,
                 "dupdate: %.2D FPS", 100000000 / benchmark_data[4]);
             
-            #ifdef ENABLE_AZUR
+            #if AZUR
             row_print(UPDATE_ROW, 26, "azrp: %.2D FPS", benchmark_data[5], 100000000 / benchmark_data[5]);
             #endif
 
-            #ifdef DHRY_LOOP
-            row_print(DHRYSTONE_ROW, 2, "INT: %llu Dhrystone/s", DHRY_LOOP * 1000000ull / benchmark_data[6]);
+            #if DHRYSTONE
+            row_print(DHRYSTONE_ROW, 2, "INT: %llu Dhrystone/s", DHRYSTONE * 1000000ull / benchmark_data[6]);
             #endif
 
-            #ifdef WHET_LOOP
-            row_print(WHETSTONE_ROW, WHETSTONE_X, "DBL: %d KWIPS", 100 * WHET_LOOP * 1000000 / benchmark_data[7]);
+            #if WHETSTONE
+            row_print(WHETSTONE_ROW, WHETSTONE_X, "DBL: %d KWIPS", 100 * WHETSTONE * 1000000 / benchmark_data[7]);
             #endif
 
             for (int i = SCORE_ROW(0); i != WHETSTONE_ROW + 1; i++)
@@ -305,7 +305,7 @@ void express_menu()
                         clock_set_speed(CLOCK_SPEED_DEFAULT);
                 }
             break;
-            #if defined CP400
+            #if CP400
             case KEY_2:
                 if (shift)
                     config.F2 = s;
@@ -330,7 +330,7 @@ void express_menu()
                 else
                     cpg_set_overclock_setting(&config.F5);
                 break;
-            #elif defined CG100
+            #elif CG100
             case KEY_PREVTAB:
             case KEY_NEXTTAB:
                 u8 select_preset = CLOCK_SPEED_F2 - 2;
@@ -418,7 +418,7 @@ void express_menu()
                 break;
             case KEY_PLUS:
             case KEY_MINUS:
-                #if defined CG50 || defined CG100 || defined CP400
+                #if CG50 || CG100 || CP400
                 bsc_modify(shift ? CS3WCR_CL_ptr : CS3WCR_TRC_ptr, key.key == KEY_PLUS ? 1 : -1);
                 #else
                 bsc_modify(shift ? CS2WCR_WW_ptr : CS2WCR_WR_ptr, key.key == KEY_PLUS ? 1 : -1);
@@ -426,10 +426,10 @@ void express_menu()
                 break;
 
             case KEY_EXPRESS_SETTINGS:
-            #if !defined CG100 && !defined CP400
+                #if !CG100 && !CP400
                 if (!shift)
                     break;
-            #endif
+                #endif
                 settings_menu();
                 break;
             case KEY_EXPRESS_BSC:
@@ -523,7 +523,7 @@ void express_menu()
             const u8 new_CS0WCR_WR = best_rom_wait(Bphi_f);
             if (!UNLOCKED_MODE && new_CS0WCR_WR > BSC.CS0WCR.WR)
                 BSC.CS0WCR.WR = new_CS0WCR_WR;
-            #if defined CG50 || defined CG100 || defined CP400
+            #if CG50 || CG100 || CP400
             const u8 new_CS3WCR_TRC = best_TRC(Bphi_f);
             if (!UNLOCKED_MODE && (new_CS3WCR_TRC > BSC.CS3WCR.TRC || AUTO_REDUCE_WAIT))
                 BSC.CS3WCR.TRC = new_CS3WCR_TRC;
@@ -537,9 +537,9 @@ void express_menu()
             #endif
             CPG.FLLFRQ.SELXM = selxm;
         }
-    #if defined CG100
+    #if CG100
     } while (key.key != KEY_HOME);
-    #elif defined CP400
+    #elif CP400
     } while (key.key != KEY_EXIT);
     #else
     } while (true);

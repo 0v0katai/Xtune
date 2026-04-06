@@ -9,9 +9,9 @@
 #include "util.h"
 #include "config.h"
 
-#if defined CG50 || defined CG100 || defined CP400
+#if CG50 || CG100 || CP400
 
-#if defined CP400
+#if CP400
 # define TRC_DISPLAY_ROW 14
 # define TRC_DISPLAY_X 1
 # define SELECT_DISPLAY_ROW 36

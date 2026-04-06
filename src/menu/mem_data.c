@@ -10,7 +10,7 @@
 #include "help.h"
 #include "menu.h"
 
-#if defined CP400
+#if CP400
 # define RAM_DISPLAY_ROW 14
 # define OFFSET_X 1
 # define TEST_DISPLAY_ROW 20
@@ -25,11 +25,11 @@ void mem_data_menu()
     key_event_t key;
     shift = false;
     bool margin = false;
-    #if !defined CG50 && !defined CG100 && !defined CP400
+    #if !CG50 && !CG100 && !CP400
     bool mode = READ;
     #endif
 
-    #ifdef ENABLE_HELP
+    #if HELP
     set_help_function(HELP_MEM_DATA);
     #endif
 
@@ -37,9 +37,9 @@ void mem_data_menu()
         dclear(C_WHITE);
         row_title("Memory data %s @%07x", XTUNE_VERSION, XTUNE_HASH);
         row_print(1, 1, "ROM %d%% / 0x%08X", ROM_MARGIN, config.ROM_read_addr);
-        #if defined CP400
+        #if CP400
         row_print(13, 1, "SDRAM %d%%", RAM_MARGIN);
-        #elif defined CG50 || defined CG100
+        #elif CG50 || CG100
         row_print(1, 25, "SDRAM %d%%", RAM_MARGIN);
         #else
         row_print(1, 25, "SRAM %d%% / 0x%08X", RAM_MARGIN, config.SRAM_read_addr);
@@ -51,7 +51,7 @@ void mem_data_menu()
                 ? config.roR[i] / 100 * (100 - ROM_MARGIN) / 1000
                 : config.roR[i] / 1000);
         }
-        #if defined CP400 || defined CG50 || defined CG100
+        #if CP400 || CG50 || CG100
         for (int i = 0; i < 4; i++)
         {
             row_print(i + RAM_DISPLAY_ROW, OFFSET_X, "TRC_%d", TRC_equivalent(i));
@@ -79,9 +79,9 @@ void mem_data_menu()
             }
         #endif
 
-        #ifndef CP400
+        #if !CP400
         fkey_action(1, "Reset");
-        #if !defined CG50 && !defined CG100
+        #if !CG50 && !CG100
         fkey_button(2, mode ? "Write" : "Read");
         #endif
         fkey_toggle(3, "Margin", margin);
@@ -98,7 +98,7 @@ void mem_data_menu()
                 init_mem_data();
                 break;
 
-            #if !defined CG50 && !defined CG100 && !defined CP400
+            #if !CG50 && !CG100 && !CP400
             case KEY_F2:
                 mode = !mode;
                 break;
@@ -113,7 +113,7 @@ void mem_data_menu()
                 break;
             
             case KEY_MEMDATA_RAMTEST:
-                #if defined CP400
+                #if CP400
                 info_box(15, 1, C_RED, "WARNING",
                     "SDRAM test may cause system errors!\n"
                     "It is highly recommended to press the\n"
@@ -122,7 +122,7 @@ void mem_data_menu()
                     "Are you sure you want to continue?\n\n");
                 if (yes_no(23))
                     sdram_test();
-                #elif defined CG50 || defined CG100
+                #elif CG50 || CG100
                 info_box(4, 1, C_RED, "WARNING",
                     "SDRAM test may cause system errors!\n"
                     "It is highly recommended to press the RESTART\n"

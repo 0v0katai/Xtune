@@ -53,6 +53,28 @@ set(ASSETS_cg
 
 fxconv_declare_assets(${ASSETS} ${ASSETS_fx} ${ASSETS_cg} WITH_METADATA)
 
+if("${CMAKE_BUILD_TYPE}" STREQUAL "FastLoad")
+  set(CG50 1)
+elseif(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "CLion")
+  if(fx9860G)
+    set(FXSH4 1)
+  elseif("${FXSDK_PLATFORM_LONG}" STREQUAL fxCG50 OR
+         "${FXSDK_PLATFORM_LONG}" STREQUAL fx9860G_G3A)
+#    set(CG20 1)
+#    set(CG50 1)
+    set(CG100 1)
+  elseif("${FXSDK_PLATFORM_LONG}" STREQUAL fxCP)
+    set(CP400 1)
+  endif()
+endif()
+
+set(DHRYSTONE 10000)
+set(USB 1)
+set(HELP 1)
+#set(WHETSTONE 10)
+#set(AZUR 1)
+#set(GDB 1)
+
 configure_file(config.h.in include/config.h)
 add_executable(Xtune ${SOURCES} ${ASSETS} ${ASSETS_${FXSDK_PLATFORM}})
 target_include_directories(Xtune PRIVATE
@@ -60,7 +82,10 @@ target_include_directories(Xtune PRIVATE
   "${CMAKE_CURRENT_BINARY_DIR}/include")
 target_compile_options(Xtune PRIVATE -Wall -Wextra -Os -g -flto=auto)
 target_link_options(Xtune PRIVATE -Wl,-Map=map -Wl,-print-memory-usage -Wl,-gc-sections)
-target_link_libraries(Xtune Gint::Gint cBench::cBench #[[Azur::Azur]])
+target_link_libraries(Xtune Gint::Gint cBench::cBench)
+if(AZUR EQUAL 1)
+  target_link_libraries(Xtune Azur::Azur)
+endif()
 
 if("${FXSDK_PLATFORM_LONG}" STREQUAL fx9860G)
   generate_g1a(TARGET Xtune VERSION ${Xtune_VERSION} OUTPUT "Ftune4.g1a"

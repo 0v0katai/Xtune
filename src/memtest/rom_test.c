@@ -11,7 +11,7 @@
 
 #define ROM_WAIT(CS0WCR) (((CS0WCR) >> 7) & 0b1111)
 
-#if defined CP400
+#if CP400
 # define SELECT_DISPLAY_ROW 36
 #else
 # define SELECT_DISPLAY_ROW 13

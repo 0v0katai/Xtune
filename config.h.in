@@ -3,131 +3,85 @@
 #include <gint/keycodes.h>
 #include <gint/hardware.h>
 
-/* Platform toggles */
+#cmakedefine01 FXSH4
+#cmakedefine01 CG20
+#cmakedefine01 CG50
+#cmakedefine01 CG100
+#cmakedefine01 CP400
 
-// #define MONO_SH3    /* All SH3 monochrome calculators */
-// #define MONO_SH4A   /* All SH4A monochrome calculators */
-// #define CG20        /* fx-CG10, fx-CG20 */
-// #define CG50        /* fx-CG50(AU), Graph 90+E */
-#define CG100       /* fx-CG100, fx-1AU Graph, Graph Math+ */
-// #define CP400       /* fx-CP400(+E), fx-CG500 */
+#cmakedefine DHRYSTONE @DHRYSTONE@
+#cmakedefine01 USB
+#cmakedefine01 HELP
+#cmakedefine WHETSTONE @WHETSTONE@
+#cmakedefine01 AZUR
+#cmakedefine01 GDB
+
+#if GDB
+# undef USB
+#endif
 
 #define XTUNE_VERSION "@XTUNE_GIT_VERSION@"
 #define XTUNE_HASH 0x@XTUNE_GIT_HASH@
 
-#if defined CP400
-# define ADDIN_NAME "CPtune4"
-# define HARDWARE_TARGET HWCALC_FXCP400
-# define XTUNE_STR ADDIN_NAME " " XTUNE_VERSION " @@XTUNE_GIT_HASH@"
-#elif defined MONO_SH3
-# define ADDIN_NAME "Ftune4 SH3"
-# define HARDWARE_TARGET HWCALC_FX9860G_SH3
-#elif defined MONO_SH4A
-# define ADDIN_NAME "Ftune4 SH4A"
-# define HARDWARE_TARGET HWCALC_FX9860G_SH4
-#elif defined CG20
-# define ADDIN_NAME "Ptune4 Prizm"
-# define HARDWARE_TARGET HWCALC_PRIZM
-# define PLATFORM "fx-CG10/20"
-#elif defined CG50
-# if defined TARGET_FXCG50_FASTLOAD
-#  define ADDIN_NAME "Ptune4 Fastload"
-# else
-#  define ADDIN_NAME "Ptune4 CG50"
-# endif
-# define HARDWARE_TARGET HWCALC_FXCG50
-# define PLATFORM "fx-CG50(AU)/Graph 90+E"
-#elif defined CG100
-# define ADDIN_NAME "Ptune4 MPM"
-# define HARDWARE_TARGET HWCALC_FXCG100
-# define PLATFORM "fx-CG100/1AU/Graph Math+"
+#if FXSH4
+# define __(fxsh4, cg20, cg50, cg100, cp400) fxsh4
+#elif CG20
+# define __(fxsh4, cg20, cg50, cg100, cp400) cg20
+#elif CG50
+# define __(fxsh4, cg20, cg50, cg100, cp400) cg50
+#elif CG100
+# define __(fxsh4, cg20, cg50, cg100, cp400) cg100
+#elif CP400
+# define __(fxsh4, cg20, cg50, cg100, cp400) cp400
+#else
+# error "No target defined!"
 #endif
 
-/* Feature toggles */
+#define MHZ(x) ((x) * 1000000)
+#define XTUNE_STR ADDIN_NAME " " XTUNE_VERSION " @@XTUNE_GIT_HASH@"
 
-#define DHRY_LOOP 10000
-// #define WHET_LOOP 10
-#define ENABLE_USB
-// #define ENABLE_AZUR
-#define ENABLE_HELP
-
-/* GDB */
-
-#if 0
-# define ENABLE_GDB
-# undef ENABLE_USB
+#if defined TARGET_FXCG50_FASTLOAD
+# define ADDIN_NAME "Ptune4 Fastload"
+#else
+# define ADDIN_NAME __( \
+    "Ftune4 SH4A", "Ptune4 Prizm", "Ptune4 CG50", \
+    "Ptune4 MPM", "CPtune4" \
+)
 #endif
+#define HARDWARE_TARGET __( \
+    HWCALC_FX9860G_SH4, HWCALC_PRIZM, HWCALC_FXCG50, \
+    HWCALC_FXCG100, HWCALC_FXCP400 \
+)
+#define PLATFORM __( \
+    "fx-9860G SH4A", "fx-CG10/20", "fx-CG50(AU)/Graph 90+E", \
+    "fx-CG100/1AU/Graph Math+", "fx-CP400(+E)/CG500" \
+)
 
 /* Keybinds */
-#if defined CP400
-# define KEY_EXPRESS_SELXM KEY_LEFTPAR
-# define KEY_EXPRESS_SS KEY_RIGHTPAR
-# define KEY_EXPRESS_SETTINGS KEY_EQUALS
-# define KEY_EXPRESS_BENCHMARK KEY_DEL
-# define KEY_EXPRESS_BSC KEY_X
-# define KEY_EXPRESS_MEMDATA KEY_Y
-# define KEY_BSC_BCRWCR KEY_X
-# define KEY_MEMDATA_RESET KEY_EQUALS
-# define KEY_MEMDATA_MARGIN KEY_X
-# define KEY_MEMDATA_ROMTEST KEY_Y
-# define KEY_MEMDATA_RAMTEST KEY_Z
-# define KEY_SETTINGS_RESET KEY_EQUALS
-# define KEY_SETTINGS_ABOUT KEY_DIV
-# define KEY_ENABLE_USB KEY_7
-# define KEY_OPEN_HELP KEY_8
-# define KEY_SAVE_CONFIG KEY_KBD
-# define KEY_DEFAULT_PRESET KEY_KBD
-#elif defined CG100
-# define KEY_EXPRESS_SELXM KEY_XOT
-# define KEY_EXPRESS_SS KEY_LOG     /* Should be KEY_FRAC for fx-CG100 */
-# define KEY_EXPRESS_SETTINGS KEY_SETTINGS
-# define KEY_EXPRESS_BENCHMARK KEY_PAGEUP
-# define KEY_EXPRESS_BSC KEY_VARS
-# define KEY_EXPRESS_MEMDATA KEY_TOOLS
-# define KEY_BSC_BCRWCR KEY_NEXTTAB
-# define KEY_MEMDATA_RESET KEY_ON
-# define KEY_MEMDATA_MARGIN KEY_PREVTAB
-# define KEY_MEMDATA_ROMTEST KEY_NEXTTAB
-# define KEY_MEMDATA_RAMTEST KEY_PAGEUP
-# define KEY_SETTINGS_RESET KEY_ON
-# define KEY_SETTINGS_ABOUT KEY_PAGEUP
-# define KEY_ENABLE_USB KEY_EXP
-# define KEY_OPEN_HELP KEY_CATALOG
-# define KEY_SAVE_CONFIG KEY_ON
-# define KEY_DEFAULT_PRESET KEY_ON
-#else
-# define KEY_EXPRESS_SELXM KEY_SQUARE
-# define KEY_EXPRESS_SS KEY_POWER
-# define KEY_EXPRESS_SETTINGS KEY_MENU
-# define KEY_EXPRESS_BENCHMARK KEY_F6
-# define KEY_EXPRESS_BSC KEY_VARS
-# define KEY_EXPRESS_MEMDATA KEY_OPTN
-# define KEY_BSC_BCRWCR KEY_F6
-# define KEY_MEMDATA_RESET KEY_F1
-# define KEY_MEMDATA_MARGIN KEY_F3
-# define KEY_MEMDATA_ROMTEST KEY_F5
-# define KEY_MEMDATA_RAMTEST KEY_F6
-# define KEY_SETTINGS_RESET KEY_F1
-# define KEY_SETTINGS_ABOUT KEY_F6
-# define KEY_ENABLE_USB KEY_7
-# define KEY_OPEN_HELP KEY_4
-# define KEY_SAVE_CONFIG KEY_F1
-# define KEY_DEFAULT_PRESET KEY_F1
-#endif
+#define KEY_EXPRESS_SELXM __(KEY_SQUARE, KEY_SQUARE, KEY_SQUARE, KEY_XOT, KEY_LEFTPAR)
+#define KEY_EXPRESS_SS __(KEY_POWER, KEY_POWER, KEY_POWER, KEY_LOG, KEY_RIGHTPAR)
+#define KEY_EXPRESS_SETTINGS __(KEY_MENU, KEY_MENU, KEY_MENU, KEY_SETTINGS, KEY_EQUALS)
+#define KEY_EXPRESS_BENCHMARK __(KEY_F6, KEY_F6, KEY_F6, KEY_PAGEUP, KEY_DEL)
+#define KEY_EXPRESS_BSC __(KEY_VARS, KEY_VARS, KEY_VARS, KEY_VARS, KEY_X)
+#define KEY_EXPRESS_MEMDATA __(KEY_OPTN, KEY_OPTN, KEY_OPTN, KEY_TOOLS, KEY_Y)
+#define KEY_BSC_BCRWCR __(KEY_F6, KEY_F6, KEY_F6, KEY_NEXTTAB, KEY_X)
+#define KEY_MEMDATA_RESET __(KEY_F1, KEY_F1, KEY_F1, KEY_ON, KEY_EQUALS)
+#define KEY_MEMDATA_MARGIN __(KEY_F3, KEY_F3, KEY_F3, KEY_PREVTAB, KEY_X)
+#define KEY_MEMDATA_ROMTEST __(KEY_F5, KEY_F5, KEY_F5, KEY_NEXTTAB, KEY_Y)
+#define KEY_MEMDATA_RAMTEST __(KEY_F6, KEY_F6, KEY_F6, KEY_PAGEUP, KEY_Z)
+#define KEY_SETTINGS_RESET __(KEY_F1, KEY_F1, KEY_F1, KEY_ON, KEY_EQUALS)
+#define KEY_SETTINGS_ABOUT __(KEY_F6, KEY_F6, KEY_F6, KEY_PAGEUP, KEY_DIV)
+#define KEY_ENABLE_USB __(KEY_7, KEY_7, KEY_7, KEY_EXP, KEY_7)
+#define KEY_OPEN_HELP __(KEY_4, KEY_4, KEY_4, KEY_CATALOG, KEY_8)
+#define KEY_SAVE_CONFIG __(KEY_F1, KEY_F1, KEY_F1, KEY_ON, KEY_KBD)
+#define KEY_DEFAULT_PRESET __(KEY_F1, KEY_F1, KEY_F1, KEY_ON, KEY_KBD)
 
 /* Settings defaults */
-
-#define ROM_MARGIN_DEF 5
-#define RAM_MARGIN_DEF 5
-#define PLL_CLK_MAX_DEF 800 * 1000000
-#define IFC_CLK_MAX_DEF 275 * 1000000
-#define SFC_CLK_MAX_DEF 180 * 1000000
-#define BFC_CLK_MAX_DEF 134 * 1000000
-#if defined CG50 || defined CG100 || defined CP400
-# define PFC_CLK_MAX_DEF  50 * 1000000
-#else
-# define PFC_CLK_MAX_DEF  24 * 1000000
-#endif
+#define PLL_CLK_MAX_DEF MHZ(800)
+#define IFC_CLK_MAX_DEF MHZ(275)
+#define SFC_CLK_MAX_DEF MHZ(180)
+#define BFC_CLK_MAX_DEF MHZ(134)
+#define PFC_CLK_MAX_DEF __(MHZ(24), MHZ(24), MHZ(50), MHZ(50), MHZ(50))
 #define UNLOCKED_MODE_DEF false
 #define AUTO_REDUCE_WAIT_DEF true
 #define AUTO_UP_PFC_DEF true
@@ -135,57 +89,61 @@
 #define F1_YES_NO_DEF true
 #define TEST_ROR_10_12_DEF true
 
-#define ROM_MARGIN_MAX 15
-#define RAM_MARGIN_MAX 15
-#define PLL_MAX 1000 * 1000000
-#define CPU_MAX 350 * 1000000
-#define SHW_MAX 200 * 1000000
-#define BUS_MAX 200 * 1000000
-#if defined CG50 || defined CG100 || defined CP400
-# define IO_MAX 60 * 1000000
-#else
-# define IO_MAX 45 * 1000000
-#endif
+#define PLL_MAX MHZ(1000)
+#define CPU_MAX MHZ(350)
+#define SHW_MAX MHZ(200)
+#define BUS_MAX MHZ(200)
+#define IO_MAX MHZ(60)
 
-#define FLL_RED_ZONE 17 * 1000000
-#define PLL_RED_ZONE 750 * 1000000
-#define IFC_RED_ZONE 250 * 1000000
-#define SFC_RED_ZONE 150 * 1000000
-#define BFC_RED_ZONE 120 * 1000000
-#if defined CG50 || defined CG100 || defined CP400
-# define PFC_RED_ZONE 48 * 1000000
-#else
-# define PFC_RED_ZONE 25 * 1000000
-#endif
+#define FLL_RED_ZONE MHZ(17)
+#define PLL_RED_ZONE MHZ(750)
+#define IFC_RED_ZONE MHZ(250)
+#define SFC_RED_ZONE MHZ(150)
+#define BFC_RED_ZONE MHZ(120)
+#define PFC_RED_ZONE __(MHZ(25), MHZ(25), MHZ(48), MHZ(48), MHZ(48))
 
 /* Memory data default tables */
-
 enum roR_default_table {
-    roR_0  =  13 * 1000000, roR_1  =  23 * 1000000, roR_2  =  33 * 1000000,
-    roR_3  =  43 * 1000000, roR_4  =  53 * 1000000, roR_5  =  62 * 1000000,
-    roR_6  =  72 * 1000000, roR_8  =  92 * 1000000, roR_10 = 110 * 1000000,
-    roR_12 = 127 * 1000000
+    roR_0  = __(MHZ(19), MHZ(14), MHZ(14), MHZ(14), MHZ(13)),
+    roR_1  = __(MHZ(30), MHZ(24), MHZ(24), MHZ(24), MHZ(23)),
+    roR_2  = __(MHZ(46), MHZ(36), MHZ(36), MHZ(36), MHZ(33)),
+    roR_3  = __(MHZ(60), MHZ(47), MHZ(47), MHZ(47), MHZ(43)),
+    roR_4  = __(MHZ(72), MHZ(57), MHZ(57), MHZ(57), MHZ(53)),
+    roR_5  = __(MHZ(84), MHZ(68), MHZ(68), MHZ(68), MHZ(62)),
+    roR_6  = __(MHZ(100), MHZ(78), MHZ(78), MHZ(78), MHZ(72)),
+    roR_8  = __(MHZ(120), MHZ(98), MHZ(98), MHZ(98), MHZ(92)),
+    roR_10 = __(MHZ(150), MHZ(119), MHZ(119), MHZ(119), MHZ(110)),
+    roR_12 = __(MHZ(170), MHZ(139), MHZ(139), MHZ(139), MHZ(130))
 };
 enum raR_default_table {
-    raR_0  =  15 * 1000000, raR_1  =  30 * 1000000, raR_2  =  52 * 1000000,
-    raR_3  =  70 * 1000000, raR_4  =  88 * 1000000, raR_5  = 106 * 1000000,
-    raR_6  = 124 * 1000000, raR_8  = 150 * 1000000
+    raR_0  = __(MHZ(20), MHZ(15), MHZ(0), MHZ(0), MHZ(0)),
+    raR_1  = __(MHZ(42), MHZ(30), MHZ(0), MHZ(0), MHZ(0)),
+    raR_2  = __(MHZ(67), MHZ(52), MHZ(0), MHZ(0), MHZ(0)),
+    raR_3  = __(MHZ(89), MHZ(70), MHZ(0), MHZ(0), MHZ(0)),
+    raR_4  = __(MHZ(102), MHZ(88), MHZ(0), MHZ(0), MHZ(0)),
+    raR_5  = __(MHZ(124), MHZ(106), MHZ(0), MHZ(0), MHZ(0)),
+    raR_6  = __(MHZ(146), MHZ(124), MHZ(0), MHZ(0), MHZ(0)),
+    raR_8  = __(MHZ(170), MHZ(150), MHZ(0), MHZ(0), MHZ(0))
 };
 enum raW_default_table {
-    raW_0  =  28 * 1000000, raW_1  =  57 * 1000000, raW_2  =  85 * 1000000,
-    raW_3  = 109 * 1000000, raW_4  = 137 * 1000000, raW_5  = 142 * 1000000,
-    raW_6  = 147 * 1000000
+    raW_0  = __(MHZ(45), MHZ(30), MHZ(0), MHZ(0), MHZ(0)),
+    raW_1  = __(MHZ(90), MHZ(60), MHZ(0), MHZ(0), MHZ(0)),
+    raW_2  = __(MHZ(120), MHZ(90), MHZ(0), MHZ(0), MHZ(0)),
+    raW_3  = __(MHZ(195), MHZ(115), MHZ(0), MHZ(0), MHZ(0)),
+    raW_4  = __(MHZ(195), MHZ(145), MHZ(0), MHZ(0), MHZ(0)),
+    raW_5  = __(MHZ(195), MHZ(150), MHZ(0), MHZ(0), MHZ(0)),
+    raW_6  = __(MHZ(195), MHZ(155), MHZ(0), MHZ(0), MHZ(0))
 };
 enum TRC_default_table {
-    TRC_3  =  50 * 1000000, TRC_4  =  80 * 1000000,
-    TRC_6  = 120 * 1000000, TRC_9  = 130 * 1000000
+    TRC_3  = __(MHZ(0), MHZ(0), MHZ(60), MHZ(60), MHZ(80)),
+    TRC_4  = __(MHZ(0), MHZ(0), MHZ(80), MHZ(80), MHZ(105)),
+    TRC_6  = __(MHZ(0), MHZ(0), MHZ(117), MHZ(123), MHZ(127)),
+    TRC_9  = __(MHZ(0), MHZ(0), MHZ(130), MHZ(160), MHZ(150)),
 };
 
 /* DO NOT CHANGE */
-
 #define SETUP0_DEF \
-    ROM_MARGIN_DEF << 28 \
-    | RAM_MARGIN_DEF << 24 \
+    5 << 28 | 5 << 24 \
     | UNLOCKED_MODE_DEF << 23 \
     | AUTO_REDUCE_WAIT_DEF << 22 \
     | AUTO_UP_PFC_DEF << 21 \

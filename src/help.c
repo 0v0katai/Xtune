@@ -8,9 +8,9 @@
 
 static help_function_t help_function = NULL;
 
-#if defined ENABLE_HELP
+#if HELP
 static void help_info_express() {
-#if defined CP400
+#if CP400
     info_box(12, 1, C_BLACK, "HELP",
         "[KBD]: Reset to default\n"
         "[DEL]: Toggle benchmark\n"
@@ -23,7 +23,7 @@ static void help_info_express() {
         "[x]: BSC settings\n"
         "[y]: Memory data & tests\n"
         "[Clear]: Close help / Quit CPtune4");
-#elif defined CG100
+#elif CG100
     info_box(0, 1, C_BLACK, "HELP",
         "[ON]: Reset to default\n"
         "[|<-][->|]: Select preset, [OK]: Confirm\n"
@@ -45,7 +45,7 @@ static void help_info_express() {
         "[UP][DOWN]: Select option\n"
         "[LEFT][RIGHT]: -/+ option value\n"
         "[x][/]: +/- roR\n"
-    #ifdef CG50
+    #if CG50
         "[+][-]: +/- TRC\n"
         "[SHIFT][+][-]: +/- CL\n"
     #else
@@ -61,21 +61,21 @@ static void help_info_express() {
 }
 
 static void help_info_mem_data() {
-#if defined CP400
+#if CP400
     info_box(15, 1, C_BLACK, "HELP",
         "[=]: Reset to default\n"
         "[x]: Toggle margin view\n"
         "[y]: ROM read test\n"
         "[z]: SDRAM write test\n"
         "[Clear]: Close help / < Express menu");
-#elif defined CG100
+#elif CG100
     info_box(4, 1, C_BLACK, "HELP",
         "[ON]: Reset to default\n"
         "[|<-]: Toggle margin view\n"
         "[->|]: ROM read test\n"
         "[PGUP]: SDRAM write test\n"
         "[BACK]: Close help / < Express menu");
-#elif defined CG50
+#elif CG50
     info_box(4, 1, C_BLACK, "HELP",
         "[F1]: Reset to default\n"
         "[F3]: Toggle margin view\n"
@@ -94,14 +94,14 @@ static void help_info_mem_data() {
 }
 
 static void help_info_bsc() {
-#if defined CP400
+#if CP400
     info_box(15, 1, C_BLACK, "HELP",
         "[-][+]: -/+ option value\n"
         "[x]: Toggle BCR/WCR mode\n"
         "[UP][DOWN]: Select option\n"
         "[LEFT][RIGHT]: Select CSn area\n"
         "[Clear]: Close help / < Express menu");
-#elif defined CG100
+#elif CG100
     info_box(3, 1, C_BLACK, "HELP",
         "[+]: Increase option value\n"
         "[-]: Decrease option value\n"
@@ -122,7 +122,7 @@ static void help_info_bsc() {
 }
 
 void help_info_setup() {
-#if defined CP400
+#if CP400
     info_box(15, 1, C_BLACK, "HELP",
         "[=]: Reset to default\n"
         "[-][+]: -/+ option value (1 MHz)\n"
@@ -130,7 +130,7 @@ void help_info_setup() {
         "[UP][DOWN]: Select option\n"
         "[/]: About this add-in\n"
         "[Clear]: Close help / < Express menu");
-#elif defined CG100
+#elif CG100
     info_box(4, 1, C_BLACK, "HELP",
         "[ON]: Reset to default\n"
         "[+][-]: +/- option value (1 MHz)\n"
@@ -152,7 +152,7 @@ void help_info_setup() {
 #endif
 
 void set_help_function(const int menu) {
-#if defined ENABLE_HELP
+#if HELP
     if (menu == HELP_EXPRESS)
         help_function = help_info_express;
     else if (menu == HELP_MEM_DATA)
@@ -167,7 +167,7 @@ void set_help_function(const int menu) {
 }
 
 void call_help_function() {
-#if defined ENABLE_HELP
+#if HELP
     extern bool help_status;
     shift = false;
     if (help_status)

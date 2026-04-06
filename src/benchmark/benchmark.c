@@ -10,11 +10,11 @@
 #include "cBench/dhry.h"
 #include "cBench/whet.h"
 
-#ifdef ENABLE_AZUR
+#if AZUR
 # include <azur/gint/render.h>
 #endif
 
-#if defined CG50 || defined CG100 || defined CP400
+#if CG50 || CG100 || CP400
 # define RAM_ADDRESS 0xAC150000
 #else
 # define RAM_ADDRESS 0xA8150000
@@ -43,7 +43,7 @@ void run_benchmark(u32 benchmark_data[], u8 PLL)
         benchmark_data[i + 1] = mem_bench((u32 *)address[i], &bench_flag);
     }
 
-    #ifdef ENABLE_AZUR
+    #if AZUR
     benchmark_data[5] = prof_exec(azrp_update());
     #endif
     int ETMU_timer = timer_configure(TIMER_ETMU, 0xFFFFFFFF, GINT_CALL_NULL);
@@ -53,12 +53,12 @@ void run_benchmark(u32 benchmark_data[], u8 PLL)
     benchmark_data[8] = 32768 / (ETMU_start - SH7305_ETMU[ETMU_timer - 3].TCNT);
     timer_stop(ETMU_timer);
 
-    #ifdef DHRY_LOOP
-    benchmark_data[6] = prof_exec(dhrystone(DHRY_LOOP));
+    #if DHRYSTONE
+    benchmark_data[6] = prof_exec(dhrystone(DHRYSTONE));
     #endif
 
-    #ifdef WHET_LOOP
-    benchmark_data[7] = prof_exec(whetstone(WHET_LOOP));
+    #if WHETSTONE
+    benchmark_data[7] = prof_exec(whetstone(WHETSTONE));
     #endif
 
     if (CPG.SSCGCR.SSEN && PLL >= 3) {

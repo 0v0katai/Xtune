@@ -293,7 +293,7 @@ void info_box(int row, int pad, int bg, const char *title, const char *format, .
 
 bool yes_no(int row)
 {
-	#if defined CP400
+	#if CP400
 	row_print(row, 7, "%s %21s", "[KBD]: Yes", "[DEL]: No");
 	while (true)
 	{
@@ -306,7 +306,7 @@ bool yes_no(int row)
 				return false;
 		}
 	}
-	#elif defined CG100
+	#elif CG100
 	row_print(row, 11, "%s %25s", "[OK]: Yes", "[BACK]: No");
 	while (true)
 	{

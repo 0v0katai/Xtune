@@ -25,7 +25,6 @@ HHK_VERSION(XTUNE_STR)
 HHK_DESCRIPTION("Overclocking utility for fx-CP calculator")
 
 bool help_status = false;
-int exception = 0;
 Xtune_config_t config;
 struct cpg_overclock_setting F1;
 
@@ -33,7 +32,7 @@ static bool global_getkey(key_event_t key)
 {
     if (key.key == KEY_SHIFT)
         shift = !shift;
-    #ifdef ENABLE_USB
+    #if USB
     if (key.key == KEY_ENABLE_USB)
     {
         shift = false;
@@ -47,27 +46,27 @@ static bool global_getkey(key_event_t key)
         return true;
     }
     #endif
-    #ifdef ENABLE_GDB
+    #if GDB
     if (!shift && key.key == KEY_ACON) {
         __asm__("trapa #42");
         __asm__("trapa #42");
     }
     #endif
-    #ifdef ENABLE_HELP
+    #if HELP
     if (key.key == KEY_OPEN_HELP && !help_status)
         call_help_function();
     #endif
     if (shift) {
         if (key.key == KEY_ACON) {
-            # if defined CG50 && !defined TARGET_FXCG50_FASTLOAD
+            #if CG50 && !defined TARGET_FXCG50_FASTLOAD
             info_box(5, 1, C_BLACK, "Caution",
                 "Poweroff function is disabled in this build.\n"
                 "Please return to the main menu before\n"
                 "turning off your calculator.");
             xtune_getkey();
-            # else
+            #else
             gint_poweroff(true);
-            # endif
+            #endif
             shift = false;
         }
         if (key.key == KEY_SAVE_CONFIG && !save_config()) {
@@ -82,7 +81,7 @@ static bool global_getkey(key_event_t key)
 
 int main()
 {
-    #ifdef ENABLE_GDB
+    #if GDB
     gdb_start_on_exception();
     #endif
 

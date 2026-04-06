@@ -126,7 +126,7 @@ void bsc_modify(BSC_option select, i8 modify)
                 modify_A3CL(check);
                 return;
             }
-            #if defined CG50 || defined CG100 || defined CP400
+            #if CG50 || CG100 || CP400
             if (!UNLOCKED_MODE && select.REG == SELECT_TRC)
                 min = best_TRC(Bphi_f);
             #endif
@@ -140,7 +140,7 @@ void bsc_modify(BSC_option select, i8 modify)
         i8 check = ((wcr_addr->lword >> mask[select.REG]) & field[select.REG]) + modify;
         if (!UNLOCKED_MODE && select.byte == CS0WCR_WR_ptr.byte)
             min = best_rom_wait(Bphi_f);
-        #if !defined CG50 && !defined CG100 && !defined CP400
+        #if !CG50 && !CG100 && !CP400
         else if (!UNLOCKED_MODE && select.byte == CS2WCR_WW_ptr.byte)
         {
             u8 best_wait = best_ram_write(Bphi_f);
@@ -164,7 +164,7 @@ void bsc_menu()
     select.byte = 0;
     shift = false;
     u8 max_option = SELECT_IWRRS;
-    #ifdef ENABLE_HELP
+    #if HELP
     set_help_function(HELP_BSC);
     #endif
 
@@ -172,7 +172,7 @@ void bsc_menu()
     {
         dclear(C_WHITE);
 
-        #if defined CP400
+        #if CP400
         row_title("Bus State Controller");
         row_print(2, 11, "Bus Control Register");
         row_print(19, 11, "Wait Control Register");
@@ -194,12 +194,12 @@ void bsc_menu()
         row_highlight(7);
         #endif
 
-        #ifndef CP400
-        #if !defined CG100
+        #if !CP400
+        # if !CG100
         fkey_action(1, "+");
         fkey_action(2, "-");
         fkey_menu(6, "BCR/WCR");
-        #else
+        # else
         if (select.MODE == SELECT_BCR)
         {
             tab_menu(1, 3, "BCR");
@@ -210,7 +210,7 @@ void bsc_menu()
             tab_action(1, 3, "BCR");
             tab_menu(4, 6, "WCR");
         }
-        #endif
+        # endif
         #endif
 
         key = xtune_getkey();
@@ -219,21 +219,21 @@ void bsc_menu()
         {
             case KEY_SHIFT:
                 continue;
-            #if !defined CG100 && !defined CP400
+            #if !CG100 && !CP400
             case KEY_F1:
             #endif
             case KEY_PLUS:
                 bsc_modify(select, 1);
                 break;
             
-            #if !defined CG100 && !defined CP400
+            #if !CG100 && !CP400
             case KEY_F2:
             #endif
             case KEY_MINUS:
                 bsc_modify(select, -1);
                 break;
 
-            #ifdef CG100
+            #if CG100
             case KEY_PREVTAB:
             #endif
             case KEY_BSC_BCRWCR:
@@ -264,7 +264,7 @@ void bsc_menu()
                 }
                 break;
             
-            #ifdef CG100
+            #if CG100
             case KEY_PAGEUP:
                 if (select.CSn >= SELECT_CS5A)
                     select.CSn -= 4;

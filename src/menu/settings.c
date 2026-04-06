@@ -37,7 +37,7 @@ typedef struct {
 
 static void about()
 {
-    #if defined CP400
+    #if CP400
     info_box(14, 1, C_BLACK, "About",
         "%s %s @%07x\n"
         "w/ gint %s @%07x\n"
@@ -78,21 +78,21 @@ void settings_menu()
         TEST_ROR_10_12
     };
     static const i32 settings_def[SELECT_MAX] = {
-        ROM_MARGIN_DEF, RAM_MARGIN_DEF, PLL_CLK_MAX_DEF,
-        IFC_CLK_MAX_DEF, SFC_CLK_MAX_DEF, BFC_CLK_MAX_DEF,
-        PFC_CLK_MAX_DEF, UNLOCKED_MODE_DEF, AUTO_REDUCE_WAIT_DEF,
-        AUTO_UP_PFC_DEF, STARTUP_MEMORY_TEST_DEF, F1_YES_NO_DEF,
+        5, 5, PLL_CLK_MAX_DEF, IFC_CLK_MAX_DEF,
+        SFC_CLK_MAX_DEF, BFC_CLK_MAX_DEF,
+        PFC_CLK_MAX_DEF, UNLOCKED_MODE_DEF,
+        AUTO_REDUCE_WAIT_DEF, AUTO_UP_PFC_DEF,
+        STARTUP_MEMORY_TEST_DEF, F1_YES_NO_DEF,
         TEST_ROR_10_12_DEF
     };
     static const i32 settings_max[SELECT_MAX] = {
-        ROM_MARGIN_MAX, RAM_MARGIN_MAX, PLL_MAX,
-        CPU_MAX, SHW_MAX, BUS_MAX,
-        IO_MAX, true, true,
+        15, 15, PLL_MAX, CPU_MAX,
+        SHW_MAX, BUS_MAX, IO_MAX,
         true, true, true,
-        true
+        true, true, true
     };
 
-    #ifdef ENABLE_HELP
+    #if HELP
     set_help_function(HELP_SETUP);
     #endif
 
@@ -123,9 +123,9 @@ void settings_menu()
         }
         row_highlight(select + 1);
 
-        #ifndef CP400
+        #if !CP400
         fkey_action(1, "Reset");
-        # ifndef CG100
+        # if !CG100
         fkey_action(2, select <= SELECT_PFC ? "+" : "On");
         fkey_action(3, select <= SELECT_PFC ? "-" : "Off");
         # endif
@@ -151,7 +151,7 @@ void settings_menu()
                 settings[select] = settings_def[select];
                 break;
 
-            #if !defined CG100 && !defined CP400
+            #if !CG100 && !CP400
             case KEY_F2:
             #endif
             case KEY_PLUS:
@@ -160,7 +160,7 @@ void settings_menu()
             case KEY_RIGHT:
                 modify++;
                 break;
-            #if !defined CG100 && !defined CP400
+            #if !CG100 && !CP400
             case KEY_F3:
             #endif
             case KEY_MINUS:
