@@ -49,7 +49,7 @@ void row_title(char const *format, ...)
 	dtext(1, 0, C_BLACK, str);
 	#elif GINT_RENDER_RGB
 	dtext(ROW_X, 3, C_BLACK, str);
-	if (shift) dtext(370, 3, C_BLUE, "[S]");
+	if (shift) dtext(_(100, 370, 298), 3, C_BLUE, "[S]");
 	drect(0, 0, DWIDTH-1, 15, C_INVERT);
 	#endif
 }
