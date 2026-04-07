@@ -29,9 +29,11 @@ struct cpg_overclock_setting get_gint_preset(int i) {
 
 void init_mem_data() {
     memcpy(config.roR, roR_defs, sizeof(config.roR));
+    config.ROM_read_addr = NULL;
     #if !CG50 && !CG100 && !CP400
         memcpy(config.raR, raR_defs, sizeof(config.raR));
         memcpy(config.raW, raW_defs, sizeof(config.raW));
+        config.SRAM_read_addr = NULL;
     #else
         memcpy(config.TRC, TRC_defs, sizeof(config.TRC));
     #endif
