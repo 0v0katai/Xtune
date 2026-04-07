@@ -17,9 +17,11 @@
 //---
 
 #if GINT_HW_FX || GINT_FX9860G_G3A
-# define _(fx,cg) fx
+# define _(fx,cg,cp) fx
+#elif GINT_HW_CG
+# define _(fx,cg,cp) cg
 #else
-# define _(fx,cg) cg
+# define _(fx,cg,cp) cp
 #endif
 
 //---

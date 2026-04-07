@@ -100,8 +100,8 @@ void row_right(int row, char const *character)
 /* scrollbar(): Show a scrollbar */
 void scrollbar(int offset, int length, int top, int bottom)
 {
-	int area_x      = _(127, 391);
-	int area_width  = _(1, 2);
+	int area_x      = _(127, 391, 319);
+	int area_width  = _(1, 2, 2);
 	int area_top    = ROW_Y + ROW_H * (top - 1);
 	int area_height = ROW_H * (bottom - top);
 
@@ -129,8 +129,8 @@ int row_y(int y)
 void scrollbar_px(int view_top, int view_bottom, int range_min, int range_max,
 	int range_pos, int range_view)
 {
-	int view_x      = _(127, 391);
-	int view_width  = _(1, 2);
+	int view_x      = _(127, 391, 319);
+	int view_width  = _(1, 2, 2);
 	int view_height = view_bottom - view_top;
 
 	/* Bring virtual range to 0..range_max */
@@ -291,49 +291,20 @@ void info_box(int row, int pad, int bg, const char *title, const char *format, .
 	free(str);
 }
 
-bool yes_no(int row)
-{
-	#if CP400
-	row_print(row, 7, "%s %21s", "[KBD]: Yes", "[DEL]: No");
-	while (true)
-	{
-		switch (xtune_getkey().key)
-		{
-			case KEY_KBD:
-			case KEY_EXE:
+bool yes_no(int row) {
+	row_print(row, _(2, 11, 7),
+		_("", "%s: Yes %21s: No", "%s: Yes %17s: No"),
+		__("", "[F1]", "[F1]", "[OK]", "[KBD]"),
+		__("", "[F6]", "[F6]", "[BACK]", "[DEL]"));
+	while (true) {
+		shift = false;
+		switch (xtune_getkey().key) {
+			case __(KEY_F1, KEY_F1, KEY_F1, KEY_OK, KEY_KBD):
 				return true;
-			case KEY_DEL:
-				return false;
+			case __(KEY_F6, KEY_F6, KEY_F6, KEY_BACK, KEY_DEL):
+			    return false;
 		}
 	}
-	#elif CG100
-	row_print(row, 11, "%s %25s", "[OK]: Yes", "[BACK]: No");
-	while (true)
-	{
-		switch (xtune_getkey().key)
-		{
-			case KEY_OK:
-			case KEY_EXE:
-				return true;
-			case KEY_BACK:
-				return false;
-		}
-	}
-	#else
-	row_print(row, 11, "%s %25s", "[F1]: Yes", "[F6]: No");
-	while (true)
-	{
-		switch (xtune_getkey().key)
-		{
-			case KEY_F1:
-			case KEY_EXE:
-				return true;
-			case KEY_F6:
-			case KEY_EXIT:
-				return false;
-		}
-	}
-	#endif
 }
 
 void print_options(int row, int x, const char *option[], u8 select)
