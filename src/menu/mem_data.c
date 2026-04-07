@@ -23,7 +23,7 @@
 void mem_data_menu()
 {
     key_event_t key;
-    shift = false;
+    global.shift = false;
     bool margin = false;
     #if !CG50 && !CG100 && !CP400
     bool mode = READ;
@@ -80,7 +80,7 @@ void mem_data_menu()
         #endif
 
         #if !CP400
-        fkey_action(1, "Reset");
+        fkey_toggle(1, global.shift ? "Save" : "Reset", global.shift);
         #if !CG50 && !CG100
         fkey_button(2, mode ? "Write" : "Read");
         #endif
@@ -95,7 +95,10 @@ void mem_data_menu()
             case KEY_SHIFT:
                 continue;
             case KEY_MEMDATA_RESET:
-                init_mem_data();
+                if (!global.no_reset) {
+                    init_mem_data();
+                    global.saved = false;
+                }
                 break;
 
             #if !CG50 && !CG100 && !CP400
@@ -110,6 +113,7 @@ void mem_data_menu()
 
             case KEY_MEMDATA_ROMTEST:
                 rom_test();
+                global.saved = false;
                 break;
             
             case KEY_MEMDATA_RAMTEST:
@@ -133,11 +137,12 @@ void mem_data_menu()
                 #else
                 sram_test();
                 #endif
+                global.saved = false;
                 break;
             
             case KEY_EXIT:
                 return;
         }
-        shift = false;
+        global.byte &= 0b100;
     }
 }

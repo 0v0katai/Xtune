@@ -68,7 +68,7 @@ static void about()
 void settings_menu()
 {
     key_event_t key;
-    shift = false;
+    global.shift = false;
     i8 select = 0;
     i32 settings[SELECT_MAX] = {
         ROM_MARGIN, RAM_MARGIN, PLL_CLK_MAX,
@@ -124,7 +124,7 @@ void settings_menu()
         row_highlight(select + 1);
 
         #if !CP400
-        fkey_action(1, "Reset");
+        fkey_toggle(1, global.shift ? "Save" : "Reset", global.shift);
         # if !CG100
         fkey_action(2, select <= SELECT_PFC ? "+" : "On");
         fkey_action(3, select <= SELECT_PFC ? "-" : "Off");
@@ -148,7 +148,10 @@ void settings_menu()
                 break;
 
             case KEY_SETTINGS_RESET:
-                settings[select] = settings_def[select];
+                if (!global.no_reset) {
+                    settings[select] = settings_def[select];
+                    global.saved = false;
+                }
                 break;
 
             #if !CG100 && !CP400
@@ -158,6 +161,7 @@ void settings_menu()
                 scale = true;
                 __attribute__((fallthrough));
             case KEY_RIGHT:
+                global.saved = false;
                 modify++;
                 break;
             #if !CG100 && !CP400
@@ -167,6 +171,7 @@ void settings_menu()
                 scale = true;
                 __attribute__((fallthrough));
             case KEY_LEFT:
+                global.saved = false;
                 modify--;
                 break;
 
@@ -177,7 +182,7 @@ void settings_menu()
             case KEY_EXIT:
                 return;
         }
-        shift = false;
+        global.byte &= 0b100;
 
         if (select >= SELECT_PLL)
         {

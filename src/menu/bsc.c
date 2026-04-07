@@ -99,9 +99,7 @@ static void modify_A3CL(u8 value)
 
 void bsc_modify(BSC_option select, i8 modify)
 {
-    extern bool benchmark_update;
-    benchmark_update = true;
-    shift = false;
+    global.shift = false;
     if (select.MODE == SELECT_BCR)
     {
         sh7305_bsc_CSnBCR_t *bcr_addr = &BSC.CS0BCR + select.CSn;
@@ -162,7 +160,7 @@ void bsc_menu()
     key_event_t key;
     BSC_option select;
     select.byte = 0;
-    shift = false;
+    global.shift = false;
     u8 max_option = SELECT_IWRRS;
     #if HELP
     set_help_function(HELP_BSC);
@@ -279,7 +277,7 @@ void bsc_menu()
                 return;
 
         }
-        shift = false;
+        global.shift = false;
         max_option = 3 + (select.MODE == SELECT_BCR || select.CSn == SELECT_CS3);
         if (select.REG > max_option)
             select.REG = max_option;

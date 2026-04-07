@@ -33,14 +33,14 @@ enum select_option
 static void print_preset()
 {
     #if CG100
-    if (shift)
+    if (global.shift)
         fkey_menu(1, "Save");
     else
         fkey_action(1, "Default");
     static const char *names[] = {"Custom", "F1", "F2", "F3", "F4", "F5"};
     tab_menu(2, 5, "Current preset: %s", names[clock_get_speed()]);
     #else
-    if (shift) {
+    if (global.shift) {
         fkey_menu(1, "Save");
         for (int i = 2; i <= 5; i++)
             fkey_action(i, "v");
@@ -108,7 +108,6 @@ static int __GetBatteryVoltage()
 }
 
 bool benchmark_update = true;
-bool shift = false;
 
 void express_menu()
 {
@@ -159,7 +158,7 @@ void express_menu()
         #endif
         #if !CP400
         print_preset();
-        fkey_menu(6, shift ? "Load" : "Bench");
+        fkey_menu(6, global.shift ? "Load" : "Bench");
         #endif
 
         row_title("%s %s @%07x %.2Dv",
@@ -298,7 +297,7 @@ void express_menu()
                 continue; 
 
             case KEY_DEFAULT_PRESET:
-                if (!shift && F1_YES_NO) {
+                if (!global.no_reset && F1_YES_NO) {
                     info_box(5, 0, C_BLACK, "Caution",
                         "Reset to default preset?\n\n");
                     if (yes_no(8))
@@ -307,25 +306,25 @@ void express_menu()
             break;
             #if CP400
             case KEY_2:
-                if (shift)
+                if (global.shift)
                     config.F2 = s;
                 else
                     cpg_set_overclock_setting(&config.F2);
                 break;
             case KEY_3:
-                if (shift)
+                if (global.shift)
                     config.F3 = s;
                 else
                     cpg_set_overclock_setting(&config.F3);
                 break;
             case KEY_4:
-                if (shift)
+                if (global.shift)
                     config.F4 = s;
                 else
                     cpg_set_overclock_setting(&config.F4);
                 break;
             case KEY_5:
-                if (shift)
+                if (global.shift)
                     config.F5 = s;
                 else
                     cpg_set_overclock_setting(&config.F5);
@@ -337,7 +336,7 @@ void express_menu()
                 bool stay = true;
                 while (stay) {
                     tab_action(2, 5, "%-10s%s preset: F%d%10s", "|<-",
-                        shift ? "Save" : "Set", select_preset + 2, "->|");
+                        global.shift ? "Save" : "Set", select_preset + 2, "->|");
                     switch (xtune_getkey().key) {
                         case KEY_SHIFT:
                             continue;
@@ -349,7 +348,7 @@ void express_menu()
                             break;
                         case KEY_OK:
                         case KEY_EXE:
-                            if (shift)
+                            if (global.shift)
                                 config.presets[select_preset] = s;
                             else
                                 cpg_set_overclock_setting(&config.presets[select_preset]);
@@ -363,12 +362,14 @@ void express_menu()
             case KEY_F3:
             case KEY_F4:
             case KEY_F5:
-                if (shift) {
+                if (global.shift) {
                     info_box(5, 0, C_BLACK, "Caution",
                         "Save to F%d?\n\n",
                         key.key - KEY_F2 + 2);
-                    if (yes_no(8))
+                    if (yes_no(8)) {
                         config.presets[key.key - KEY_F2] = s;
+                        global.saved = false;
+                    }
                     break;
                 }
                 cpg_set_overclock_setting(&config.presets[key.key - KEY_F2]);
@@ -377,7 +378,7 @@ void express_menu()
             break;
 
             case KEY_EXPRESS_BENCHMARK:
-                if (shift) {
+                if (global.shift) {
                     info_box(5, 0, C_BLACK, "Caution",
                         "Load config?\n\n");
                     if (yes_no(8)) {
@@ -419,15 +420,15 @@ void express_menu()
             case KEY_PLUS:
             case KEY_MINUS:
                 #if CG50 || CG100 || CP400
-                bsc_modify(shift ? CS3WCR_CL_ptr : CS3WCR_TRC_ptr, key.key == KEY_PLUS ? 1 : -1);
+                bsc_modify(global.shift ? CS3WCR_CL_ptr : CS3WCR_TRC_ptr, key.key == KEY_PLUS ? 1 : -1);
                 #else
-                bsc_modify(shift ? CS2WCR_WW_ptr : CS2WCR_WR_ptr, key.key == KEY_PLUS ? 1 : -1);
+                bsc_modify(global.shift ? CS2WCR_WW_ptr : CS2WCR_WR_ptr, key.key == KEY_PLUS ? 1 : -1);
                 #endif
                 break;
 
             case KEY_EXPRESS_SETTINGS:
                 #if !CG100 && !CP400
-                if (!shift)
+                if (!global.shift)
                     break;
                 #endif
                 settings_menu();
@@ -444,7 +445,7 @@ void express_menu()
                 if ((&f.FLL)[select] == min[select])
                     break;
                 if (select == SELECT_FLL) {
-                    u16 new_FLL = f.FLL - (shift ? 50 : 1);
+                    u16 new_FLL = f.FLL - (global.shift ? 50 : 1);
                     if (new_FLL < min[SELECT_FLL])
                         new_FLL = min[SELECT_FLL];
                     CPG.FLLFRQ.FLF = new_FLL;
@@ -472,7 +473,7 @@ void express_menu()
                 if ((&f.FLL)[select] == max[select])
                     break;
                 if (select == SELECT_FLL) {
-                    const u8 increment = shift ? 50 : 1;
+                    const u8 increment = global.shift ? 50 : 1;
                     u16 new_FLL = f.FLL + increment;
                     if (new_FLL > max[SELECT_FLL])
                         new_FLL = max[SELECT_FLL];
@@ -507,7 +508,7 @@ void express_menu()
                 update = true;
                 break;
         }
-        shift = false;
+        global.byte &= 0b100;
         if (update)
         {
             benchmark_update = true;

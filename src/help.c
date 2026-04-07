@@ -169,7 +169,7 @@ void set_help_function(const int menu) {
 void call_help_function() {
 #if HELP
     extern bool help_status;
-    shift = false;
+    global.shift = false;
     if (help_status)
         return;
     help_status = true;

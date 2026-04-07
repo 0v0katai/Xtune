@@ -113,7 +113,14 @@ void row_clear(int row);
 
 #endif /* FXCG50 */
 
-extern bool shift;
+typedef byte_union(Xtune_global_t,
+	u8			  : 5;
+	bool saved	  : 1;
+	bool no_reset : 1;
+	bool shift	  : 1;
+);
+
+extern Xtune_global_t global;
 key_event_t xtune_getkey();
 
 int CALL(int r4, int r5, int r6, int r7, int address);

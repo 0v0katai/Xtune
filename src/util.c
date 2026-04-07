@@ -49,7 +49,8 @@ void row_title(char const *format, ...)
 	dtext(1, 0, C_BLACK, str);
 	#elif GINT_RENDER_RGB
 	dtext(ROW_X, 3, C_BLACK, str);
-	if (shift) dtext(_(100, 370, 298), 3, C_BLUE, "[S]");
+	if (!global.saved) dtext(_(92, 349, 277), 3, C_BLACK, "(*)");
+	if (global.shift) dtext(_(100, 370, 298), 3, C_BLUE, "[S]");
 	drect(0, 0, DWIDTH-1, 15, C_INVERT);
 	#endif
 }
@@ -297,7 +298,7 @@ bool yes_no(int row) {
 		__("", "[F1]", "[F1]", "[OK]", "[KBD]"),
 		__("", "[F6]", "[F6]", "[BACK]", "[DEL]"));
 	while (true) {
-		shift = false;
+		global.shift = false;
 		switch (xtune_getkey().key) {
 			case __(KEY_F1, KEY_F1, KEY_F1, KEY_OK, KEY_KBD):
 				return true;
@@ -339,6 +340,6 @@ key_event_t xtune_getkey()
 {
 	dupdate();
 	u16 modifier = GETKEY_DEFAULT ^ GETKEY_MOD_SHIFT;
-	if (shift) modifier ^= GETKEY_MENU;
+	if (global.shift) modifier ^= GETKEY_MENU;
 	return getkey_opt(modifier, NULL);
 }

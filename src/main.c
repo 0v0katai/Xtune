@@ -25,17 +25,18 @@ HHK_VERSION(XTUNE_STR)
 HHK_DESCRIPTION("Overclocking utility for fx-CP calculator")
 
 bool help_status = false;
+Xtune_global_t global = {.byte = 0};
 Xtune_config_t config;
 struct cpg_overclock_setting F1;
 
 static bool global_getkey(key_event_t key)
 {
     if (key.key == KEY_SHIFT)
-        shift = !shift;
+        global.byte ^= 0b11;
     #if USB
     if (key.key == KEY_ENABLE_USB)
     {
-        shift = false;
+        global.shift = false;
         if (!usb_is_open())
         {
             usb_interface_t const *interfaces[] = {&usb_ff_bulk, NULL};
@@ -56,7 +57,7 @@ static bool global_getkey(key_event_t key)
     if (key.key == KEY_OPEN_HELP && !help_status)
         call_help_function();
     #endif
-    if (shift) {
+    if (global.shift) {
         if (key.key == KEY_ACON) {
             #if CG50 && !defined TARGET_FXCG50_FASTLOAD
             info_box(5, 1, C_BLACK, "Caution",
@@ -67,13 +68,16 @@ static bool global_getkey(key_event_t key)
             #else
             gint_poweroff(true);
             #endif
-            shift = false;
+            global.shift = false;
         }
-        if (key.key == KEY_SAVE_CONFIG && !save_config()) {
-            info_box(5, 1, C_RED, "ERROR",
-                "Failed to write config to file!");
-            xtune_getkey();
-            shift = false;
+        if (key.key == KEY_SAVE_CONFIG) {
+            global.saved = save_config();
+            if (!global.saved) {
+                info_box(5, 1, C_RED, "ERROR",
+                    "Failed to write config to file!");
+                xtune_getkey();
+            }
+            global.no_reset = true;
         }
     }
     return false;
@@ -94,7 +98,8 @@ int main()
     cpg_set_overclock_permanent(true);
     getkey_set_feature_function(global_getkey);
 
-    if (!load_config())
+    global.saved = load_config();
+    if (!global.saved)
         init_config();
 
     express_menu();
