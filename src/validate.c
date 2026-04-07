@@ -26,41 +26,35 @@ bool compute_limit(int PLL_add) {
     return false;
 }
 
-unsigned int best_rom_wait(u32 Bphi_f)
-{
-    int i;
-    for (i = SH4_WR_12; i >= SH4_WR_0; i--)
-        if (Bphi_f >= config.roR[i] / 100 * (100 - ROM_MARGIN))
-            break;
-    return i + 1;
+unsigned int best_rom_wait(u32 Bphi_f) {
+    for (int i = SH4_WR_0; i <= SH4_WR_12; i++)
+        if (Bphi_f <= config.roR[i] / 100 * (100 - ROM_MARGIN))
+            return i;
+    return SH4_WR_14;
 }
 
 #if CG50 || CG100 || CP400
-unsigned int best_TRC(u32 Bphi_f)
-{
-    int i;
-    for (i = SH4_TRC_6; i >= SH4_TRC_3; i--)
-        if (Bphi_f >= config.TRC[i] / 100 * (100 - RAM_MARGIN))
-            break;
-    return i + 1;
+unsigned int best_TRC(u32 Bphi_f) {
+    for (int i = SH4_TRC_3; i <= SH4_TRC_6; i++)
+        if (Bphi_f <= config.TRC[i] / 100 * (100 - RAM_MARGIN))
+            return i;
+    return SH4_TRC_9;
 }
 #else
 unsigned int best_ram_read(u32 Bphi_f)
 {
-    int i;
-    for (i = SH4_WR_8; i >= SH4_WR_0; i--)
-        if (Bphi_f >= config.raR[i] / 100 * (100 - RAM_MARGIN))
-            break;
-    return i + 1;
+    for (int i = SH4_WR_0; i <= SH4_WR_8; i++)
+        if (Bphi_f <= config.raR[i] / 100 * (100 - RAM_MARGIN))
+            return i;
+    return SH4_WR_10;
 }
 
 unsigned int best_ram_write(u32 Bphi_f)
 {
-    int i;
-    for (i = SH4_WR_6; i >= SH4_WR_0; i--)
-        if (Bphi_f >= config.raW[i] / 100 * (100 - RAM_MARGIN))
-            break;
-    return i + 2;
+    for (int i = SH4_WW_0; i <= SH4_WW_5; i++)
+        if (Bphi_f <= config.raW[i - 1] / 100 * (100 - RAM_MARGIN))
+            return i;
+    return SH4_WW_6;
 }
 #endif
 
