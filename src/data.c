@@ -15,7 +15,11 @@ static u32 get_file_size(FILE *f) {
 
 static void set_header() {
     config.hash = XTUNE_HASH;
-    memcpy(config.model, (char *)0x80000300, sizeof(config.model));
+    #if CP400
+        memcpy(config.model, (char *)0x80000302, sizeof(char[3]));
+    #else
+        memcpy(config.model, (char *)0x80000300, sizeof(char[4]));
+    #endif
 }
 
 struct cpg_overclock_setting get_gint_preset(int i) {

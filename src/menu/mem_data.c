@@ -70,12 +70,12 @@ void mem_data_menu()
                     : config.raR[i] / 1000);
             }
         else
-            for (int i = SH4_WR_0; i <= SH4_WR_6; i++)
+            for (int i = SH4_WW_0; i <= SH4_WW_6; i++)
             {
-                row_print(i + 2, 25, "raW_%d", i);
-                row_print_color(i + 2, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
-                    ? config.raW[i] / 100 * (100 - RAM_MARGIN) / 1000
-                    : config.raW[i] / 1000);
+                row_print(i + 1, 25, "raW_%d", i - 1);
+                row_print_color(i + 1, 35, margin ? C_BLUE : C_BLACK, C_WHITE, "%.3D MHz", margin
+                    ? config.raW[i - 1] / 100 * (100 - RAM_MARGIN) / 1000
+                    : config.raW[i - 1] / 1000);
             }
         #endif
 
