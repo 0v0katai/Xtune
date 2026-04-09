@@ -173,15 +173,13 @@ void bsc_menu()
         #if CP400
         row_title("Bus State Controller");
         row_print(2, 11, "Bus Control Register");
-        row_print(19, 11, "Wait Control Register");
-        for (int i = 0; i < 8; i++)
-        {
+        row_print(19, 10, "Wait Control Register");
+        for (int i = 0; i < 8; i++) {
             const u8 shift = (i >= SELECT_CS5A) * 7;
             print_csnxcr(4 + shift, 2 + (i % 4) * 10, (SELECT_BCR << 6) | (i << 3), select);
             print_csnxcr(21 + shift, 2 + (i % 4) * 10, (SELECT_WCR << 6) | (i << 3), select);
         }
-        for (int i = 0; i < 6; i++)
-        {
+        for (int i = 0; i < 6; i++) {
             static const u8 highlight_row[6] = {2, 4, 11, 19, 21, 28};
             row_highlight(highlight_row[i]);
         }
@@ -192,23 +190,19 @@ void bsc_menu()
         row_highlight(7);
         #endif
 
-        #if !CP400
-        # if !CG100
+        #if !CG100
         fkey_action(1, "+");
         fkey_action(2, "-");
-        fkey_menu(6, "BCR/WCR");
-        # else
-        if (select.MODE == SELECT_BCR)
-        {
+        fkey_button(6, select.MODE == SELECT_BCR ? "WCR" : "BCR");
+        #else
+        if (select.MODE == SELECT_BCR) {
             tab_menu(1, 3, "BCR");
             tab_action(4, 6, "WCR");
         }
-        else
-        {
+        else {
             tab_action(1, 3, "BCR");
             tab_menu(4, 6, "WCR");
         }
-        # endif
         #endif
 
         key = xtune_getkey();
@@ -217,15 +211,15 @@ void bsc_menu()
         {
             case KEY_SHIFT:
                 continue;
-            #if !CG100 && !CP400
-            case KEY_F1:
+            #if !CG100
+            case _(KEY_F1, KEY_F1, KEY_EQUALS):
             #endif
             case KEY_PLUS:
                 bsc_modify(select, 1);
                 break;
             
-            #if !CG100 && !CP400
-            case KEY_F2:
+            #if !CG100
+            case _(KEY_F2, KEY_F2, KEY_X):
             #endif
             case KEY_MINUS:
                 bsc_modify(select, -1);

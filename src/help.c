@@ -20,8 +20,8 @@ static void help_info_express() {
         "[-][+]: -/+ TRC\n"
         "[SHIFT][-][+]: -/+ CL\n"
         "[=]: Settings\n"
-        "[x]: BSC settings\n"
-        "[y]: Memory data & tests\n"
+        "[(]: BSC settings\n"
+        "[)]: Memory data & tests\n"
         "[Clear]: Close help / Quit CPtune4");
 #elif CG100
     info_box(0, 1, C_BLACK, "HELP",
@@ -63,10 +63,10 @@ static void help_info_express() {
 static void help_info_mem_data() {
 #if CP400
     info_box(15, 1, C_BLACK, "HELP",
-        "[=]: Reset to default\n"
-        "[x]: Toggle margin view\n"
-        "[y]: ROM read test\n"
-        "[z]: SDRAM write test\n"
+        "[KBD]: Reset to default\n"
+        "[y]: Toggle margin view\n"
+        "[^]: ROM read test\n"
+        "[/]: SDRAM write test\n"
         "[Clear]: Close help / < Express menu");
 #elif CG100
     info_box(4, 1, C_BLACK, "HELP",
@@ -124,11 +124,11 @@ static void help_info_bsc() {
 void help_info_setup() {
 #if CP400
     info_box(15, 1, C_BLACK, "HELP",
-        "[=]: Reset to default\n"
+        "[KBD]: Reset to default\n"
         "[-][+]: -/+ option value (1 MHz)\n"
         "[LEFT][RIGHT]: -/+ option value (0.1 MHz)\n"
         "[UP][DOWN]: Select option\n"
-        "[/]: About this add-in\n"
+        "[DEL]: About this add-in\n"
         "[Clear]: Close help / < Express menu");
 #elif CG100
     info_box(4, 1, C_BLACK, "HELP",

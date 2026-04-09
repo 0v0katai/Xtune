@@ -103,5 +103,5 @@ int main()
         init_config();
 
     express_menu();
-    return 1;
+    return 0;
 }

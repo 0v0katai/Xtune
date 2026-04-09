@@ -29,31 +29,6 @@ enum select_option
     SELECT_PFC
 };
 
-#if !CP400
-static void print_preset()
-{
-    #if CG100
-    if (global.shift)
-        fkey_menu(1, "Save");
-    else
-        fkey_action(1, "Default");
-    static const char *names[] = {"Custom", "F1", "F2", "F3", "F4", "F5"};
-    tab_menu(2, 5, "Current preset: %s", names[clock_get_speed()]);
-    #else
-    if (global.shift) {
-        fkey_menu(1, "Save");
-        for (int i = 2; i <= 5; i++)
-            fkey_action(i, "v");
-    } else {
-        for (int i = 1; i <= 5; i++) {
-            static const char *names[] = {"F1", "F2", "F3", "F4", "F5"};
-            fkey_toggle(i, names[i - 1], i == clock_get_speed());
-        }
-    }
-    #endif
-}
-#endif
-
 static void print_express_cpg_bsc(struct cpg_overclock_setting s)
 {
     #if CP400
@@ -156,10 +131,18 @@ void express_menu()
         #if HELP
         set_help_function(HELP_EXPRESS);
         #endif
-        #if !CP400
-        print_preset();
-        fkey_menu(6, global.shift ? "Load" : "Bench");
+
+        fkey_button(1, global.shift ? "Save" : "Reset");
+        #if CG100
+        static const char *names[] = {"Custom", "F1", "F2", "F3", "F4", "F5"};
+        tab_menu(2, 5, "Current preset: %s", names[clock_get_speed()]);
+        #else
+        for (int i = 2; i <= 5; i++) {
+            static const char *names[] = {"F2", "F3", "F4", "F5"};
+            fkey_toggle(i, names[i - 2], clock_get_speed() == i);
+        }
         #endif
+        fkey_button(6, global.shift ? "Load" : "Bench");
 
         row_title("%s %s @%07x %.2Dv",
             ADDIN_NAME, XTUNE_VERSION, XTUNE_HASH,
@@ -305,25 +288,25 @@ void express_menu()
                 }
             break;
             #if CP400
-            case KEY_2:
+            case KEY_X:
                 if (global.shift)
                     config.F2 = s;
                 else
                     cpg_set_overclock_setting(&config.F2);
                 break;
-            case KEY_3:
+            case KEY_Y:
                 if (global.shift)
                     config.F3 = s;
                 else
                     cpg_set_overclock_setting(&config.F3);
                 break;
-            case KEY_4:
+            case KEY_Z:
                 if (global.shift)
                     config.F4 = s;
                 else
                     cpg_set_overclock_setting(&config.F4);
                 break;
-            case KEY_5:
+            case KEY_CARET:
                 if (global.shift)
                     config.F5 = s;
                 else

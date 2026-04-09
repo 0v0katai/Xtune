@@ -79,15 +79,17 @@ void mem_data_menu()
             }
         #endif
 
-        #if !CP400
-        fkey_toggle(1, global.shift ? "Save" : "Reset", global.shift);
-        #if !CG50 && !CG100
-        fkey_button(2, mode ? "Write" : "Read");
-        #endif
-        fkey_toggle(3, "Margin", margin);
-        fkey_menu(5, "ROM");
-        fkey_menu(6, "RAM");
-        #endif
+        if (global.shift) {
+            fkey_button(1, "Save");
+        } else {
+            fkey_button(1, "Reset");
+            #if !CG50 && !CG100 && !CP400
+            fkey_button(2, mode ? "Write" : "Read");
+            #endif
+            fkey_toggle(3, "Margin", margin);
+            fkey_action(5, "ROM");
+            fkey_action(6, "RAM");
+        }
 
         key = xtune_getkey();
         switch (key.key)

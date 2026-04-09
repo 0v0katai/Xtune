@@ -157,9 +157,9 @@ void fkey_action(int position, char const *text)
 	int width;
 	dsize(text, NULL, &width, NULL);
 
-	int x = 4 + 65 * (position - 1);
-	int y = 207;
-	int w = 63;
+	int x = _(0, 4, 2) + _(0, 65, 53) * (position - 1);
+	int y = _(0, 207, 511);
+	int w = _(0, 63, 51);
 
 	dline(x + 1, y, x + w - 2, y, C_BLACK);
 	dline(x + 1, y + 14, x + w - 2, y + 14, C_BLACK);
@@ -201,9 +201,9 @@ void fkey_button(int position, char const *text)
 	int width;
 	dsize(text, NULL, &width, NULL);
 
-	int x = 4 + 65 * (position - 1);
-	int y = 207;
-	int w = 63;
+	int x = _(0, 4, 2) + _(0, 65, 53) * (position - 1);
+	int y = _(0, 207, 511);
+	int w = _(0, 63, 51);
 
 	dline(x + 1, y, x + w - 2, y, C_BLACK);
 	dline(x + 1, y + 14, x + w - 2, y + 14, C_BLACK);
@@ -248,9 +248,9 @@ void tab_menu(int start, int end, char const *format, ...)
 /* fkey_menu(): A rectangular F-key with the bottom right corner removed */
 void fkey_menu(int position, char const *text)
 {
-	int x = 4 + 65 * (position - 1);
-	int y = 207;
-	int w = 63;
+	int x = _(0, 4, 2) + _(0, 65, 53) * (position - 1);
+	int y = _(0, 207, 511);
+	int w = _(0, 63, 51);
 
 	fkey_button(position, text);
 	dline(x + w - 1, y + 10, x + w - 5, y + 14, C_WHITE);

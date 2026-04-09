@@ -123,14 +123,16 @@ void settings_menu()
         }
         row_highlight(select + 1);
 
-        #if !CP400
-        fkey_toggle(1, global.shift ? "Save" : "Reset", global.shift);
-        # if !CG100
-        fkey_action(2, select <= SELECT_PFC ? "+" : "On");
-        fkey_action(3, select <= SELECT_PFC ? "-" : "Off");
-        # endif
-        fkey_button(6, "About");
-        #endif
+        if (global.shift) {
+            fkey_button(1, "Save");
+        } else {
+            fkey_button(1, "Reset");
+            #if !CG100 && !CP400
+            fkey_action(2, select <= SELECT_PFC ? "+" : "On");
+            fkey_action(3, select <= SELECT_PFC ? "-" : "Off");
+            #endif
+            fkey_button(6, "About");
+        }
 
         key = xtune_getkey();
 
