@@ -32,13 +32,13 @@ enum select_option
 static void print_express_cpg_bsc(struct cpg_overclock_setting s)
 {
     #if CP400
-    row_print(13, 2, "FLLFRQ: 0x%08X", s.FLLFRQ);
-    row_print(13, 21, "FRQCR: 0x%08X", s.FRQCR);
+    row_print(14, 2, "FLLFRQ: 0x%08X", s.FLLFRQ);
+    row_print(14, 21, "FRQCR: 0x%08X", s.FRQCR);
     for (int i = 0; i < 4; i++)
     {
         static const char *csn_name[] = {"0", "2", "3", "5A"};
-        row_print(i + 14, 2, "CS%sBCR: 0x%08X", csn_name[i], *(&(s.CS0BCR) + i));
-        row_print(i + 14, 21, "CS%sWCR: 0x%08X", csn_name[i], *(&(s.CS0WCR) + i));
+        row_print(i + 15, 2, "CS%sBCR: 0x%08X", csn_name[i], *(&(s.CS0BCR) + i));
+        row_print(i + 15, 21, "CS%sWCR: 0x%08X", csn_name[i], *(&(s.CS0WCR) + i));
     }
     #else
     row_print(1, 29, "FLLFRQ:");
@@ -54,13 +54,11 @@ static void print_express_cpg_bsc(struct cpg_overclock_setting s)
 
 #if CP400
 # define MEMTEST_DISPLAY_ROW 15
-# define KEY_DISPLAY_ROW 8
 # define REG_DISPLAY_X 7
 # define WAIT_DISPLAY_X 13
 # define SPEED_DISPLAY_X 21
 #else
 # define MEMTEST_DISPLAY_ROW 4
-# define KEY_DISPLAY_ROW 9
 # define REG_DISPLAY_X 6
 # define WAIT_DISPLAY_X 11
 # define SPEED_DISPLAY_X 17
@@ -170,24 +168,17 @@ void express_menu()
         #endif
 
         #if USB
-        row_print(KEY_DISPLAY_ROW, 2, "Capture");
-        # if CG100
-        row_print(KEY_DISPLAY_ROW, 12, "[x10^]");
-        # else
-        row_print(KEY_DISPLAY_ROW, 12, "[7]");
-        # endif
+        row_print(8, 2, "Capture");
+        row_print(8, 12, __("", "[7]", "[7]", "[x10^]", "[7]"));
         #endif
 
         #if HELP
-        row_print(KEY_DISPLAY_ROW + 1, 2, "Help");
-        # if CG100
-        row_print(KEY_DISPLAY_ROW + 1, 12, "[CATALOG]");
-        # elif CP400
-        row_print(KEY_DISPLAY_ROW + 1, 12, "[8]");
-        # else
-        row_print(KEY_DISPLAY_ROW + 1, 12, "[4]");
-        # endif
+        row_print(9, 2, "Help");
+        row_print(9, 12, __("", "[4]", "[4]", "[CATALOG]", "[8]"));
         #endif
+
+        row_print(10, 2, "Save");
+        row_print(10, 12, __("", "[SHIFT][F1]", "[SHIFT][F1]", "[SHIFT][ON]", "[SHIFT][KBD]"));
 
         for (int i = 0; i < 6; i++)
         {
@@ -201,12 +192,12 @@ void express_menu()
         #endif
         {
             static const char *description[] = {"FLL", "PLL", "CPU", "SuperHyway", "Bus", "I/O"};
-            row_print(KEY_DISPLAY_ROW + 3, 2, "%s %s", description[select],
+            row_print(12, 2, "%s %s", description[select],
                 select < SELECT_IFC ? "multiplier" : "clock divider");
             #if CP400
             if (select != SELECT_FLL)
-                row_print(11, 25, "(Max %.3D MHz)", config.clock_max[select - 1] / 1000);
-            row_highlight(11);
+                row_print(12, 25, "(Max %.3D MHz)", config.clock_max[select - 1] / 1000);
+            row_highlight(12);
             #else
             if (select != SELECT_FLL)
                 row_print(12, 33, "(Max %.3D MHz)", config.clock_max[select - 1] / 1000);
@@ -222,14 +213,14 @@ void express_menu()
 
             #if CP400
             # define SCORE_X(i) 2
-            # define SCORE_ROW(i) (19 + (i))
-            # define UPDATE_ROW 23
-            # define DHRYSTONE_ROW 24
+            # define SCORE_ROW(i) (20 + (i))
+            # define UPDATE_ROW 24
+            # define DHRYSTONE_ROW 25
             # define WHETSTONE_X 2
             # if WHETSTONE
-            #  define WHETSTONE_ROW 25
+            #  define WHETSTONE_ROW 26
             # else
-            #  define WHETSTONE_ROW 24
+            #  define WHETSTONE_ROW 25
             # endif
             #else
             # define SCORE_X(i) ((i) * 12 + 2)
